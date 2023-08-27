@@ -2,12 +2,13 @@
   (:require [goog.object :as object]
             [goog.dom :as dom]))
 
-(defn init-canvas-and-get-context [id width height]
-  (when-not (dom/getElement id)
-    (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-  (let [canvas (dom/getElement id)]
-    (dom/setProperties canvas #js {:width width :height height})
-    (.getContext canvas "2d")))
+(defn init-canvas-and-get-context [drawing-meta]
+  (let [id (name (:name drawing-meta))]
+    (when-not (dom/getElement id)
+      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+    (let [canvas (dom/getElement id)]
+      (dom/setProperties canvas (clj->js (select-keys drawing-meta [:width :height])))
+      (.getContext canvas "2d"))))
 
 (defn drawing
   {:width 608
@@ -42,6 +43,6 @@
                      1))))))
 
 (defn ^:dev/after-load init []
-  (let [{:keys [width height]} (meta #'drawing)
-        ctx (init-canvas-and-get-context "drawing" width height)]
+  (let [{:keys [width height] :as drawing-meta} (meta #'drawing)
+        ctx (init-canvas-and-get-context drawing-meta)]
     (drawing ctx width height)))
