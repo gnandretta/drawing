@@ -2,18 +2,22 @@
   (:require [goog.object :as object]
             [goog.dom :as dom]))
 
+(defn init-canvas [id width height]
+  (when-not (dom/getElement id)
+    (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+  (let [canvas (dom/getElement id)]
+    (dom/setProperties canvas #js {:width width :height height})
+    canvas))
+
 (defn ^:dev/after-load init []
   (let [id "drawing"
         width 608
         height 1080]
-    (when-not (dom/getElement id)
-      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-    (let [canvas (dom/getElement id)
+    (let [canvas (init-canvas id width height)
           ctx (.getContext canvas "2d")
           circle-radius (* width 0.3)
           probability-inside (rand)
           probability-outside (rand)]
-      (dom/setProperties canvas #js {:width width :height height})
       (object/set ctx "fillStyle" "rgb(229,228,228)")
       (.fillRect ctx 0 0 width height)
       (.translate ctx (/ width 2) (/ height 2))
