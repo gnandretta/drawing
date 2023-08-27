@@ -13,7 +13,7 @@
 (defn drawing
   {:width 608
    :height 1080}
-  [ctx width height]
+  [{:keys [ctx width height]}]
   (let [circle-radius (* width 0.3)
         probability-inside (rand)
         probability-outside (rand)]
@@ -45,4 +45,6 @@
 (defn ^:dev/after-load init []
   (let [{:keys [width height] :as drawing-meta} (meta #'drawing)
         ctx (init-canvas-and-get-context drawing-meta)]
-    (drawing ctx width height)))
+    (drawing {:ctx ctx
+              :width width
+              :height height})))
