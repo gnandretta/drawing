@@ -1,5 +1,5 @@
 (ns drawing.core
-  (:require [drawing.canvas :as c]
+  (:require [drawing.canvas :as c :include-macros true]
             [goog.object :as object]))
 
 (defn drawing
@@ -35,4 +35,4 @@
                      1))))))
 
 (defn ^:dev/after-load init []
-  (c/draw #'drawing))
+  (c/draw drawing))
