@@ -1,4 +1,4 @@
 (ns drawing.core)
 
-(defn init []
+(defn ^:dev/after-load init []
   (println "drawing"))
