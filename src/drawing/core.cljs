@@ -9,7 +9,10 @@
     (dom/setProperties canvas #js {:width width :height height})
     (.getContext canvas "2d")))
 
-(defn drawing [ctx width height]
+(defn drawing
+  {:width 608
+   :height 1080}
+  [ctx width height]
   (let [circle-radius (* width 0.3)
         probability-inside (rand)
         probability-outside (rand)]
@@ -39,7 +42,6 @@
                      1))))))
 
 (defn ^:dev/after-load init []
-  (let [width 608
-        height 1080
+  (let [{:keys [width height]} (meta #'drawing)
         ctx (init-canvas-and-get-context "drawing" width height)]
     (drawing ctx width height)))
