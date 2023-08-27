@@ -1,0 +1,4 @@
+{:source-paths ["src"]
+ :builds {:dev {:target :browser
+                :modules {:main {:init-fn drawing.core/init}}}}
+ :dev-http {9000 "public"}}
