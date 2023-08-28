@@ -23,11 +23,11 @@
                     :width  width
                     :height height}))))))
 
-(defn- sp [name value]                                      ; short for set property
-  (object/set *ctx* name value))
+(defn- sp [nm value]                                        ; short for set property
+  (object/set *ctx* nm value))
 
-(defn- im [name & args]                                     ; short for invoke method
-  (.apply (object/get *ctx* name) *ctx* (into-array args)))
+(defn- im [nm & args]                                       ; short for invoke method
+  (.apply (object/get *ctx* nm) *ctx* (into-array args)))
 
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
