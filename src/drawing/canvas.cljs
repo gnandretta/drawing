@@ -23,8 +23,11 @@
                     :width  width
                     :height height}))))))
 
+(defn- sp [name value]                                      ; short for set property
+  (object/set *ctx* name value))
+
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
   [value]
-  (object/set *ctx* "fillStyle" value))
+  (sp "fillStyle" value))
