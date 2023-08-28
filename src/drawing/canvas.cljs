@@ -41,3 +41,9 @@
    Negative values to the left and up."
   [x y w h]
   (im "fillRect" x y w h))
+
+(defn translate
+  "Adds a translation transformation to the current matrix by moving the canvas
+   origin the given units."
+  [x y]
+  (im "translate" x y))
