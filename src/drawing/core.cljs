@@ -10,7 +10,7 @@
         probability-inside (rand)
         probability-outside (rand)]
     (c/set-fill-style "rgb(229,228,228)")
-    (.fillRect ctx 0 0 width height)
+    (c/fill-rect 0 0 width height)
     (.translate ctx (/ width 2) (/ height 2))
     (doseq [_ (range 45000)]
       (let [angle (rand (* 2 js/Math.PI))
@@ -22,17 +22,15 @@
                                                  (repeat 2 "rgb(255,195,190)")
                                                  (repeat 1 "rgb(255,255,255)")))))
         (when (> (rand) probability-inside)
-          (.fillRect ctx
-                     (* hypotenuse-inside (js/Math.cos angle))
-                     (* hypotenuse-inside (js/Math.sin angle))
-                     1
-                     1))
+          (c/fill-rect (* hypotenuse-inside (js/Math.cos angle))
+                       (* hypotenuse-inside (js/Math.sin angle))
+                       1
+                       1))
         (when (> (rand) probability-outside)
-          (.fillRect ctx
-                     (* hypotenuse-outside (js/Math.cos angle))
-                     (* hypotenuse-outside (js/Math.sin angle))
-                     1
-                     1))))))
+          (c/fill-rect (* hypotenuse-outside (js/Math.cos angle))
+                       (* hypotenuse-outside (js/Math.sin angle))
+                       1
+                       1))))))
 
 (defn ^:dev/after-load init []
   (c/draw drawing))

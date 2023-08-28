@@ -26,8 +26,18 @@
 (defn- sp [name value]                                      ; short for set property
   (object/set *ctx* name value))
 
+(defn- im [name & args]                                     ; short for invoke method
+  (.apply (object/get *ctx* name) *ctx* (into-array args)))
+
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
   [value]
   (sp "fillStyle" value))
+
+(defn fill-rect
+  "Draws a rectangle filled according fill-style without modifying the current
+   path. Positive values of w and h are to the right and down, respectively.
+   Negative values to the left and up."
+  [x y w h]
+  (im "fillRect" x y w h))
