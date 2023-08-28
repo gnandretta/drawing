@@ -1,5 +1,6 @@
 (ns drawing.canvas
-  (:require [goog.dom :as dom]))
+  (:require [goog.object :as object]
+            [goog.dom :as dom]))
 
 (def default-drawing-mt {:name   "drawing"
                          :width  600
@@ -17,3 +18,9 @@
               (f {:ctx    (.getContext canvas "2d")
                   :width  width
                   :height height})))))
+
+(defn set-fill-style
+  "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
+   default."
+  [ctx value]
+  (object/set ctx "fillStyle" value))
