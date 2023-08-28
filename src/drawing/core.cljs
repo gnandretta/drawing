@@ -3,7 +3,7 @@
             [goog.object :as object]))
 
 (defn drawing
-  {:width 608
+  {:width  608
    :height 1080}
   [{:keys [ctx width height]}]
   (let [circle-radius (* width 0.3)
