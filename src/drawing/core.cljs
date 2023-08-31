@@ -21,12 +21,12 @@
                                                  (repeat 2 "rgb(57,0,3)")
                                                  (repeat 2 "rgb(255,195,190)")
                                                  (repeat 1 "rgb(255,255,255)")))))
-        (when (> (rand) probability-inside)
+        (when (<= (rand) probability-inside)
           (c/fill-rect (* hypotenuse-inside (js/Math.cos angle))
                        (* hypotenuse-inside (js/Math.sin angle))
                        1
                        1))
-        (when (> (rand) probability-outside)
+        (when (<= (rand) probability-outside)
           (c/fill-rect (* hypotenuse-outside (js/Math.cos angle))
                        (* hypotenuse-outside (js/Math.sin angle))
                        1
