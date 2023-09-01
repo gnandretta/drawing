@@ -46,5 +46,5 @@
 (defn translate
   "Adds a translation transformation to the current matrix by moving the canvas
    origin the given units."
-  [x y]
+  [[x y]]
   (im "translate" x y))
