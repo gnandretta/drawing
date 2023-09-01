@@ -6,7 +6,7 @@
 (defn drawing
   {:dimensions [608 1080]}
   [{:keys [d w]}]
-  (let [r (w 0.3)
+  (let [r 0.3
         pi (rand)
         po (rand)]
     (c/set-fill-style "rgb(229,228,228)")
@@ -20,10 +20,10 @@
                                                "rgb(255,195,190)" 2
                                                "rgb(255,255,255)" 1}))
         (when (<= (rand) pi)
-          (c/fill-rect (m/sides a (* (- 1 (rand (rand))) r))
+          (c/fill-rect (m/sides a (w (- 1 (rand (rand))) r))
                        [1 1]))
         (when (<= (rand) po)
-          (c/fill-rect (m/sides a (* (js/Math.cosh (rand js/Math.PI)) r))
+          (c/fill-rect (m/sides a (w (js/Math.cosh (rand js/Math.PI)) r))
                        [1 1]))))))
 
 (defn ^:dev/after-load init []
