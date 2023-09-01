@@ -4,7 +4,7 @@
 
 (def ^:dynamic *ctx* nil)
 
-(def default-drawing-mt {:name   "drawing"
+(def default-drawing-mt {:name       "drawing"
                          :dimensions [600 600]})
 
 (defn draw*
