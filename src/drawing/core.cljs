@@ -5,13 +5,13 @@
 
 (defn drawing
   {:dimensions [608 1080]}
-  [{:keys [dimensions width]}]
-  (let [circle-radius (width 0.3)
+  [{:keys [d w]}]
+  (let [circle-radius (w 0.3)
         probability-inside (rand)
         probability-outside (rand)]
     (c/set-fill-style "rgb(229,228,228)")
-    (c/fill-rect [0 0] (dimensions))
-    (c/translate (dimensions 0.5))
+    (c/fill-rect [0 0] (d))
+    (c/translate (d 0.5))
     (doseq [_ (range 45000)]
       (let [angle (rand (* 2 js/Math.PI))
             hypotenuse-inside (* (- 1 (rand (rand))) circle-radius)

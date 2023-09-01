@@ -19,12 +19,12 @@
                   ctx (.getContext canvas "2d")]
               (dom/setProperties canvas #js {:width width :height height})
               (binding [*ctx* ctx]
-                (f {:ctx        ctx
-                    :dimensions (fn d
-                                  ([] (d 1))
-                                  ([n] (map (partial * n) dimensions)))
-                    :width      (partial * width)
-                    :height     (partial * height)}))))))
+                (f {:ctx ctx
+                    :d   (fn d
+                           ([] (d 1))
+                           ([n] (map (partial * n) dimensions)))
+                    :w   (partial * width)
+                    :h   (partial * height)}))))))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))
