@@ -23,12 +23,10 @@
                                                "rgb(255,195,190)" 2
                                                "rgb(255,255,255)" 1}))
         (when (<= (rand) probability-inside)
-          (c/fill-rect [(* hypotenuse-inside (js/Math.cos angle))
-                        (* hypotenuse-inside (js/Math.sin angle))]
+          (c/fill-rect (m/sides angle hypotenuse-inside)
                        [1 1]))
         (when (<= (rand) probability-outside)
-          (c/fill-rect [(* hypotenuse-outside (js/Math.cos angle))
-                        (* hypotenuse-outside (js/Math.sin angle))]
+          (c/fill-rect (m/sides angle hypotenuse-outside)
                        [1 1]))))))
 
 (defn ^:dev/after-load init []
