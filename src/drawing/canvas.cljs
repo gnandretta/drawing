@@ -24,7 +24,7 @@
                                   ([] (d 1))
                                   ([n] (map (partial * n) dimensions)))
                     :width      (partial * width)
-                    :height     height}))))))
+                    :height     (partial * height)}))))))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))
