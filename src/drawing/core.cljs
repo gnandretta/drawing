@@ -6,7 +6,7 @@
 (defn drawing
   {:dimensions [608 1080]}
   [{:keys [dimensions width]}]
-  (let [circle-radius (* width 0.3)
+  (let [circle-radius (width 0.3)
         probability-inside (rand)
         probability-outside (rand)]
     (c/set-fill-style "rgb(229,228,228)")

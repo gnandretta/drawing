@@ -21,7 +21,7 @@
               (binding [*ctx* ctx]
                 (f {:ctx    ctx
                     :dimensions dimensions
-                    :width  width
+                    :width  (partial * width)
                     :height height}))))))
 
 (defn- sp [nm value]                                        ; short for set property
