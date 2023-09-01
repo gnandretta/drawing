@@ -6,26 +6,26 @@
 (defn drawing
   {:dimensions [608 1080]}
   [{:keys [d w]}]
-  (let [circle-radius (w 0.3)
-        probability-inside (rand)
-        probability-outside (rand)]
+  (let [r (w 0.3)
+        pi (rand)
+        po (rand)]
     (c/set-fill-style "rgb(229,228,228)")
     (c/fill-rect [0 0] (d))
     (c/translate (d 0.5))
     (doseq [_ (range 45000)]
-      (let [angle (rand (* 2 js/Math.PI))
-            hypotenuse-inside (* (- 1 (rand (rand))) circle-radius)
-            hypotenuse-outside (* (js/Math.cosh (rand js/Math.PI)) circle-radius)]
+      (let [a (rand (* 2 js/Math.PI))
+            hi (* (- 1 (rand (rand))) r)
+            ho (* (js/Math.cosh (rand js/Math.PI)) r)]
         (c/set-fill-style (m/weighed-rand-key {"rgb(109,79,246)"  4
                                                "rgb(64,0,131)"    2
                                                "rgb(57,0,3)"      2
                                                "rgb(255,195,190)" 2
                                                "rgb(255,255,255)" 1}))
-        (when (<= (rand) probability-inside)
-          (c/fill-rect (m/sides angle hypotenuse-inside)
+        (when (<= (rand) pi)
+          (c/fill-rect (m/sides a hi)
                        [1 1]))
-        (when (<= (rand) probability-outside)
-          (c/fill-rect (m/sides angle hypotenuse-outside)
+        (when (<= (rand) po)
+          (c/fill-rect (m/sides a ho)
                        [1 1]))))))
 
 (defn ^:dev/after-load init []
