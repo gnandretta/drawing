@@ -4,14 +4,13 @@
             [goog.object :as object]))
 
 (defn drawing
-  {:width  608
-   :height 1080}
-  [{:keys [width height]}]
+  {:dimensions [608 1080]}
+  [{:keys [dimensions width height]}]
   (let [circle-radius (* width 0.3)
         probability-inside (rand)
         probability-outside (rand)]
     (c/set-fill-style "rgb(229,228,228)")
-    (c/fill-rect [0 0] [width height])
+    (c/fill-rect [0 0] dimensions)
     (c/translate (/ width 2) (/ height 2))
     (doseq [_ (range 45000)]
       (let [angle (rand (* 2 js/Math.PI))

@@ -5,13 +5,13 @@
 (def ^:dynamic *ctx* nil)
 
 (def default-drawing-mt {:name   "drawing"
-                         :width  600
-                         :height 600})
+                         :dimensions [600 600]})
 
 (defn draw*
   ([f] (draw* {} f))
   ([mt f] (let [mt (merge default-drawing-mt mt)
-                {:keys [width height]} mt
+                {:keys [dimensions]} mt
+                [width height] dimensions
                 id (name (:name mt))]
             (when-not (dom/getElement id)
               (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
@@ -20,6 +20,7 @@
               (dom/setProperties canvas #js {:width width :height height})
               (binding [*ctx* ctx]
                 (f {:ctx    ctx
+                    :dimensions dimensions
                     :width  width
                     :height height}))))))
 
