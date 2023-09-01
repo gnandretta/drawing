@@ -39,7 +39,7 @@
   "Draws a rectangle filled according fill-style without modifying the current
    path. Positive values of w and h are to the right and down, respectively.
    Negative values to the left and up."
-  [x y w h]
+  [[x y] [w h]]
   (im "fillRect" x y w h))
 
 (defn translate
