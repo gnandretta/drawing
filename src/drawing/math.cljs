@@ -23,9 +23,9 @@
    weights."
   [m]
   (let [interval-ends (reductions + (vals m))
-        r (rand (last interval-ends))]
+        n (rand (last interval-ends))]
     (loop [[[e k] & eks] (map vector interval-ends (keys m))]
       (when e
-        (if (< r e)
+        (if (< n e)
           k
           (recur eks))))))
