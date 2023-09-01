@@ -1,5 +1,6 @@
 (ns drawing.core
   (:require [drawing.canvas :as c :include-macros true]
+            [drawing.math :as m]
             [goog.object :as object]))
 
 (defn drawing
@@ -16,11 +17,11 @@
       (let [angle (rand (* 2 js/Math.PI))
             hypotenuse-inside (* (- 1 (rand (rand))) circle-radius)
             hypotenuse-outside (* (js/Math.cosh (rand js/Math.PI)) circle-radius)]
-        (c/set-fill-style (rand-nth (vec (concat (repeat 4 "rgb(109,79,246)")
-                                                 (repeat 2 "rgb(64,0,131)")
-                                                 (repeat 2 "rgb(57,0,3)")
-                                                 (repeat 2 "rgb(255,195,190)")
-                                                 (repeat 1 "rgb(255,255,255)")))))
+        (c/set-fill-style (m/weighed-rand-key {"rgb(109,79,246)"  4
+                                               "rgb(64,0,131)"    2
+                                               "rgb(57,0,3)"      2
+                                               "rgb(255,195,190)" 2
+                                               "rgb(255,255,255)" 1}))
         (when (<= (rand) probability-inside)
           (c/fill-rect (* hypotenuse-inside (js/Math.cos angle))
                        (* hypotenuse-inside (js/Math.sin angle))
