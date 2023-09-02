@@ -3,6 +3,7 @@
             [goog.dom :as dom]))
 
 (def ^:dynamic *ctx* nil)
+(def ^:dynamic *dimensions* nil)
 
 (def default-drawing-mt {:name       "drawing"
                          :dimensions [600 600]})
@@ -18,13 +19,17 @@
             (let [canvas (dom/getElement id)
                   ctx (.getContext canvas "2d")]
               (dom/setProperties canvas #js {:width width :height height})
-              (binding [*ctx* ctx]
+              (binding [*ctx* ctx
+                        *dimensions* dimensions]
                 (f {:ctx ctx
-                    :d   (fn d
-                           ([] (d 1))
-                           ([n] (map (partial * n) dimensions)))
                     :w   (partial * width)
                     :h   (partial * height)}))))))
+
+(defn d
+  "Multiplies the drawing's dimensions by the given numbers, returning
+   proportional dimensions."
+  [& n]
+  (map (apply partial * n) *dimensions*))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))

@@ -1,11 +1,11 @@
 (ns drawing.core
-  (:require [drawing.canvas :as c :include-macros true]
+  (:require [drawing.canvas :as c :refer [d] :include-macros true]
             [drawing.math :as m]
             [goog.object :as object]))
 
 (defn drawing
   {:dimensions [608 1080]}
-  [{:keys [d w]}]
+  [{:keys [w]}]
   (let [r 0.3
         pi (rand)
         po (rand)]
