@@ -4,6 +4,13 @@
             [goog.object :as object]))
 
 (defn drawing
+  "Randomly draws at most c points inside and at most c points outside a circle
+   of radius r, determined by the probabilities pi and po, respectively. fhi
+   and fho are fns that take no arguments and return random hypotenuses for the
+   points inside and outside the circle, fhi codomain is [0,1] and fho codomain
+   is >= 1 (although large values won't fit in the canvas). bg is the color of
+   the background and fgs is a map with colors as keys and weights as values,
+   the colors of the points are picked from that map."
   {:dimensions [608 1080]}
   [{:keys [r c pi fhi po fho bg fgs]
     :or   {r   0.3
