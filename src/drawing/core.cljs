@@ -5,8 +5,9 @@
 
 (defn drawing
   {:dimensions [608 1080]}
-  [{:keys [r pi fhi po fho bg fgs]
+  [{:keys [r c pi fhi po fho bg fgs]
     :or   {r   0.3
+           c   45000
            pi  (rand)
            fhi #(- 1 (rand (rand)))
            po  (rand)
@@ -20,7 +21,7 @@
   (c/set-fill-style bg)
   (c/fill-rect [0 0] (d))
   (c/translate (d 0.5))
-  (doseq [_ (range 45000)]
+  (doseq [_ (range c)]
     (let [a (rand (* 2 js/Math.PI))]
       (c/set-fill-style (m/weighed-rand-key fgs))
       (when (<= (rand) pi)
