@@ -9,19 +9,19 @@
                          :dimensions [600 600]})
 
 (defn draw*
-  ([f] (draw* {} f))
-  ([mt f] (let [mt (merge default-drawing-mt mt)
-                {:keys [dimensions]} mt
-                [width height] dimensions
-                id (name (:name mt))]
-            (when-not (dom/getElement id)
-              (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-            (let [canvas (dom/getElement id)
-                  ctx (.getContext canvas "2d")]
-              (dom/setProperties canvas #js {:width width :height height})
-              (binding [*ctx* ctx
-                        *dimensions* dimensions]
-                (f {:ctx ctx}))))))
+  [mt f & args]
+  (let [mt (merge default-drawing-mt mt)
+        {:keys [dimensions]} mt
+        [width height] dimensions
+        id (name (:name mt))]
+    (when-not (dom/getElement id)
+      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+    (let [canvas (dom/getElement id)
+          ctx (.getContext canvas "2d")]
+      (dom/setProperties canvas #js {:width width :height height})
+      (binding [*ctx* ctx
+                *dimensions* dimensions]
+        (apply f args)))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning

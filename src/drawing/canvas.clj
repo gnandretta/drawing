@@ -1,6 +1,6 @@
 (ns drawing.canvas)
 
-(defmacro draw [drawing]
+(defmacro draw [drawing & args]
   (if (symbol? drawing)
-    `(draw* (meta (var ~drawing)) ~drawing)
-    `(draw* ~drawing)))
+    `(draw* (meta (var ~drawing)) ~drawing ~@args)
+    `(draw* {} ~drawing ~@args)))
