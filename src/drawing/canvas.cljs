@@ -21,15 +21,25 @@
               (dom/setProperties canvas #js {:width width :height height})
               (binding [*ctx* ctx
                         *dimensions* dimensions]
-                (f {:ctx ctx
-                    :w   (partial * width)
-                    :h   (partial * height)}))))))
+                (f {:ctx ctx}))))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
    proportional dimensions."
   [& n]
   (map (apply partial * n) *dimensions*))
+
+(defn w
+  "Multiples the drawing's width by the given numbers, returning a proportional
+   width."
+  [& n]
+  (apply * (first *dimensions*) n))
+
+(defn h
+  "Multiples the drawing's height by the given numbers, returning a proportional
+   height."
+  [& n]
+  (apply * (second *dimensions*) n))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))
