@@ -5,17 +5,22 @@
 
 (defn drawing
   {:dimensions [608 1080]}
-  [{:keys [r pi po] :or {r 0.3 pi (rand) po (rand)}}]
-  (c/set-fill-style "rgb(229,228,228)")
+  [{:keys [r pi po bg fgs]
+    :or   {r   0.3
+           pi  (rand)
+           po  (rand)
+           bg  "rgb(229,228,228)"
+           fgs {"rgb(109,79,246)"  4
+                "rgb(64,0,131)"    2
+                "rgb(57,0,3)"      2
+                "rgb(255,195,190)" 2
+                "rgb(255,255,255)" 1}}}]
+  (c/set-fill-style bg)
   (c/fill-rect [0 0] (d))
   (c/translate (d 0.5))
   (doseq [_ (range 45000)]
     (let [a (rand (* 2 js/Math.PI))]
-      (c/set-fill-style (m/weighed-rand-key {"rgb(109,79,246)"  4
-                                             "rgb(64,0,131)"    2
-                                             "rgb(57,0,3)"      2
-                                             "rgb(255,195,190)" 2
-                                             "rgb(255,255,255)" 1}))
+      (c/set-fill-style (m/weighed-rand-key fgs))
       (when (<= (rand) pi)
         (c/fill-rect (m/sides a (w (- 1 (rand (rand))) r))
                      [1 1]))
