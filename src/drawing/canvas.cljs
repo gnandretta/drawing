@@ -15,23 +15,21 @@
   (js/Math.round (/ (* n dpi) 25.4)))                       ; 1 inch = 25.4 mm
 
 (defn get-dimensions [size paper dpi]
-  (if paper
-   (mapv #(mm % dpi) (get paper-mms paper))
-    size))
-
+  {:canvas (if paper
+             (mapv #(mm % dpi) (get paper-mms paper))
+             size)})
 (defn draw*
   [mt f & args]
   (let [{:keys [size paper dpi] :as mt} (merge default-drawing-mt mt)
         dimensions (get-dimensions size paper dpi)
-        [width height] dimensions
         id (name (:name mt))]
     (when-not (dom/getElement id)
       (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
     (let [canvas (dom/getElement id)
           ctx (.getContext canvas "2d")]
-      (dom/setProperties canvas #js {:width width :height height})
+      (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
       (binding [*ctx* ctx
-                *dimensions* dimensions]
+                *dimensions* (:canvas dimensions)]
         (apply f args)))))
 
 (defn d
