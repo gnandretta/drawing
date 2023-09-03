@@ -6,7 +6,7 @@
 
 (def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
-
+(def ^:dynamic *dpi* nil)
 
 (def default-drawing-mt {:name   "drawing"
                          :size   [600 600]
@@ -15,12 +15,12 @@
 
 (def paper-mms {:a3 [297 420]})
 
-(defn mm [n dpi]
-  (js/Math.round (/ (* n dpi) 25.4)))                       ; 1 inch = 25.4 mm
+(defn mm [n]
+  (js/Math.round (/ (* n *dpi*) 25.4)))                     ; 1 inch = 25.4 mm
 
-(defn get-dimensions [size paper dpi [mt mr mb ml]]
+(defn get-dimensions [size paper [mt mr mb ml]]
   (let [[w h] (if paper
-                (mapv #(mm % dpi) (get paper-mms paper))
+                (mapv mm (get paper-mms paper))
                 size)]
     {:canvas  [w h]
      :content [(- w ml mr) (- h mt mb)]}))
@@ -28,17 +28,18 @@
 (defn draw*
   [mt f & args]
   (let [{:keys [size paper dpi margin] :as mt} (merge default-drawing-mt mt)
-        dimensions (get-dimensions size paper dpi margin)
         id (name (:name mt))]
     (when-not (dom/getElement id)
       (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-    (let [canvas (dom/getElement id)
-          ctx (.getContext canvas "2d")]
-      (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
-      (binding [*ctx* ctx
-                *dimensions* dimensions]
-        (let [[mt _ _ ml] margin] (translate [mt ml]))
-        (apply f args)))))
+    (binding [*dpi* dpi]
+      (let [canvas (dom/getElement id)
+            dimensions (get-dimensions size paper margin)
+            ctx (.getContext canvas "2d")]
+        (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
+        (binding [*ctx* ctx
+                  *dimensions* dimensions]
+          (let [[mt _ _ ml] margin] (translate [mt ml]))
+          (apply f args))))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
