@@ -1,6 +1,6 @@
 (ns drawing.canvas
-  (:require [goog.object :as object]
-            [goog.dom :as dom]))
+  (:require [goog.dom :as dom]
+            [goog.object :as object]))
 
 (declare fill-rect reset-transform set-fill-style translate)
 

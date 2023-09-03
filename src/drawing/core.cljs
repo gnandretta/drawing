@@ -1,7 +1,6 @@
 (ns drawing.core
   (:require [drawing.canvas :as c :refer [d w] :include-macros true]
-            [drawing.math :as m]
-            [goog.object :as object]))
+            [drawing.math :as m]))
 
 (defn drawing
   "Randomly draws c points inside or outside a circle of radius r on a
@@ -10,14 +9,14 @@
    determined by the hypotenuse function fh which takes no arguments and returns
    a number—[0,1] inside the circle, and >= 1 outside (which may not fit in the
    canvas)."
-  {:size [608 1080]
+  {:size   [608 1080]
    :margin [40]}
   [{:keys [r c fh bg fgs]
     :or   {r   0.3
            c   45000
-           fh #(if (< (rand) 0.5)
-                 (- 1 (rand (rand)))
-                 (js/Math.cosh (rand js/Math.PI)))
+           fh  #(if (< (rand) 0.5)
+                  (- 1 (rand (rand)))
+                  (js/Math.cosh (rand js/Math.PI)))
            bg  "rgb(229,228,228)"
            fgs {"rgb(109,79,246)"  4
                 "rgb(64,0,131)"    2
