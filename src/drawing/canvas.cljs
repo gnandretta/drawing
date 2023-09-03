@@ -2,7 +2,7 @@
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
-(declare fill-rect reset-transform set-fill-style translate)
+(declare fill-rect reset-transform set-fill-style)
 
 (def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
@@ -46,21 +46,6 @@
                   :content [(- w ml mr) (- h mt mb)]}
      :margin     margin}))
 
-(defn draw*
-  [mt f & args]
-  (let [{:keys [size paper dpi margin] :as mt} (merge default-drawing-mt mt)
-        id (name (:name mt))]
-    (when-not (dom/getElement id)
-      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-    (binding [*dpi* dpi]
-      (let [canvas (dom/getElement id)
-            {:keys [dimensions margin]} (compute-layout size paper margin)]
-        (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
-        (binding [*ctx* (.getContext canvas "2d")
-                  *dimensions* dimensions]
-          (let [[mt _ _ ml] margin] (translate [mt ml]))
-          (apply f args)
-          (draw-margin margin))))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
@@ -109,3 +94,19 @@
    origin the given units."
   [[x y]]
   (im "translate" x y))
+
+(defn draw*
+  [mt f & args]
+  (let [{:keys [size paper dpi margin] :as mt} (merge default-drawing-mt mt)
+        id (name (:name mt))]
+    (when-not (dom/getElement id)
+      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+    (binding [*dpi* dpi]
+      (let [canvas (dom/getElement id)
+            {:keys [dimensions margin]} (compute-layout size paper margin)]
+        (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
+        (binding [*ctx* (.getContext canvas "2d")
+                  *dimensions* dimensions]
+          (let [[mt _ _ ml] margin] (translate [mt ml]))
+          (apply f args)
+          (draw-margin margin))))))
