@@ -21,12 +21,14 @@
       (f x)
       (mapv f x))))
 
-(defn get-dimensions [size paper [mt mr mb ml]]
-  (let [[w h] (if paper
-                (mm (paper-mms paper))
-                size)]
-    {:canvas  [w h]
-     :content [(- w ml mr) (- h mt mb)]}))
+(defn get-dimensions [size paper margin]
+  (let [[mt mr mb ml :as margin] (cond-> margin paper mm)
+        [w h :as canvas] (if paper
+                           (mm (cond-> paper symbol? paper-mms))
+                           size)]
+    {:canvas  canvas
+     :content [(- w ml mr) (- h mt mb)]
+     :margin  margin}))
 
 (defn draw*
   [mt f & args]
