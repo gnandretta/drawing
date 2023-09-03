@@ -10,7 +10,8 @@
    determined by the hypotenuse function fh which takes no arguments and returns
    a number—[0,1] inside the circle, and >= 1 outside (which may not fit in the
    canvas)."
-  {:size [608 1080]}
+  {:size [608 1080]
+   :margin [40 40 40 40]}
   [{:keys [r c fh bg fgs]
     :or   {r   0.3
            c   45000

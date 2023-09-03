@@ -2,26 +2,33 @@
   (:require [goog.object :as object]
             [goog.dom :as dom]))
 
+(declare translate)
+
 (def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
 
-(def default-drawing-mt {:name "drawing"
-                         :size [600 600]
-                         :dpi  300})
+
+(def default-drawing-mt {:name   "drawing"
+                         :size   [600 600]
+                         :margin [0 0 0 0]
+                         :dpi    300})
 
 (def paper-mms {:a3 [297 420]})
 
 (defn mm [n dpi]
   (js/Math.round (/ (* n dpi) 25.4)))                       ; 1 inch = 25.4 mm
 
-(defn get-dimensions [size paper dpi]
-  {:canvas (if paper
-             (mapv #(mm % dpi) (get paper-mms paper))
-             size)})
+(defn get-dimensions [size paper dpi [mt mr mb ml]]
+  (let [[w h] (if paper
+                (mapv #(mm % dpi) (get paper-mms paper))
+                size)]
+    {:canvas  [w h]
+     :content [(- w ml mr) (- h mt mb)]}))
+
 (defn draw*
   [mt f & args]
-  (let [{:keys [size paper dpi] :as mt} (merge default-drawing-mt mt)
-        dimensions (get-dimensions size paper dpi)
+  (let [{:keys [size paper dpi margin] :as mt} (merge default-drawing-mt mt)
+        dimensions (get-dimensions size paper dpi margin)
         id (name (:name mt))]
     (when-not (dom/getElement id)
       (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
@@ -29,26 +36,27 @@
           ctx (.getContext canvas "2d")]
       (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
       (binding [*ctx* ctx
-                *dimensions* (:canvas dimensions)]
+                *dimensions* dimensions]
+        (let [[mt _ _ ml] margin] (translate [mt ml]))
         (apply f args)))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
    proportional dimensions."
   [& n]
-  (map (apply partial * n) *dimensions*))
+  (map (apply partial * n) (:content *dimensions*)))
 
 (defn w
   "Multiples the drawing's width by the given numbers, returning a proportional
    width."
   [& n]
-  (apply * (first *dimensions*) n))
+  (apply * (first (:content *dimensions*)) n))
 
 (defn h
   "Multiples the drawing's height by the given numbers, returning a proportional
    height."
   [& n]
-  (apply * (second *dimensions*) n))
+  (apply * (second (:content *dimensions*)) n))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))
