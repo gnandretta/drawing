@@ -13,12 +13,6 @@
 
 (def paper-mms {:a3 [297 420]})
 
-(defn mm [x]
-  (let [f #(js/Math.round (/ (* % *dpi*) 25.4))]            ; 1 inch = 25.4 mm
-    (if (number? x)
-      (f x)
-      (mapv f x))))
-
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
    proportional dimensions."
@@ -36,6 +30,12 @@
    height."
   [& n]
   (apply * (second (:content *dimensions*)) n))
+
+(defn mm [x]
+  (let [f #(js/Math.round (/ (* % *dpi*) 25.4))]            ; 1 inch = 25.4 mm
+    (if (number? x)
+      (f x)
+      (mapv f x))))
 
 (defn- sp [nm value]                                        ; short for set property
   (object/set *ctx* nm value))
