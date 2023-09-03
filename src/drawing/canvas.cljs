@@ -14,15 +14,15 @@
 (defn mm [n dpi]
   (js/Math.round (/ (* n dpi) 25.4)))                       ; 1 inch = 25.4 mm
 
-(defn expand-dimensions [x dpi]
-  (if-let [d (get paper-mms x)]
-    (mapv #(mm % dpi) d)
-    x))
+(defn calculate-dimensions [dimensions paper dpi]
+  (if paper
+   (mapv #(mm % dpi) (get paper-mms paper))
+    dimensions))
 
 (defn draw*
   [mt f & args]
-  (let [{:keys [dimensions dpi] :as mt} (merge default-drawing-mt mt)
-        dimensions (expand-dimensions dimensions dpi)
+  (let [{:keys [dimensions paper dpi] :as mt} (merge default-drawing-mt mt)
+        dimensions (calculate-dimensions dimensions paper dpi)
         [width height] dimensions
         id (name (:name mt))]
     (when-not (dom/getElement id)
