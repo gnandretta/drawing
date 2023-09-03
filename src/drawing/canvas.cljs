@@ -54,10 +54,9 @@
       (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
     (binding [*dpi* dpi]
       (let [canvas (dom/getElement id)
-            {:keys [dimensions margin]} (compute-layout size paper margin)
-            ctx (.getContext canvas "2d")]
+            {:keys [dimensions margin]} (compute-layout size paper margin)]
         (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
-        (binding [*ctx* ctx
+        (binding [*ctx* (.getContext canvas "2d")
                   *dimensions* dimensions]
           (let [[mt _ _ ml] margin] (translate [mt ml]))
           (apply f args)
