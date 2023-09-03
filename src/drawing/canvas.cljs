@@ -74,7 +74,7 @@
     3 (let [[t lr b] v] [t lr b lr])
     v))
 
-(defn compute-layout [size paper margin]
+(defn- compute-layout [size paper margin]
   (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
         [w h :as canvas] (if paper
                            (mm (cond-> paper symbol? paper-mms))
