@@ -19,23 +19,6 @@
       (f x)
       (mapv f x))))
 
-(defn- expand-margin [v]
-  (case (count v)
-    1 (vec (repeat 4 (first v)))
-    2 (let [[tb lr] v] [tb lr tb lr])
-    3 (let [[t lr b] v] [t lr b lr])
-    v))
-
-(defn compute-layout [size paper margin]
-  (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
-        [w h :as canvas] (if paper
-                           (mm (cond-> paper symbol? paper-mms))
-                           size)]
-    {:dimensions {:canvas  canvas
-                  :content [(- w ml mr) (- h mt mb)]}
-     :margin     margin}))
-
-
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
    proportional dimensions."
@@ -83,6 +66,22 @@
    origin the given units."
   [[x y]]
   (im "translate" x y))
+
+(defn- expand-margin [v]
+  (case (count v)
+    1 (vec (repeat 4 (first v)))
+    2 (let [[tb lr] v] [tb lr tb lr])
+    3 (let [[t lr b] v] [t lr b lr])
+    v))
+
+(defn compute-layout [size paper margin]
+  (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
+        [w h :as canvas] (if paper
+                           (mm (cond-> paper symbol? paper-mms))
+                           size)]
+    {:dimensions {:canvas  canvas
+                  :content [(- w ml mr) (- h mt mb)]}
+     :margin     margin}))
 
 (defn- draw-margin [[t r b l]]                              ; this isn't drawing anything when there's no margin
   (let [[cw ch] (:canvas *dimensions*)]
