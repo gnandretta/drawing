@@ -15,12 +15,15 @@
 
 (def paper-mms {:a3 [297 420]})
 
-(defn mm [n]
-  (js/Math.round (/ (* n *dpi*) 25.4)))                     ; 1 inch = 25.4 mm
+(defn mm [x]
+  (let [f #(js/Math.round (/ (* % *dpi*) 25.4))]            ; 1 inch = 25.4 mm
+    (if (number? x)
+      (f x)
+      (mapv f x))))
 
 (defn get-dimensions [size paper [mt mr mb ml]]
   (let [[w h] (if paper
-                (mapv mm (get paper-mms paper))
+                (mm (paper-mms paper))
                 size)]
     {:canvas  [w h]
      :content [(- w ml mr) (- h mt mb)]}))
