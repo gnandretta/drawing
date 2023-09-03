@@ -10,7 +10,7 @@
 
 (def default-drawing-mt {:name   "drawing"
                          :size   [600 600]
-                         :margin [0 0 0 0]
+                         :margin [0]
                          :dpi    300})
 
 (def paper-mms {:a3 [297 420]})
@@ -21,8 +21,15 @@
       (f x)
       (mapv f x))))
 
+(defn- expand-margin [v]
+  (case (count v)
+    1 (vec (repeat 4 (first v)))
+    2 (let [[tb lr] v] [tb lr tb lr])
+    3 (let [[t lr b] v] [t lr b lr])
+    v))
+
 (defn compute-layout [size paper margin]
-  (let [[mt mr mb ml :as margin] (cond-> margin paper mm)
+  (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
         [w h :as canvas] (if paper
                            (mm (cond-> paper symbol? paper-mms))
                            size)]
