@@ -28,6 +28,15 @@
     3 (let [[t lr b] v] [t lr b lr])
     v))
 
+(defn- draw-margin [[t r b l]]
+  (let [[cw ch] (:canvas *dimensions*)]
+    (reset-transform)
+    (set-fill-style "white")
+    (fill-rect [0 0] [cw t])
+    (fill-rect [(- cw r) t] [r (- ch t b)])
+    (fill-rect [0 (- ch b)] [cw b])
+    (fill-rect [0 t] [l (- ch t b)])))
+
 (defn compute-layout [size paper margin]
   (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
         [w h :as canvas] (if paper
@@ -51,7 +60,8 @@
         (binding [*ctx* ctx
                   *dimensions* dimensions]
           (let [[mt _ _ ml] margin] (translate [mt ml]))
-          (apply f args))))))
+          (apply f args)
+          (draw-margin margin))))))
 
 (defn d
   "Multiplies the drawing's dimensions by the given numbers, returning
