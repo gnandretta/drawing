@@ -6,12 +6,23 @@
 (def ^:dynamic *dimensions* nil)
 
 (def default-drawing-mt {:name       "drawing"
-                         :dimensions [600 600]})
+                         :dimensions [600 600]
+                         :dpi        300})
+
+(def paper-mms {:a3 [297 420]})
+
+(defn mm [n dpi]
+  (js/Math.round (/ (* n dpi) 25.4)))                       ; 1 inch = 25.4 mm
+
+(defn expand-dimensions [x dpi]
+  (if-let [d (get paper-mms x)]
+    (mapv #(mm % dpi) d)
+    x))
 
 (defn draw*
   [mt f & args]
-  (let [mt (merge default-drawing-mt mt)
-        {:keys [dimensions]} mt
+  (let [{:keys [dimensions dpi] :as mt} (merge default-drawing-mt mt)
+        dimensions (expand-dimensions dimensions dpi)
         [width height] dimensions
         id (name (:name mt))]
     (when-not (dom/getElement id)
