@@ -28,7 +28,7 @@
     3 (let [[t lr b] v] [t lr b lr])
     v))
 
-(defn- draw-margin [[t r b l]]
+(defn- draw-margin [[t r b l]]                              ; this isn't drawing anything when there's no margin
   (let [[cw ch] (:canvas *dimensions*)]
     (reset-transform)
     (set-fill-style "white")
