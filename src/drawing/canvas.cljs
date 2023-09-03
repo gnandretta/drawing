@@ -2,8 +2,6 @@
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
-(declare fill-rect reset-transform set-fill-style)
-
 (def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
 (def ^:dynamic *dpi* nil)
@@ -27,15 +25,6 @@
     2 (let [[tb lr] v] [tb lr tb lr])
     3 (let [[t lr b] v] [t lr b lr])
     v))
-
-(defn- draw-margin [[t r b l]]                              ; this isn't drawing anything when there's no margin
-  (let [[cw ch] (:canvas *dimensions*)]
-    (reset-transform)
-    (set-fill-style "white")
-    (fill-rect [0 0] [cw t])
-    (fill-rect [(- cw r) t] [r (- ch t b)])
-    (fill-rect [0 (- ch b)] [cw b])
-    (fill-rect [0 t] [l (- ch t b)])))
 
 (defn compute-layout [size paper margin]
   (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
@@ -94,6 +83,15 @@
    origin the given units."
   [[x y]]
   (im "translate" x y))
+
+(defn- draw-margin [[t r b l]]                              ; this isn't drawing anything when there's no margin
+  (let [[cw ch] (:canvas *dimensions*)]
+    (reset-transform)
+    (set-fill-style "white")
+    (fill-rect [0 0] [cw t])
+    (fill-rect [(- cw r) t] [r (- ch t b)])
+    (fill-rect [0 (- ch b)] [cw b])
+    (fill-rect [0 t] [l (- ch t b)])))
 
 (defn draw*
   [mt f & args]
