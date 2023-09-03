@@ -2,7 +2,7 @@
   (:require [goog.object :as object]
             [goog.dom :as dom]))
 
-(declare translate)
+(declare fill-rect reset-transform set-fill-style translate)
 
 (def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
@@ -89,6 +89,11 @@
    Negative values to the left and up."
   [[x y] [w h]]
   (im "fillRect" x y w h))
+
+(defn reset-transform
+  "Resets the current transformation matrix to the identity matrix."
+  []
+  (im "resetTransform"))
 
 (defn translate
   "Adds a translation transformation to the current matrix by moving the canvas
