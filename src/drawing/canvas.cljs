@@ -93,7 +93,7 @@
     (fill-rect [0 t] [l (- ch t b)])))
 
 (defn draw*
-  [mt f & args]
+  [mt f params & _]
   (let [{:keys [size paper dpi margin] :as mt} (merge default-drawing-mt mt)
         id (name (:name mt))]
     (when-not (dom/getElement id)
@@ -105,5 +105,5 @@
         (binding [*ctx* (.getContext canvas "2d")
                   *dimensions* dimensions]
           (let [[mt _ _ ml] margin] (translate [mt ml]))
-          (apply f args)
+          (f params)
           (draw-margin margin))))))
