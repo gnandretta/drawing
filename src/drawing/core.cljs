@@ -33,4 +33,4 @@
       (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1]))))
 
 (defn ^:dev/after-load init []
-  (c/draw #'drawing {} :size [608 1080]))
+  (c/draw #'drawing :size [608 1080]))
