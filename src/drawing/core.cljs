@@ -1,7 +1,6 @@
 (ns drawing.core
-  (:require [drawing.canvas :as c :refer [d w] :include-macros true]
-            [drawing.math :as m]
-            [noc.randomness :as noc]))
+  (:require [drawing.canvas :as c :refer [d w]]
+            [drawing.math :as m]))
 
 (defn drawing
   "Randomly draws c points inside or outside a circle of radius r on a
@@ -34,4 +33,4 @@
       (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1]))))
 
 (defn ^:dev/after-load init []
-  (c/draw drawing {} :size [608 1080] :id "drawing"))
+  (c/draw #'drawing {} :size [608 1080]))

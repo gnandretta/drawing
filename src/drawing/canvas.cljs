@@ -87,12 +87,12 @@
     (fill-rect [0 (- ch b)] [cw b])
     (fill-rect [0 t] [l (- ch t b)])))
 
-(defn draw*
-  [_ f params & {:keys [id size paper dpi margin]
-                  :or   {id     "drawing"
-                         size   [600 600]
-                         margin [0]
-                         dpi    300}}]
+(defn draw
+  [f params & {:keys [id size paper dpi margin]
+               :or   {id     (-> (meta f) (get :name "drawing") name)
+                      size   [600 600]
+                      margin [0]
+                      dpi    300}}]
   (when-not (dom/getElement id)
     (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
   (binding [*dpi* dpi]
@@ -102,5 +102,5 @@
       (binding [*ctx* (.getContext canvas "2d")
                 *dimensions* dimensions]
         (let [[mt _ _ ml] margin] (translate [mt ml]))
-        (f params)
+        ((if (var? f) @f f) params)
         (draw-margin margin)))))
