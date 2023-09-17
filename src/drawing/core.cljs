@@ -13,7 +13,6 @@
    the probability of using fho is 1-p. Note that two or more points may be
    drawn in the same coordinate and that some points may not fit the canvas
    (when fho returns a number large enough)."
-  {:size [608 1080]}
   [{:keys [r c p fhi fho bg fgs]
     :or   {r   0.3
            c   45000
@@ -35,4 +34,4 @@
       (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1]))))
 
 (defn ^:dev/after-load init []
-  (c/draw drawing {}))
+  (c/draw drawing {} :size [608 1080] :id "drawing"))
