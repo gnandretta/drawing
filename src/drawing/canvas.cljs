@@ -88,9 +88,15 @@
     (fill-rect [0 (- ch b)] [cw b])
     (fill-rect [0 t] [l (- ch t b)])))
 
-(defn create [id]
+(defn resize [canvas size]
+  (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
+
+(defn create [id size]
   (when-not (dom/getElement id)
-    (dom/append js/document.body (dom/createDom "canvas" #js {:id id}))))
+    (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+  (let [canvas (dom/getElement id)]
+    (resize canvas size)                                    ; TODO not sure about resizing during creation
+    canvas))
 
 (defn print                                                 ; TODO not sure about the name
   [f & {:keys [id size paper dpi margin]
@@ -99,11 +105,9 @@
                margin [0]
                dpi    300}
         :as   kwargs}]
-  (create id)
   (binding [*dpi* dpi]
-    (let [canvas (dom/getElement id)
-          {:keys [dimensions margin]} (compute-layout size paper margin)]
-      (dom/setProperties canvas (clj->js (zipmap [:width :height] (:canvas dimensions))))
+    (let [{:keys [dimensions margin]} (compute-layout size paper margin)
+          canvas (create id (:canvas dimensions))]
       (binding [*ctx* (.getContext canvas "2d")
                 *dimensions* dimensions]
         (let [[mt _ _ ml] margin] (translate [mt ml]))
