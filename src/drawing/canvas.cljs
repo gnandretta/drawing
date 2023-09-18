@@ -1,4 +1,5 @@
 (ns drawing.canvas
+  (:refer-clojure :exclude [print])
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
@@ -87,7 +88,7 @@
     (fill-rect [0 (- ch b)] [cw b])
     (fill-rect [0 t] [l (- ch t b)])))
 
-(defn draw
+(defn print                                                 ; TODO not sure about the name
   [f & {:keys [id size paper dpi margin]
         :or   {id     (-> (meta f) (get :name "drawing") name)
                size   [600 600]
