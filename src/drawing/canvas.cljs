@@ -88,6 +88,10 @@
     (fill-rect [0 (- ch b)] [cw b])
     (fill-rect [0 t] [l (- ch t b)])))
 
+(defn create [id]
+  (when-not (dom/getElement id)
+    (dom/append js/document.body (dom/createDom "canvas" #js {:id id}))))
+
 (defn print                                                 ; TODO not sure about the name
   [f & {:keys [id size paper dpi margin]
         :or   {id     (-> (meta f) (get :name "drawing") name)
@@ -95,8 +99,7 @@
                margin [0]
                dpi    300}
         :as   kwargs}]
-  (when-not (dom/getElement id)
-    (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+  (create id)
   (binding [*dpi* dpi]
     (let [canvas (dom/getElement id)
           {:keys [dimensions margin]} (compute-layout size paper margin)]
