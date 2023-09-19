@@ -3,7 +3,6 @@
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
-(def ^:dynamic *ctx* nil)
 (def ^:dynamic *dimensions* nil)
 (def ^:dynamic *dpi* nil)
 
