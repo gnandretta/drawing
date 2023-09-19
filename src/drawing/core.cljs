@@ -12,7 +12,7 @@
    the probability of using fho is 1-p. Note that two or more points may be
    drawn in the same coordinate and that some points may not fit the canvas
    (when fho returns a number large enough)."
-  [{:keys [r c p fhi fho bg fgs]
+  [{:keys [ctx r c p fhi fho bg fgs]
     :or   {r   0.3
            c   45000
            p   0.7
@@ -24,13 +24,15 @@
                 "rgb(57,0,3)"      2
                 "rgb(255,195,190)" 2
                 "rgb(255,255,255)" 1}}}]
-  (c/set-fill-style bg)
-  (c/fill-rect [0 0] (d))
-  (c/translate (d 0.5))
+  (-> ctx
+      (c/set-fill-style bg)
+      (c/fill-rect [0 0] (d))
+      (c/translate (d 0.5)))
   (doseq [_ (range c)]
     (let [a (rand (* 2 js/Math.PI))]
-      (c/set-fill-style (m/weighed-rand-key fgs))
-      (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1]))))
+      (-> ctx
+          (c/set-fill-style (m/weighed-rand-key fgs))
+          (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1])))))
 
 (defn ^:dev/after-load init []
   (c/print #'drawing :size [608 1080]))

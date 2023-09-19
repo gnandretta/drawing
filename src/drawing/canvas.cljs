@@ -33,35 +33,37 @@
       (f x)
       (mapv f x))))
 
-(defn- sp [nm value]                                        ; short for set property
-  (object/set *ctx* nm value))
+(defn- sp [ctx nm value]                                    ; short for set property
+  (object/set ctx nm value)
+  ctx)
 
-(defn- im [nm & args]                                       ; short for invoke method
-  (.apply (object/get *ctx* nm) *ctx* (into-array args)))
+(defn- im [ctx nm & args]                                   ; short for invoke method
+  (.apply (object/get ctx nm) ctx (into-array args))
+  ctx)
 
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
-  [value]
-  (sp "fillStyle" value))
+  [ctx value]
+  (sp ctx "fillStyle" value))
 
 (defn fill-rect
   "Draws a rectangle filled according fill-style without modifying the current
    path. Positive values of w and h are to the right and down, respectively.
    Negative values to the left and up."
-  [[x y] [w h]]
-  (im "fillRect" x y w h))
+  [ctx [x y] [w h]]
+  (im ctx "fillRect" x y w h))
 
 (defn reset-transform
   "Resets the current transformation matrix to the identity matrix."
-  []
-  (im "resetTransform"))
+  [ctx]
+  (im ctx "resetTransform"))
 
 (defn translate
   "Adds a translation transformation to the current matrix by moving the canvas
    origin the given units."
-  [[x y]]
-  (im "translate" x y))
+  [ctx [x y]]
+  (im ctx "translate" x y))
 
 (defn- expand-margin [v]
   (case (count v)
@@ -79,14 +81,15 @@
                   :content [(- w ml mr) (- h mt mb)]}
      :margin     margin}))
 
-(defn- draw-margin [[t r b l]]                              ; this isn't drawing anything when there's no margin
+(defn- draw-margin [ctx [t r b l]]                          ; this isn't drawing anything when there's no margin
   (let [[cw ch] (:canvas *dimensions*)]
-    (reset-transform)
-    (set-fill-style "white")
-    (fill-rect [0 0] [cw t])
-    (fill-rect [(- cw r) t] [r (- ch t b)])
-    (fill-rect [0 (- ch b)] [cw b])
-    (fill-rect [0 t] [l (- ch t b)])))
+    (-> ctx
+        (reset-transform)
+        (set-fill-style "white")
+        (fill-rect [0 0] [cw t])
+        (fill-rect [(- cw r) t] [r (- ch t b)])
+        (fill-rect [0 (- ch b)] [cw b])
+        (fill-rect [0 t] [l (- ch t b)]))))
 
 (defn resize [canvas size]
   (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
@@ -107,9 +110,9 @@
         :as   kwargs}]
   (binding [*dpi* dpi]
     (let [{:keys [dimensions margin]} (compute-layout size paper margin)
-          canvas (create id (:canvas dimensions))]
-      (binding [*ctx* (.getContext canvas "2d")
-                *dimensions* dimensions]
-        (let [[mt _ _ ml] margin] (translate [mt ml]))
-        ((if (var? f) @f f) kwargs)
-        (draw-margin margin)))))
+          canvas (create id (:canvas dimensions))
+          ctx (.getContext canvas "2d")]
+      (binding [*dimensions* dimensions]
+        (let [[mt _ _ ml] margin] (translate ctx [mt ml]))
+        ((if (var? f) @f f) (assoc kwargs :ctx ctx))
+        (draw-margin ctx margin)))))
