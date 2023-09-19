@@ -47,6 +47,31 @@
   [ctx value]
   (sp ctx "fillStyle" value))
 
+(defn set-line-width
+  "Sets the thickness of lines, in coordinate space units. 1.0 by default,
+   zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
+  [ctx value]
+  (sp ctx "lineWidth" value))
+
+(defn set-stroke-style
+  "Sets the CSS color, gradient, or pattern to use for shapes outlines. \"#000\"
+   by default."
+  [ctx value]
+  (sp ctx "strokeStyle" value))
+
+(defn begin-path
+  "Creates a new path by emptying the list of sub-paths."   ; TODO what's the difference between path and sub-path?
+  [ctx]
+  (im ctx "beginPath"))
+
+(defn fill                                                  ; TODO implement other arities and doc rules from https://en.wikipedia.org/wiki/Nonzero-rule and https://en.wikipedia.org/wiki/Even–odd_rule (see stroke docs).
+  "Fills the current or given path with the current fill-style. fill-rule
+  specifies the algorithm that determines if a point is inside or outside the
+  filling region. \"nonzero\" by default and the other possible value is
+  \"evenodd\"."
+  [ctx]
+  (im ctx "fill"))
+
 (defn fill-rect
   "Draws a rectangle filled according fill-style without modifying the current
    path. Positive values of w and h are to the right and down, respectively.
@@ -54,10 +79,29 @@
   [ctx [x y] [w h]]
   (im ctx "fillRect" x y w h))
 
+(defn rect
+  "Adds a rectangle to the current path."                   ; TODO doc all values can be negative like in fill-rect, or remove from fill-rect's doc if it's a general pattern
+  [ctx [x y] [w h]]
+  (im ctx "rect" x y w h))
+
 (defn reset-transform
   "Resets the current transformation matrix to the identity matrix."
   [ctx]
   (im ctx "resetTransform"))
+
+(defn stroke                                                ; TODO implement other arities
+  "Outlines the current or given path with the current stroke-style. Strokes
+   are aligned to the center of a path (half of the stroke is drawn on the
+   inner side, and half on the outer side) and drawn using the non-zero winding
+   rule (path intersections will still get filled)."
+  [ctx]
+  (im ctx "stroke"))
+
+(defn stroke-rect
+  "Draws an outlined rectangle according to stroke-style without modifying the
+   current path."                                           ; TODO same as rect
+  [ctx [x y] [w h]]
+  (im ctx "strokeRect" x y w h))
 
 (defn translate
   "Adds a translation transformation to the current matrix by moving the canvas
