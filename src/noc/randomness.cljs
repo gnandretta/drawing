@@ -50,3 +50,23 @@
             (c/stroke)))
       (<! (a/timeout (/ 1000 fps)))
       (recur (update counts (rand-int n) inc)))))
+
+(defn random-walk-tends-to-right [& {:keys [size fps]
+                                     :or   {size [640 420]
+                                            fps  30}}]
+  (let [step (fn [[x y]]
+               (condp >= (rand)
+                 0.4 [(inc x) y]
+                 0.6 [(dec x) y]
+                 0.8 [x (inc y)]
+                 1 [x (dec y)]))
+        ctx (c/ctx (c/create "random-walk-tends-to-right" size))]
+    (-> ctx
+        (c/set-fill-style "#fff")
+        (c/fill-rect [0 0] size))
+    (go-loop [p (mapv (partial * 0.5) size)]
+      (-> ctx
+          (c/set-fill-style "#000")
+          (c/fill-rect p [1 1]))
+      (<! (a/timeout (/ 1000 fps)))
+      (recur (step p)))))
