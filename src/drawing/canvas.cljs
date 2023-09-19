@@ -101,6 +101,9 @@
     (resize canvas size)                                    ; TODO not sure about resizing during creation
     canvas))
 
+(defn ctx [canvas]
+  (.getContext canvas "2d"))
+
 (defn print                                                 ; TODO not sure about the name
   [f & {:keys [id size paper dpi margin]
         :or   {id     (-> (meta f) (get :name "drawing") name)
