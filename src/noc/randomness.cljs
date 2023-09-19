@@ -27,3 +27,26 @@
           (c/fill-rect p [1 1]))
       (<! (a/timeout (/ 1000 fps)))
       (recur (step p)))))
+
+(defn random-distribution [& {:keys [size fps n]
+                              :or   {size [640 420]
+                                     fps  30
+                                     n    20}}]
+  (let [ctx (c/ctx (c/create "random-distribution" size))
+        [w h] size
+        w-bar (/ w n)]
+    (go-loop [counts (vec (repeat n 0))]
+      (-> ctx
+          (c/set-fill-style "#fff")
+          (c/fill-rect [0 0] size)
+          (c/set-fill-style "#7f7f7f")
+          (c/set-stroke-style "#000")
+          (c/set-line-width 2))
+      (doseq [i (range 0 n)]
+        (-> ctx
+            (c/begin-path)
+            (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
+            (c/fill)
+            (c/stroke)))
+      (<! (a/timeout (/ 1000 fps)))
+      (recur (update counts (rand-int n) inc)))))
