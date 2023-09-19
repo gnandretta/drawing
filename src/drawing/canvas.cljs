@@ -73,9 +73,9 @@
   (im ctx "fill"))
 
 (defn fill-rect
-  "Draws a rectangle filled according fill-style without modifying the current
-   path. Positive values of w and h are to the right and down, respectively.
-   Negative values to the left and up."
+  "Draws a rectangle filled according to fill-style without modifying the
+   current path. Positive values of w and h are to the right and down,
+   respectively. Negative values to the left and up."
   [ctx [x y] [w h]]
   (im ctx "fillRect" x y w h))
 
