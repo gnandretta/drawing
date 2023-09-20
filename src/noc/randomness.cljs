@@ -92,9 +92,9 @@
           (<! (a/timeout (/ 1000 fps)))))))
 
 (defn accept-reject-distribution [& {:keys [size fps n]
-                              :or   {size [640 420]
-                                     fps  30
-                                     n    20}}]
+                                     :or   {size [640 420]
+                                            fps  30
+                                            n    20}}]
   (let [accept-reject (fn [] (loop []
                                (let [r1 (rand)
                                      r2 (rand)]
