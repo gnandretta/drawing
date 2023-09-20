@@ -20,14 +20,14 @@
 (defn w
   "Multiples the drawing's width by the given numbers, returning a proportional
    width."
-  [& n]
-  (apply * (first (:content *dimensions*)) n))
+  [& ns]
+  (apply * (first (:content *dimensions*)) ns))
 
 (defn h
   "Multiples the drawing's height by the given numbers, returning a proportional
    height."
-  [& n]
-  (apply * (second (:content *dimensions*)) n))
+  [& ns]
+  (apply * (second (:content *dimensions*)) ns))
 
 (defn mm [x]
   (let [f #(js/Math.round (/ (* % *dpi*) 25.4))]            ; 1 inch = 25.4 mm
