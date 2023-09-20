@@ -18,7 +18,7 @@
                     (+ y (js/Math.floor (rand 3)) -1)])
         #_#_step (fn [[x y]]                                ; infinite choices
                    [(+ x (rand 2) -1) (+ y (rand 2) -1)])
-        ctx (c/ctx (c/create "random-walker" size))]
+        ctx (c/ctx (c/create "traditional-random-walk" size))]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
