@@ -9,10 +9,13 @@
 (def paper-mms {:a3 [297 420]})
 
 (defn d
-  "Multiplies the drawing's dimensions by the given numbers, returning
-   proportional dimensions."
-  [& n]
-  (map (apply partial * n) (:content *dimensions*)))
+  "Multiplies the drawing's dimensions by each the given numbers or dimensions,
+   returning proportional dimensions."
+  [& xs]
+  (reduce (fn [acc x]
+            (mapv * acc (if (vector? x) x [x x])))
+          (:content *dimensions*)
+          xs))
 
 (defn w
   "Multiples the drawing's width by the given numbers, returning a proportional
