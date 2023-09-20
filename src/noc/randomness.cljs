@@ -1,6 +1,7 @@
 (ns noc.randomness
-  (:require [cljs.core.async :as a :refer [<!] :refer-macros [go-loop]]
-            [drawing.canvas :as c]))
+  (:require [cljs.core.async :as a :refer [<!] :refer-macros [go go-loop]]
+            [drawing.canvas :as c]
+            [drawing.math :as m]))
 
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 420]
@@ -70,3 +71,22 @@
           (c/fill-rect p [1 1]))
       (<! (a/timeout (/ 1000 fps)))
       (recur (step p)))))
+
+(defn gaussian-distribution [& {:keys [size fps]
+                                :or   {size [640 240]
+                                       fps  30}}]
+  (let [[w h] size
+        ctx (c/ctx (c/create "gaussian-distribution" size))]
+    (-> ctx
+        (c/set-fill-style "#fff")
+        (c/fill-rect [0 0] size))
+    (go (while true
+          (-> ctx
+              (c/set-fill-style "rgba(0,0,0,0.005)")
+              (c/arc (+ (* (m/rand-std-norm) 60) (* w 0.5))
+                     (* h 0.5)
+                     8
+                     0
+                     (* js/Math.PI 2))
+              (c/fill))
+          (<! (a/timeout (/ 1000 fps)))))))
