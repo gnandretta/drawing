@@ -119,3 +119,26 @@
             (c/stroke)))
       (<! (a/timeout (/ 1000 fps)))
       (recur (update counts (js/Math.floor (* n (accept-reject))) inc)))))
+
+(defn perlin-noise-walk [& {:keys [size fps]
+                            :or   {size [640 240]
+                                   fps  30}}]
+  (let [[w h] size
+        ctx (c/ctx (c/create "perlin-noise-walk" size))]
+    (-> ctx
+        (c/set-fill-style "#fff")
+        (c/fill-rect [0 0] size))
+    (go-loop [tx 0 ty 10000]
+      (-> ctx
+          (c/set-fill-style "rgb(127,127,127)")
+          (c/set-line-width 2)
+          (c/begin-path)
+          (c/arc (* w (+ 1 (m/noise tx)) 0.5)
+                 (* h (+ 1 (m/noise ty)) 0.5)
+                 24
+                 0
+                 (* 2 js/Math.PI))
+          (c/fill)
+          (c/stroke))
+      (<! (a/timeout (/ 1000 fps)))
+      (recur (+ tx 0.01) (+ ty 0.01)))))
