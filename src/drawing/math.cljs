@@ -1,5 +1,6 @@
 (ns drawing.math
-  (:require ["random$default" :as random]))
+  (:require ["random$default" :as random]
+            ["simplex-noise" :refer [createNoise2D]]))
 
 (defn adj
   "Given the acute angle of a right triangle and the length of its hypotenuse,
@@ -39,3 +40,11 @@
    another normal distribution."
   []
   (rand-std-norm-generator))
+
+(defonce noise-2d-generator (createNoise2D))                ; TODO see alea npm module
+
+(defn noise
+  "Returns a simplex noise value (in the range [-1,1]) at the specified
+   coordinates."
+  [t]
+  (noise-2d-generator t 0))

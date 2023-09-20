@@ -6,6 +6,7 @@
     "shadow-cljs": "2.25.3"
   },
   "dependencies": {
-    "random": "^4.1.0"
+    "random": "^4.1.0",
+    "simplex-noise": "^4.0.1"
   }
 }
