@@ -90,3 +90,32 @@
                      (* js/Math.PI 2))
               (c/fill))
           (<! (a/timeout (/ 1000 fps)))))))
+
+(defn accept-reject-distribution [& {:keys [size fps n]
+                              :or   {size [640 420]
+                                     fps  30
+                                     n    20}}]
+  (let [accept-reject (fn [] (loop []
+                               (let [r1 (rand)
+                                     r2 (rand)]
+                                 (if (< r2 r1)
+                                   r1
+                                   (recur)))))
+        ctx (c/ctx (c/create "accept-reject-distribution" size))
+        [w h] size
+        w-bar (/ w n)]
+    (go-loop [counts (vec (repeat n 0))]
+      (-> ctx
+          (c/set-fill-style "#fff")
+          (c/fill-rect [0 0] size)
+          (c/set-fill-style "#7f7f7f")
+          (c/set-stroke-style "#000")
+          (c/set-line-width 2))
+      (doseq [i (range 0 n)]
+        (-> ctx
+            (c/begin-path)
+            (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
+            (c/fill)
+            (c/stroke)))
+      (<! (a/timeout (/ 1000 fps)))
+      (recur (update counts (js/Math.floor (* n (accept-reject))) inc)))))
