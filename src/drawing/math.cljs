@@ -1,4 +1,5 @@
-(ns drawing.math)
+(ns drawing.math
+  (:require ["random$default" :as random]))
 
 (defn adj
   "Given the acute angle of a right triangle and the length of its hypotenuse,
@@ -29,3 +30,12 @@
         (if (< n e)
           k
           (recur eks))))))
+
+(defonce rand-std-norm-generator (.normal random))          ; TODO allow to set (and get?) a seed
+
+(defn rand-std-norm
+  "Returns a random floating point number sampled from a standard (μ=0, σ=1)
+   normal distribution. Use (+ (* σ (rand-std-norm) μ) to obtain a sample from
+   another normal distribution."
+  []
+  (rand-std-norm-generator))
