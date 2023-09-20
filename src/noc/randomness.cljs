@@ -4,7 +4,7 @@
             [drawing.math :as m]))
 
 (defn traditional-random-walk [& {:keys [size fps]
-                                  :or   {size [640 420]
+                                  :or   {size [640 240]
                                          fps  30}}]
   (let [step (fn [[x y]]                                    ; 4 choices
                (let [choice (js/Math.floor (rand 4))]
@@ -30,7 +30,7 @@
       (recur (step p)))))
 
 (defn random-distribution [& {:keys [size fps n]
-                              :or   {size [640 420]
+                              :or   {size [640 240]
                                      fps  30
                                      n    20}}]
   (let [ctx (c/ctx (c/create "random-distribution" size))
@@ -53,7 +53,7 @@
       (recur (update counts (rand-int n) inc)))))
 
 (defn random-walk-tends-to-right [& {:keys [size fps]
-                                     :or   {size [640 420]
+                                     :or   {size [640 240]
                                             fps  30}}]
   (let [step (fn [[x y]]
                (condp >= (rand)
@@ -92,7 +92,7 @@
           (<! (a/timeout (/ 1000 fps)))))))
 
 (defn accept-reject-distribution [& {:keys [size fps n]
-                                     :or   {size [640 420]
+                                     :or   {size [640 240]
                                             fps  30
                                             n    20}}]
   (let [accept-reject (fn [] (loop []
