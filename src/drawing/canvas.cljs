@@ -129,14 +129,16 @@
                   :content [(- w ml mr) (- h mt mb)]}
      :margin     margin}))
 
-(defn- draw-margin [ctx [width height] [t r b l]]           ; this isn't drawing anything when there's no margin
-  (-> ctx
-      (reset-transform)
-      (set-fill-style color)
-      (fill-rect [0 0] [width t])
-      (fill-rect [(- width r) t] [r (- height t b)])
-      (fill-rect [0 (- height b)] [width b])
-      (fill-rect [0 t] [l (- height t b)])))
+(defn- draw-margin                                          ; this isn't drawing anything when there's no margin
+  ([ctx size margin] (draw-margin ctx size margin "white"))
+  ([ctx [width height] [t r b l] color]
+   (-> ctx
+       (reset-transform)
+       (set-fill-style color)
+       (fill-rect [0 0] [width t])
+       (fill-rect [(- width r) t] [r (- height t b)])
+       (fill-rect [0 (- height b)] [width b])
+       (fill-rect [0 t] [l (- height t b)]))))
 
 (defn resize [canvas size]
   (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
@@ -166,7 +168,9 @@
      :d           (partial d content)                       ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
      :w           (partial w width)
      :h           (partial h height)
-     :draw-margin (fn [ctx] (draw-margin ctx canvas margin))})) ; TODO is this fn worth it?
+     :draw-margin (fn                                       ; TODO is this fn worth it?
+                    ([ctx] (draw-margin ctx canvas margin))
+                    ([ctx color] (draw-margin ctx canvas margin color)))}))
 
 #_(defn print                                               ; TODO not sure about the name
     [f & {:keys [id size paper dpi margin]
