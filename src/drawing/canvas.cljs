@@ -29,11 +29,10 @@
   [& ns]
   (apply * (second (:content *dimensions*)) ns))
 
-(defn mm [x]
-  (let [f #(js/Math.round (/ (* % *dpi*) 25.4))]            ; 1 inch = 25.4 mm
-    (if (number? x)
-      (f x)
-      (mapv f x))))
+(defn mm
+  ([x] (mm *dpi* x))
+  ([dpi x] (let [f #(js/Math.round (/ (* % dpi) 25.4))]     ; 1 inch = 25.4 mm
+             (if (number? x) (f x) (mapv f x)))))
 
 (defn- sp [ctx nm value]                                    ; short for set property
   (object/set ctx nm value)
