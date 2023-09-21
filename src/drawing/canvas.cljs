@@ -3,8 +3,6 @@
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
-(def ^:dynamic *dpi* nil)
-
 (def paper-mms {:a3 [297 420]})
 
 (defn d
@@ -28,10 +26,9 @@
   [height & ns]
   (apply * height ns))
 
-(defn mm
-  ([x] (mm *dpi* x))
-  ([dpi x] (let [f #(js/Math.round (/ (* % dpi) 25.4))]     ; 1 inch = 25.4 mm
-             (if (number? x) (f x) (mapv f x)))))
+(def mm [dpi x]
+  (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
+    (if (number? x) (f x) (mapv f x))))
 
 (defn- sp [ctx nm value]                                    ; short for set property
   (object/set ctx nm value)
