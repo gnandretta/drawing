@@ -3,7 +3,6 @@
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
-(def ^:dynamic *dimensions* nil)
 (def ^:dynamic *dpi* nil)
 
 (def paper-mms {:a3 [297 420]})
@@ -11,23 +10,23 @@
 (defn d
   "Multiplies the drawing's dimensions by each the given numbers or dimensions,
    returning proportional dimensions."
-  [& xs]
+  [size & xs]
   (reduce (fn [acc x]
             (mapv * acc (if (vector? x) x [x x])))
-          (:content *dimensions*)
+          size
           xs))
 
 (defn w
   "Multiples the drawing's width by the given numbers, returning a proportional
    width."
-  [& ns]
-  (apply * (first (:content *dimensions*)) ns))
+  [width & ns]
+  (apply * width ns))
 
 (defn h
   "Multiples the drawing's height by the given numbers, returning a proportional
    height."
-  [& ns]
-  (apply * (second (:content *dimensions*)) ns))
+  [height & ns]
+  (apply * height ns))
 
 (defn mm
   ([x] (mm *dpi* x))
@@ -133,15 +132,14 @@
                   :content [(- w ml mr) (- h mt mb)]}
      :margin     margin}))
 
-(defn- draw-margin [ctx [t r b l]]                          ; this isn't drawing anything when there's no margin
-  (let [[cw ch] (:canvas *dimensions*)]
-    (-> ctx
-        (reset-transform)
-        (set-fill-style "white")
-        (fill-rect [0 0] [cw t])
-        (fill-rect [(- cw r) t] [r (- ch t b)])
-        (fill-rect [0 (- ch b)] [cw b])
-        (fill-rect [0 t] [l (- ch t b)]))))
+(defn- draw-margin [ctx [width height] [t r b l]]           ; this isn't drawing anything when there's no margin
+  (-> ctx
+      (reset-transform)
+      (set-fill-style color)
+      (fill-rect [0 0] [width t])
+      (fill-rect [(- width r) t] [r (- height t b)])
+      (fill-rect [0 (- height b)] [width b])
+      (fill-rect [0 t] [l (- height t b)])))
 
 (defn resize [canvas size]
   (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
@@ -168,10 +166,10 @@
     {:dimensions  {:canvas canvas :content content}
      :margin      margin
      :top-left    [mt mr]                                   ; TODO maybe add a corners/edges map with each of them?
-     :d           (fn [& xs] (binding [*dimensions* {:content content}] (apply d xs))) ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
-     :w           (fn [& ns] (binding [*dimensions* {:content content}] (apply w ns)))
-     :h           (fn [& ns] (binding [*dimensions* {:content content}] (apply h ns)))
-     :draw-margin (fn [ctx] (binding [*dimensions* {:canvas canvas}] (draw-margin ctx margin)))})) ; TODO is this fn worth it?
+     :d           (partial d content)                       ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
+     :w           (partial w width)
+     :h           (partial h height)
+     :draw-margin (fn [ctx] (draw-margin ctx canvas margin))})) ; TODO is this fn worth it?
 
 #_(defn print                                               ; TODO not sure about the name
     [f & {:keys [id size paper dpi margin]
