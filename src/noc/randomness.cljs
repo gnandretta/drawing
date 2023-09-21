@@ -141,4 +141,4 @@
           (c/fill)
           (c/stroke))
       (<! (a/timeout (/ 1000 fps)))
-      (recur (+ tx 0.01) (+ ty 0.01)))))
+      (recur (+ tx 0.006) (+ ty 0.006)))))
