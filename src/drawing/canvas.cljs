@@ -156,6 +156,23 @@
 (defn ctx [canvas]
   (.getContext canvas "2d"))
 
+(defn layout [& {:keys [dpi margin paper size]
+                 :or   {size   [600 600]
+                        margin [0]
+                        dpi    300}}]
+  (let [[mt mr mb ml :as margin] (cond->> (expand-margin margin) paper (mm dpi)) ; TODO don't assume paper margin in mm
+        [width height :as canvas] (if paper
+                                    (mm dpi (cond-> paper symbol? paper-mms))
+                                    size)
+        content [(- width ml mr) (- height mt mb)]]
+    {:dimensions  {:canvas canvas :content content}
+     :margin      margin
+     :top-left    [mt mr]                                   ; TODO maybe add a corners/edges map with each of them?
+     :d           (fn [& xs] (binding [*dimensions* {:content content}] (apply d xs))) ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
+     :w           (fn [& ns] (binding [*dimensions* {:content content}] (apply w ns)))
+     :h           (fn [& ns] (binding [*dimensions* {:content content}] (apply h ns)))
+     :draw-margin (fn [ctx] (binding [*dimensions* {:canvas canvas}] (draw-margin ctx margin)))})) ; TODO is this fn worth it?
+
 (defn print                                                 ; TODO not sure about the name
   [f & {:keys [id size paper dpi margin]
         :or   {id     (-> (meta f) (get :name "drawing") name)
