@@ -173,18 +173,18 @@
      :h           (fn [& ns] (binding [*dimensions* {:content content}] (apply h ns)))
      :draw-margin (fn [ctx] (binding [*dimensions* {:canvas canvas}] (draw-margin ctx margin)))})) ; TODO is this fn worth it?
 
-(defn print                                                 ; TODO not sure about the name
-  [f & {:keys [id size paper dpi margin]
-        :or   {id     (-> (meta f) (get :name "drawing") name)
-               size   [600 600]
-               margin [0]
-               dpi    300}
-        :as   kwargs}]
-  (binding [*dpi* dpi]
-    (let [{:keys [dimensions margin]} (compute-layout size paper margin)
-          canvas (create id (:canvas dimensions))
-          ctx (.getContext canvas "2d")]
-      (binding [*dimensions* dimensions]
-        (let [[mt _ _ ml] margin] (translate ctx [mt ml]))
-        ((if (var? f) @f f) (assoc kwargs :ctx ctx))
-        (draw-margin ctx margin)))))
+#_(defn print                                               ; TODO not sure about the name
+    [f & {:keys [id size paper dpi margin]
+          :or   {id     (-> (meta f) (get :name "drawing") name)
+                 size   [600 600]
+                 margin [0]
+                 dpi    300}
+          :as   kwargs}]
+    (binding [*dpi* dpi]
+      (let [{:keys [dimensions margin]} (compute-layout size paper margin)
+            canvas (create id (:canvas dimensions))
+            ctx (.getContext canvas "2d")]
+        (binding [*dimensions* dimensions]
+          (let [[mt _ _ ml] margin] (translate ctx [mt ml]))
+          ((if (var? f) @f f) (assoc kwargs :ctx ctx))
+          (draw-margin ctx margin)))))
