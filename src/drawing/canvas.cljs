@@ -26,7 +26,7 @@
   [height & ns]
   (apply * height ns))
 
-(def mm [dpi x]
+(defn mm [dpi x]
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))
 
@@ -120,10 +120,10 @@
     3 (let [[t lr b] v] [t lr b lr])
     v))
 
-(defn- compute-layout [size paper margin]
-  (let [[mt mr mb ml :as margin] (cond-> (expand-margin margin) paper mm)
+(defn- compute-layout [size paper dpi margin]
+  (let [[mt mr mb ml :as margin] (cond->> (expand-margin margin) paper (mm dpi))
         [w h :as canvas] (if paper
-                           (mm (cond-> paper symbol? paper-mms))
+                           (mm dpi (cond-> paper symbol? paper-mms))
                            size)]
     {:dimensions {:canvas  canvas
                   :content [(- w ml mr) (- h mt mb)]}
@@ -180,7 +180,7 @@
                  dpi    300}
           :as   kwargs}]
     (binding [*dpi* dpi]
-      (let [{:keys [dimensions margin]} (compute-layout size paper margin)
+      (let [{:keys [dimensions margin]} (compute-layout size paper dpi margin)
             canvas (create id (:canvas dimensions))
             ctx (.getContext canvas "2d")]
         (binding [*dimensions* dimensions]
