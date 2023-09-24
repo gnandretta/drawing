@@ -1,5 +1,4 @@
 (ns drawing.canvas
-  (:refer-clojure :exclude [print])
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
