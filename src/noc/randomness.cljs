@@ -1,12 +1,13 @@
 (ns noc.randomness
-  (:require [cljs.core.async :as a :refer [<!] :refer-macros [go go-loop]]
+  (:require [cljs.core.async :as a :refer [<! >!] :refer-macros [go]]
             [drawing.canvas :as c]
             [drawing.math :as m]))
 
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 240]
                                          fps  30}}]
-  (let [step (fn [[x y]]                                    ; 4 choices
+  (let [in (a/chan)
+        step (fn [[x y]]                                    ; 4 choices
                (let [choice (js/Math.floor (rand 4))]
                  (case choice
                    0 [(inc x) y]
@@ -22,55 +23,64 @@
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
-    (go-loop [p (mapv (partial * 0.5) size)]
-      (-> ctx
-          (c/set-fill-style "#000")
-          (c/fill-rect p [1 1]))
-      (<! (a/timeout (/ 1000 fps)))
-      (recur (step p)))))
+    (go (loop [p (mapv (partial * 0.5) size)]
+          (>! in p)
+          (recur (step p))))
+    (go (while true
+          (-> ctx
+              (c/set-fill-style "#000")
+              (c/fill-rect (<! in) [1 1]))
+          (<! (a/timeout (/ 1000 fps)))))))
 
 (defn random-distribution [& {:keys [size fps n]
                               :or   {size [640 240]
                                      fps  30
                                      n    20}}]
-  (let [ctx (c/ctx (c/create "random-distribution" size))
+  (let [in (a/chan)
+        ctx (c/ctx (c/create "random-distribution" size))
         [w h] size
         w-bar (/ w n)]
-    (go-loop [counts (vec (repeat n 0))]
-      (-> ctx
-          (c/set-fill-style "#fff")
-          (c/fill-rect [0 0] size)
-          (c/set-fill-style "#7f7f7f")
-          (c/set-stroke-style "#000")
-          (c/set-line-width 2))
-      (doseq [i (range 0 n)]
-        (-> ctx
-            (c/begin-path)
-            (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
-            (c/fill)
-            (c/stroke)))
-      (<! (a/timeout (/ 1000 fps)))
-      (recur (update counts (rand-int n) inc)))))
+    (go (loop [counts (vec (repeat n 0))]
+          (>! in counts)
+          (recur (update counts (rand-int n) inc))))
+    (go (while true
+          (-> ctx
+              (c/set-fill-style "#fff")
+              (c/fill-rect [0 0] size)
+              (c/set-fill-style "#7f7f7f")
+              (c/set-stroke-style "#000")
+              (c/set-line-width 2))
+          (let [counts (<! in)]
+            (doseq [i (range 0 n)]
+              (-> ctx
+                  (c/begin-path)
+                  (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
+                  (c/fill)
+                  (c/stroke))))
+          (<! (a/timeout (/ 1000 fps)))))))
 
 (defn random-walk-tends-to-right [& {:keys [size fps]
                                      :or   {size [640 240]
                                             fps  30}}]
-  (let [step (fn [[x y]]
+  (let [in (a/chan)
+        step (fn [[x y]]
                (condp >= (rand)
                  0.4 [(inc x) y]
                  0.6 [(dec x) y]
                  0.8 [x (inc y)]
                  1 [x (dec y)]))
         ctx (c/ctx (c/create "random-walk-tends-to-right" size))]
+    (go (loop [p (mapv (partial * 0.5) size)]
+          (>! in p)
+          (recur (step p))))
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
-    (go-loop [p (mapv (partial * 0.5) size)]
-      (-> ctx
-          (c/set-fill-style "#000")
-          (c/fill-rect p [1 1]))
-      (<! (a/timeout (/ 1000 fps)))
-      (recur (step p)))))
+    (go (while true
+          (-> ctx
+              (c/set-fill-style "#000")
+              (c/fill-rect (<! in) [1 1]))
+          (<! (a/timeout (/ 1000 fps)))))))
 
 (defn gaussian-distribution [& {:keys [size fps]
                                 :or   {size [640 240]
@@ -101,44 +111,49 @@
                                  (if (< r2 r1)
                                    r1
                                    (recur)))))
+        in (a/chan)
         ctx (c/ctx (c/create "accept-reject-distribution" size))
         [w h] size
         w-bar (/ w n)]
-    (go-loop [counts (vec (repeat n 0))]
-      (-> ctx
-          (c/set-fill-style "#fff")
-          (c/fill-rect [0 0] size)
-          (c/set-fill-style "#7f7f7f")
-          (c/set-stroke-style "#000")
-          (c/set-line-width 2))
-      (doseq [i (range 0 n)]
-        (-> ctx
-            (c/begin-path)
-            (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
-            (c/fill)
-            (c/stroke)))
-      (<! (a/timeout (/ 1000 fps)))
-      (recur (update counts (js/Math.floor (* n (accept-reject))) inc)))))
+    (go (loop [counts (vec (repeat n 0))]
+          (>! in counts)
+          (recur (update counts (js/Math.floor (* n (accept-reject))) inc))))
+    (go (while true
+          (-> ctx
+              (c/set-fill-style "#fff")
+              (c/fill-rect [0 0] size)
+              (c/set-fill-style "#7f7f7f")
+              (c/set-stroke-style "#000")
+              (c/set-line-width 2))
+          (let [counts (<! in)]
+            (doseq [i (range 0 n)]
+              (-> ctx
+                  (c/begin-path)
+                  (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
+                  (c/fill)
+                  (c/stroke))))
+          (<! (a/timeout (/ 1000 fps)))))))
 
 (defn perlin-noise-walk [& {:keys [size fps]
                             :or   {size [640 240]
                                    fps  30}}]
-  (let [[w h] size
+  (let [in (a/chan)
+        [w h] size
         ctx (c/ctx (c/create "perlin-noise-walk" size))]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
-    (go-loop [tx 0 ty 10000]
-      (-> ctx
-          (c/set-fill-style "rgb(127,127,127)")
-          (c/set-line-width 2)
-          (c/begin-path)
-          (c/arc (* w (+ 1 (m/noise tx)) 0.5)
-                 (* h (+ 1 (m/noise ty)) 0.5)
-                 24
-                 0
-                 (* 2 js/Math.PI))
-          (c/fill)
-          (c/stroke))
-      (<! (a/timeout (/ 1000 fps)))
-      (recur (+ tx 0.006) (+ ty 0.006)))))
+    (go (loop [tx 0 ty 10000]
+          (>! in [(* w (+ 1 (m/noise tx)) 0.5)
+                  (* h (+ 1 (m/noise ty)) 0.5)])
+          (recur (+ tx 0.006) (+ ty 0.006))))
+    (go (while true
+          (let [[x y] (<! in)]
+            (-> ctx
+                (c/set-fill-style "rgb(127,127,127)")
+                (c/set-line-width 2)
+                (c/begin-path)
+                (c/arc x y 24 0 (* 2 js/Math.PI))
+                (c/fill)
+                (c/stroke))
+            (<! (a/timeout (/ 1000 fps))))))))
