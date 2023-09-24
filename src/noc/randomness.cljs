@@ -93,8 +93,7 @@
     (go (while true
           (-> ctx
               (c/set-fill-style "rgba(0,0,0,0.005)")
-              (c/arc (+ (* (m/rand-std-norm) 60) (* w 0.5))
-                     (* h 0.5)
+              (c/arc [(+ (* (m/rand-std-norm) 60) (* w 0.5)) (* h 0.5)]
                      8
                      0
                      (* js/Math.PI 2))
@@ -148,12 +147,12 @@
                   (* h (+ 1 (m/noise ty)) 0.5)])
           (recur (+ tx 0.006) (+ ty 0.006))))
     (go (while true
-          (let [[x y] (<! in)]
+          (let [p (<! in)]
             (-> ctx
                 (c/set-fill-style "rgb(127,127,127)")
                 (c/set-line-width 2)
                 (c/begin-path)
-                (c/arc x y 24 0 (* 2 js/Math.PI))
+                (c/arc p 24 0 (* 2 js/Math.PI))
                 (c/fill)
                 (c/stroke))
             (<! (a/timeout (/ 1000 fps))))))))
