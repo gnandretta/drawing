@@ -104,12 +104,8 @@
                                      :or   {size [640 240]
                                             fps  30
                                             n    20}}]
-  (let [accept-reject (fn [] (loop []
-                               (let [r1 (rand)
-                                     r2 (rand)]
-                                 (if (< r2 r1)
-                                   r1
-                                   (recur)))))
+  (let [accept-reject (fn [] (let [r1 (rand) r2 (rand)]
+                               (if (< r2 r1) r1 (recur))))
         in (a/chan)
         ctx (c/ctx (c/create "accept-reject-distribution" size))
         [w h] size
