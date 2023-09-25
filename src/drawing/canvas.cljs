@@ -92,6 +92,17 @@
   [ctx]
   (im ctx "resetTransform"))
 
+(defn restore
+  "Pops from the drawing state stack and makes it the current drawing state.
+   Does nothing if the stack is empty."
+  [ctx]
+  (im ctx "restore"))
+
+(defn save
+  "Pushes the current drawing state onto a stack."          ; TODO doc what makes the drawing state
+  [ctx]
+  (im ctx "save"))
+
 (defn stroke                                                ; TODO implement other arities
   "Outlines the current or given path with the current stroke-style. Strokes
    are aligned to the center of a path (half of the stroke is drawn on the
