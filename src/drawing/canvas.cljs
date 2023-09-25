@@ -82,6 +82,16 @@
   [ctx [x y] [w h]]
   (im ctx "fillRect" x y w h))
 
+(defn line-to
+  "Adds a straight line to the current sub-path from its last point to (x,y)."
+  [ctx [x y]]
+  (im ctx "lineTo" x y))
+
+(defn move-to
+  "Creates a new sub-path that beings at (x,y)."
+  [ctx [x y]]
+  (im ctx "moveTo" x y))
+
 (defn rect
   "Adds a rectangle to the current path."                   ; TODO doc all values can be negative like in fill-rect, or remove from fill-rect's doc if it's a general pattern
   [ctx [x y] [w h]]
