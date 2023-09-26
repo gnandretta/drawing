@@ -108,6 +108,11 @@
   [ctx]
   (im ctx "restore"))
 
+(defn rotate
+  "Adds a rotation (around the canvas origin) to the transformation matrix."
+  [ctx a]
+  (im ctx "rotate" a))
+
 (defn save
   "Pushes the current drawing state onto a stack."          ; TODO doc what makes the drawing state
   [ctx]
