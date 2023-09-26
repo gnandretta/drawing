@@ -46,5 +46,5 @@
 (defn noise
   "Returns a simplex noise value (in the range [-1,1]) at the specified
    coordinates."
-  [t]
-  (noise-2d-generator t 0))
+  [[x y]]
+  (noise-2d-generator x (if (nil? y) 0 y)))
