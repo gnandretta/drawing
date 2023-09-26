@@ -43,6 +43,11 @@
   [ctx value]
   (sp ctx "fillStyle" value))
 
+(defn set-font
+  "Sets the CSS font to use when drawing text."
+  [ctx value]
+  (sp ctx "font" value))
+
 (defn set-line-width
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
@@ -54,6 +59,18 @@
    by default."
   [ctx value]
   (sp ctx "strokeStyle" value))
+
+(defn set-text-align
+  "Sets the text alignment. \"start\" by default, other possible values are
+   \"end\", \"left\", \"right\", and \"center\"."
+  [ctx value]
+  (sp ctx "textAlign" value))
+
+(defn set-text-baseline
+  "Sets the text baseline. \"alphabetic\" by default, other possible values are
+   \"top\", \"hanging\", \"middle\", \"ideographic\", and \"bottom\"."
+  [ctx value]
+  (sp ctx "textBaseline" value))
 
 (defn arc
   "Adds a circular arc centered at (x,y) to the current sub-path, clockwise by
@@ -82,10 +99,22 @@
   [ctx [x y] [w h]]
   (im ctx "fillRect" x y w h))
 
+(defn fill-text                                             ; TODO implement arity with max-width
+  "Draws text at (x,y) using the font and text layout defined by font,
+   text-align, text-baseline and direction, and filling characters according to
+   fill-style."
+  [ctx s [x y]]
+  (im ctx "fillText" s x y))
+
 (defn line-to
   "Adds a straight line to the current sub-path from its last point to (x,y)."
   [ctx [x y]]
   (im ctx "lineTo" x y))
+
+(defn measure-text
+  "Returns an object (that implements TextMetrics) with the dimensions of s."
+  [ctx s]
+  (.measureText ctx s))
 
 (defn move-to
   "Creates a new sub-path that beings at (x,y)."
