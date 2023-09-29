@@ -197,16 +197,13 @@
 (defn- size->properties [size]
   (clj->js (zipmap [:width :height] size)))
 
-(defn resize [canvas size]
-  (dom/setProperties canvas (size->properties size)))
-
 (defn append
   ([id size] (append id size "2d"))
   ([id size ctx-type]
    (when-not (dom/getElement id)
      (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
    (let [canvas (dom/getElement id)]
-     (resize canvas size)                                   ; TODO not sure about resizing during creation
+     (dom/setProperties canvas (size->properties size))
      (.getContext canvas ctx-type))))
 
 (defn layout [& {:keys [dpi margin paper size]
