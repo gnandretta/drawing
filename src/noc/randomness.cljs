@@ -19,7 +19,7 @@
                     (+ y (js/Math.floor (rand 3)) -1)])
         #_#_step (fn [[x y]]                                ; infinite choices
                    [(+ x (rand 2) -1) (+ y (rand 2) -1)])
-        ctx (c/ctx (c/append "traditional-random-walk" size))]
+        ctx (c/append "traditional-random-walk" size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
@@ -37,7 +37,7 @@
                                      fps  30
                                      n    20}}]
   (let [in (a/chan)
-        ctx (c/ctx (c/append "random-distribution" size))
+        ctx (c/append "random-distribution" size)
         [w h] size
         w-bar (/ w n)]
     (go (loop [counts (vec (repeat n 0))]
@@ -69,7 +69,7 @@
                  0.6 [(dec x) y]
                  0.8 [x (inc y)]
                  1 [x (dec y)]))
-        ctx (c/ctx (c/append "random-walk-tends-to-right" size))]
+        ctx (c/append "random-walk-tends-to-right" size)]
     (go (loop [p (mapv (partial * 0.5) size)]
           (>! in p)
           (recur (step p))))
@@ -86,7 +86,7 @@
                                 :or   {size [640 240]
                                        fps  30}}]
   (let [[w h] size
-        ctx (c/ctx (c/append "gaussian-distribution" size))]
+        ctx (c/append "gaussian-distribution" size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
@@ -107,7 +107,7 @@
   (let [accept-reject (fn [] (let [r1 (rand) r2 (rand)]
                                (if (< r2 r1) r1 (recur))))
         in (a/chan)
-        ctx (c/ctx (c/append "accept-reject-distribution" size))
+        ctx (c/append "accept-reject-distribution" size)
         [w h] size
         w-bar (/ w n)]
     (go (loop [counts (vec (repeat n 0))]
@@ -134,7 +134,7 @@
                                    fps  30}}]
   (let [in (a/chan)
         [w h] size
-        ctx (c/ctx (c/append "perlin-noise-walk" size))]
+        ctx (c/append "perlin-noise-walk" size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))

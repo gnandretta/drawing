@@ -202,10 +202,7 @@
     (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
   (let [canvas (dom/getElement id)]
     (resize canvas size)                                    ; TODO not sure about resizing during creation
-    canvas))
-
-(defn ctx [canvas]
-  (.getContext canvas "2d"))
+    (.getContext canvas "2d")))
 
 (defn layout [& {:keys [dpi margin paper size]
                  :or   {size   [600 600]
