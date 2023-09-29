@@ -207,11 +207,12 @@
 (defn append
   ([id size] (append id size default-ctx-type))
   ([id size ctx-type]
-   (when-not (dom/getElement id)
-     (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
-   (let [canvas (dom/getElement id)]
-     (dom/setProperties canvas (size->properties size))
-     (.getContext canvas ctx-type))))
+   (let [id (-> id symbol str)]                             ; ns-qualified name of a keyword (without :) or same string
+     (when-not (dom/getElement id)
+       (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
+     (let [canvas (dom/getElement id)]
+       (dom/setProperties canvas (size->properties size))
+       (.getContext canvas ctx-type)))))
 
 (defn layout [& {:keys [dpi margin paper size]
                  :or   {size   [600 600]

@@ -13,7 +13,7 @@
    drawn in the same coordinate and that some points may not fit the canvas
    (when fho returns a number large enough)."
   [& {:keys [id size r c p fhi fho bg fgs]
-      :or   {id  "drawing"
+      :or   {id  ::drawing
              r   0.3
              c   45000
              p   0.7
