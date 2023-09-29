@@ -194,8 +194,11 @@
        (fill-rect [0 (- height b)] [width b])
        (fill-rect [0 t] [l (- height t b)]))))
 
+(defn- size->properties [size]
+  (clj->js (zipmap [:width :height] size)))
+
 (defn resize [canvas size]
-  (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
+  (dom/setProperties canvas (size->properties size)))
 
 (defn append
   ([id size] (append id size "2d"))
