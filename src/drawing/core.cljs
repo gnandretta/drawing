@@ -25,7 +25,7 @@
                   "rgb(57,0,3)"      2
                   "rgb(255,195,190)" 2
                   "rgb(255,255,255)" 1}}}]
-  (let [ctx (c/ctx (c/create id size))
+  (let [ctx (c/ctx (c/append id size))
         {:keys [d w]} (c/layout :size size)]
     (-> ctx
         (c/set-fill-style bg)

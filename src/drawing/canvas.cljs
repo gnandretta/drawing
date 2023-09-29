@@ -197,7 +197,7 @@
 (defn resize [canvas size]
   (dom/setProperties canvas (clj->js (zipmap [:width :height] size))))
 
-(defn create [id size]
+(defn append [id size]
   (when-not (dom/getElement id)
     (dom/append js/document.body (dom/createDom "canvas" #js {:id id})))
   (let [canvas (dom/getElement id)]
@@ -235,7 +235,7 @@
           :as   kwargs}]
     (binding [*dpi* dpi]
       (let [{:keys [dimensions margin]} (compute-layout size paper dpi margin)
-            canvas (create id (:canvas dimensions))
+            canvas (append id (:canvas dimensions))
             ctx (.getContext canvas "2d")]
         (binding [*dimensions* dimensions]
           (let [[mt _ _ ml] margin] (translate ctx [mt ml]))
