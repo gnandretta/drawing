@@ -197,6 +197,11 @@
 (defn- size->properties [size]
   (clj->js (zipmap [:width :height] size)))
 
+(defn create
+  ([size] (create size "2d"))
+  ([size ctx-type]
+   (.getContext (dom/createDom "canvas" (size->properties size)) ctx-type)))
+
 (defn append
   ([id size] (append id size "2d"))
   ([id size ctx-type]
