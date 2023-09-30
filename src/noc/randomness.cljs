@@ -1,12 +1,12 @@
 (ns noc.randomness
-  (:require [cljs.core.async :as a :refer [<! >!] :refer-macros [go]]
+  (:require [cljs.core.async :refer [<! >! chan timeout] :refer-macros [go]]
             [drawing.canvas :as c]
             [drawing.math :as m]))
 
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 240]
                                          fps  30}}]
-  (let [in (a/chan)
+  (let [in (chan)
         step (fn [[x y]]                                    ; 4 choices
                (let [choice (js/Math.floor (rand 4))]
                  (case choice
@@ -30,13 +30,13 @@
           (-> ctx
               (c/set-fill-style "#000")
               (c/fill-rect (<! in) [1 1]))
-          (<! (a/timeout (/ 1000 fps)))))))
+          (<! (timeout (/ 1000 fps)))))))
 
 (defn random-distribution [& {:keys [size fps n]
                               :or   {size [640 240]
                                      fps  30
                                      n    20}}]
-  (let [in (a/chan)
+  (let [in (chan)
         ctx (c/append "random-distribution" size)
         [w h] size
         w-bar (/ w n)]
@@ -57,12 +57,12 @@
                   (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
                   (c/fill)
                   (c/stroke))))
-          (<! (a/timeout (/ 1000 fps)))))))
+          (<! (timeout (/ 1000 fps)))))))
 
 (defn random-walk-tends-to-right [& {:keys [size fps]
                                      :or   {size [640 240]
                                             fps  30}}]
-  (let [in (a/chan)
+  (let [in (chan)
         step (fn [[x y]]
                (condp >= (rand)
                  0.4 [(inc x) y]
@@ -80,7 +80,7 @@
           (-> ctx
               (c/set-fill-style "#000")
               (c/fill-rect (<! in) [1 1]))
-          (<! (a/timeout (/ 1000 fps)))))))
+          (<! (timeout (/ 1000 fps)))))))
 
 (defn gaussian-distribution [& {:keys [size fps]
                                 :or   {size [640 240]
@@ -98,7 +98,7 @@
                      0
                      (* js/Math.PI 2))
               (c/fill))
-          (<! (a/timeout (/ 1000 fps)))))))
+          (<! (timeout (/ 1000 fps)))))))
 
 (defn accept-reject-distribution [& {:keys [size fps n]
                                      :or   {size [640 240]
@@ -106,7 +106,7 @@
                                             n    20}}]
   (let [accept-reject (fn [] (let [r1 (rand) r2 (rand)]
                                (if (< r2 r1) r1 (recur))))
-        in (a/chan)
+        in (chan)
         ctx (c/append "accept-reject-distribution" size)
         [w h] size
         w-bar (/ w n)]
@@ -127,12 +127,12 @@
                   (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
                   (c/fill)
                   (c/stroke))))
-          (<! (a/timeout (/ 1000 fps)))))))
+          (<! (timeout (/ 1000 fps)))))))
 
 (defn perlin-noise-walk [& {:keys [size fps]
                             :or   {size [640 240]
                                    fps  30}}]
-  (let [in (a/chan)
+  (let [in (chan)
         [w h] size
         ctx (c/append "perlin-noise-walk" size)]
     (-> ctx
@@ -151,4 +151,4 @@
                 (c/arc p 24 0 (* 2 js/Math.PI))
                 (c/fill)
                 (c/stroke))
-            (<! (a/timeout (/ 1000 fps))))))))
+            (<! (timeout (/ 1000 fps))))))))
