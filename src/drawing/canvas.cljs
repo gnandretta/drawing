@@ -29,10 +29,6 @@
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))
 
-(defn- sp [ctx nm value]                                    ; short for set property
-  (object/set ctx nm value)
-  ctx)
-
 (defn- im [ctx nm & args]                                   ; short for invoke method
   (.apply (object/get ctx nm) ctx (into-array args))
   ctx)
@@ -41,36 +37,42 @@
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
   [ctx value]
-  (sp ctx "fillStyle" value))
+  (object/set ctx "fillStyle" value)
+  ctx)
 
 (defn set-font
   "Sets the CSS font to use when drawing text."
   [ctx value]
-  (sp ctx "font" value))
+  (object/set ctx "font" value)
+  ctx)
 
 (defn set-line-width
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
   [ctx value]
-  (sp ctx "lineWidth" value))
+  (object/set "lineWidth" value)
+  ctx)
 
 (defn set-stroke-style
   "Sets the CSS color, gradient, or pattern to use for shapes outlines. \"#000\"
    by default."
   [ctx value]
-  (sp ctx "strokeStyle" value))
+  (object/set ctx "strokeStyle" value)
+  ctx)
 
 (defn set-text-align
   "Sets the text alignment. \"start\" by default, other possible values are
    \"end\", \"left\", \"right\", and \"center\"."
   [ctx value]
-  (sp ctx "textAlign" value))
+  (object/set ctx "textAlign" value)
+  ctx)
 
 (defn set-text-baseline
   "Sets the text baseline. \"alphabetic\" by default, other possible values are
    \"top\", \"hanging\", \"middle\", \"ideographic\", and \"bottom\"."
   [ctx value]
-  (sp ctx "textBaseline" value))
+  (object/set ctx "textBaseline" value)
+  ctx)
 
 (defn arc
   "Adds a circular arc centered at (x,y) to the current sub-path, clockwise by
