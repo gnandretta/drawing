@@ -2,6 +2,13 @@
   (:require ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
+(defn lerp
+  "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
+  ([n c d] (lerp n 0 1 c d))                                ; also works when d < c
+  ([n a b c d] (+ (* (- d c)
+                     (/ (- n a) (- b a)))
+                  c)))
+
 (defn adj
   "Given the acute angle of a right triangle and the length of its hypotenuse,
    calculates the length of its adjacent side."
