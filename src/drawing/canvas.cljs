@@ -29,10 +29,6 @@
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))
 
-(defn- im [ctx nm & args]                                   ; short for invoke method
-  (.apply (object/get ctx nm) ctx (into-array args))
-  ctx)
-
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
@@ -77,14 +73,18 @@
 (defn arc
   "Adds a circular arc centered at (x,y) to the current sub-path, clockwise by
    default."                                                ; TODO doc somewhere how angles are measured (radians from teh positive x-axis) and letter meaning
-  ([ctx [x y] r a-start a-end] (im ctx "arc" x y r a-start a-end))
+  ([ctx [x y] r a-start a-end]
+   (.arc ctx x y r a-start a-end)
+   ctx)
   ([ctx [x y] r a-start a-end counter-clockwise]
-   (im ctx "arc" x y r a-start a-end counter-clockwise)))
+   (.arc ctx x y r a-start a-end counter-clockwise)
+   ctx))
 
 (defn begin-path
   "Creates a new path by emptying the list of sub-paths."   ; TODO what's the difference between path and sub-path?
   [ctx]
-  (im ctx "beginPath"))
+  (.beginPath ctx)
+  ctx)
 
 (defn fill                                                  ; TODO implement other arities and doc rules from https://en.wikipedia.org/wiki/Nonzero-rule and https://en.wikipedia.org/wiki/Even–odd_rule (see stroke docs).
   "Fills the current or given path with the current fill-style. fill-rule
@@ -92,26 +92,30 @@
   filling region. \"nonzero\" by default and the other possible value is
   \"evenodd\"."
   [ctx]
-  (im ctx "fill"))
+  (.fill ctx)
+  ctx)
 
 (defn fill-rect
   "Draws a rectangle filled according to fill-style without modifying the
    current path. Positive values of w and h are to the right and down,
    respectively. Negative values to the left and up."
   [ctx [x y] [w h]]
-  (im ctx "fillRect" x y w h))
+  (.fillRect ctx x y w h)
+  ctx)
 
 (defn fill-text                                             ; TODO implement arity with max-width
   "Draws text at (x,y) using the font and text layout defined by font,
    text-align, text-baseline and direction, and filling characters according to
    fill-style."
   [ctx s [x y]]
-  (im ctx "fillText" s x y))
+  (.fillText ctx s x y)
+  ctx)
 
 (defn line-to
   "Adds a straight line to the current sub-path from its last point to (x,y)."
   [ctx [x y]]
-  (im ctx "lineTo" x y))
+  (.lineTo ctx x y)
+  ctx)
 
 (defn measure-text
   "Returns an object (that implements TextMetrics) with the dimensions of s."
@@ -121,33 +125,39 @@
 (defn move-to
   "Creates a new sub-path that beings at (x,y)."
   [ctx [x y]]
-  (im ctx "moveTo" x y))
+  (.moveTo ctx x y)
+  ctx)
 
 (defn rect
   "Adds a rectangle to the current path."                   ; TODO doc all values can be negative like in fill-rect, or remove from fill-rect's doc if it's a general pattern
   [ctx [x y] [w h]]
-  (im ctx "rect" x y w h))
+  (.rect ctx x y w h)
+  ctx)
 
 (defn reset-transform
   "Resets the current transformation matrix to the identity matrix."
   [ctx]
-  (im ctx "resetTransform"))
+  (.resetTransform ctx)
+  ctx)
 
 (defn restore
   "Pops from the drawing state stack and makes it the current drawing state.
    Does nothing if the stack is empty."
   [ctx]
-  (im ctx "restore"))
+  (.restore ctx)
+  ctx)
 
 (defn rotate
   "Adds a rotation (around the canvas origin) to the transformation matrix."
   [ctx a]
-  (im ctx "rotate" a))
+  (.rotate ctx a)
+  ctx)
 
 (defn save
   "Pushes the current drawing state onto a stack."          ; TODO doc what makes the drawing state
   [ctx]
-  (im ctx "save"))
+  (.save ctx)
+  ctx)
 
 (defn stroke                                                ; TODO implement other arities
   "Outlines the current or given path with the current stroke-style. Strokes
@@ -155,19 +165,22 @@
    inner side, and half on the outer side) and drawn using the non-zero winding
    rule (path intersections will still get filled)."
   [ctx]
-  (im ctx "stroke"))
+  (.stroke ctx)
+  ctx)
 
 (defn stroke-rect
   "Draws an outlined rectangle according to stroke-style without modifying the
    current path."                                           ; TODO same as rect
   [ctx [x y] [w h]]
-  (im ctx "strokeRect" x y w h))
+  (.strokeRect ctx x y w h)
+  ctx)
 
 (defn translate
   "Adds a translation transformation to the current matrix by moving the canvas
    origin the given units."
   [ctx [x y]]
-  (im ctx "translate" x y))
+  (.translate ctx x y)
+  ctx)
 
 (defn- expand-margin [v]
   (case (count v)
