@@ -9,6 +9,12 @@
                      (/ (- n a) (- b a)))
                   c)))
 
+(defn dist
+  "Returns the Euclidean distance between (x0,y0) and (x1, y1)."
+  [[x0 y0] [x1 y1]]
+  (let [dx (- x1 x0) dy (- y1 y0)]
+    (js/Math.sqrt (+ (* dx dx) (* dy dy)))))
+
 (defn adj
   "Given the acute angle of a right triangle and the length of its hypotenuse,
    calculates the length of its adjacent side."
