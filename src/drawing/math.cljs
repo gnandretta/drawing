@@ -67,3 +67,10 @@
    coordinates."
   [[x y]]
   (noise-2d-generator x (if (nil? y) 0 y)))
+
+(defn grid
+  "Returns a lazy sequence of normalized coordinates of the intersections in a
+   grid with v (or n) vertical lines and h (or n) horizontal lines."
+  ([n] (grid n n))
+  ([v h] (for [j (range h) i (range v)]
+           [(/ i (dec v)) (/ j (dec h))])))
