@@ -45,6 +45,12 @@
           k
           (recur eks))))))
 
+(defn rand-off
+  "Returns a random floating point number between a (inclusive) and b
+   (exclusive)."
+  [a b]
+  (+ a (rand (- b a))))
+
 (defonce rand-std-norm-generator (.normal random))          ; TODO allow to set (and get?) a seed
 
 (defn rand-std-norm
