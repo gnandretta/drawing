@@ -139,8 +139,8 @@
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
     (go (loop [tx 0 ty 10000]
-          (>! in [(* w (+ 1 (m/noise tx)) 0.5)
-                  (* h (+ 1 (m/noise ty)) 0.5)])
+          (>! in [(* w (+ 1 (m/noise-1d tx)) 0.5)
+                  (* h (+ 1 (m/noise-1d ty)) 0.5)])
           (recur (+ tx 0.006) (+ ty 0.006))))
     (go (while true
           (let [p (<! in)]

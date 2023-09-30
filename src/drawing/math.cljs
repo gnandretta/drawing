@@ -62,11 +62,17 @@
 
 (defonce noise-2d-generator (createNoise2D))                ; TODO see alea npm module
 
-(defn noise
+(defn noise-1d
   "Returns a simplex noise value (in the range [-1,1]) at the specified
-   coordinates."
+   coordinate."
+  [x]
+  (noise-2d-generator x 0))
+
+(defn noise-2d
+  "Returns a simplex noise value (in the range [-1,1]) at the specified
+   coordinate."
   [[x y]]
-  (noise-2d-generator x (if (nil? y) 0 y)))
+  (noise-2d-generator x y))
 
 (defn grid
   "Returns a lazy sequence of normalized coordinates of the intersections in a
