@@ -159,6 +159,14 @@
   (.save ctx)
   ctx)
 
+(defn scale
+  "Adds a scaling transformation to the current matrix by changing how many
+   pixels correspond to a coordinate space unit, 1 unit = 1 pixel by default.
+   Negative values flip pixels across the corresponding axis."
+  [ctx [x y]]
+  (.scale ctx x y)
+  ctx)
+
 (defn stroke                                                ; TODO implement other arities
   "Outlines the current or given path with the current stroke-style. Strokes
    are aligned to the center of a path (half of the stroke is drawn on the
