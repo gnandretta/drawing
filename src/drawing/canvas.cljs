@@ -46,7 +46,7 @@
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
   [ctx value]
-  (object/set "lineWidth" value)
+  (object/set ctx "lineWidth" value)
   ctx)
 
 (defn set-stroke-style
