@@ -86,6 +86,14 @@
   (.beginPath ctx)
   ctx)
 
+(defn close-path
+  "Adds a straight line to the current sub-path from its last point to its
+   first point unless they are the same point—the shape is closed or has a
+   single point."
+  [ctx]
+  (.closePath ctx)
+  ctx)
+
 (defn fill                                                  ; TODO implement other arities and doc rules from https://en.wikipedia.org/wiki/Nonzero-rule and https://en.wikipedia.org/wiki/Even–odd_rule (see stroke docs).
   "Fills the current or given path with the current fill-style. fill-rule
   specifies the algorithm that determines if a point is inside or outside the
