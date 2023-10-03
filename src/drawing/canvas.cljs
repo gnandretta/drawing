@@ -1,4 +1,5 @@
 (ns drawing.canvas
+  (:refer-clojure :exclude [set])
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
@@ -28,6 +29,18 @@
 (defn mm [dpi x]
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))
+
+(defn set
+  "Sets a property on a drawing context and returns the context."
+  [ctx nm value]
+  (object/set ctx nm value)
+  ctx)
+
+(defn call
+  "Calls a method on a drawing context and returns the context."
+  [ctx nm & args]
+  (.apply (object/get ctx nm) ctx (into-array args))
+  ctx)
 
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
