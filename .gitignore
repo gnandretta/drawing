@@ -15,3 +15,8 @@ pom.xml.asc
 /node_modules/
 /public/js/
 /.shadow-cljs/
+
+/package-lock.json
+/src/*
+!/src/drawing/
+!/src/noc/
