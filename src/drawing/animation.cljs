@@ -13,7 +13,7 @@
   ([fps] (let [c (chan)
                ctrl (chan)
                rl (rate-limit (/ 1000 fps))]
-           (go (loop [frame 0]
+           (go (loop [frame 1]
                  (alt! ctrl ([x] (<! ctrl))
                        rl ([] (>! c frame)))
                  (recur (inc frame))))
