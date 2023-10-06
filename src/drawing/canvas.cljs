@@ -1,5 +1,5 @@
 (ns drawing.canvas
-  (:refer-clojure :exclude [set])
+  (:refer-clojure :exclude [get set])
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
@@ -29,6 +29,10 @@
 (defn mm [dpi x]
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))
+
+(defn get
+  ([ctx] (get ctx "canvas"))
+  ([ctx nm] (object/get ctx nm)))                           ; TODO not sure about this arity, maybe take keywords?
 
 (defn set
   "Sets a property on a drawing context and returns the context."
