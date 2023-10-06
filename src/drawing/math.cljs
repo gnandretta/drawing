@@ -2,6 +2,34 @@
   (:require ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
+(defn- v-op [op v & xs]
+  (letfn [(f [acc x] (mapv op acc (if (vector? x) x (repeat (count v) x))))]
+    (reduce f v xs)))
+
+(defn v+
+  "Adds to each element of vector v any given number or the corresponding
+   element of any given vector. All vectors must be the same size."
+  [v & xs]
+  (apply v-op + v xs))
+
+(defn v-
+  "Subtracts from each element of vector v any given number or the corresponding
+   element of any given vector. All vectors must be the same size."
+  [v & xs]
+  (apply v-op - v xs))
+
+(defn v*
+  "Multiplies each element of vector v by any given number or the corresponding
+   element of any given vector. All vectors must be the same size."
+  [v & xs]
+  (apply v-op * v xs))
+
+(defn v-div
+  "Divides each element of vector v by any given number or the corresponding
+   element of any given vector. All vectors must be the same size."
+  [v & xs]
+  (apply v-op / v xs))
+
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
   ([n c d] (lerp n 0 1 c d))                                ; also works when d < c
