@@ -108,6 +108,13 @@
   (.beginPath ctx)
   ctx)
 
+(defn bezier-curve-to
+  "Adds a cubic Bézier curve to the current sub-path from its last point to
+   (x,y) with the control points (ax,ay) amd (bx,by)."
+  [ctx [ax ay] [bx by] [x y]]
+  (.bezierCurveTo ctx ax ay bx by x y)
+  ctx)
+
 (defn clip
   "Makes the current path the current clipping region, if there isn't any.
    Otherwise, it makes the intersection of the clipping region and path the
@@ -164,6 +171,13 @@
   "Creates a new sub-path that beings at (x,y)."
   [ctx [x y]]
   (.moveTo ctx x y)
+  ctx)
+
+(defn quadratic-curve-to
+  "Adds a quadratic Bézier curve to the current sub-path from its last point to
+   (x,y) with the control point (cx,cy)."
+  [ctx [cx cy] [x y]]
+  (.quadraticCurveTo ctx cx cy x y)
   ctx)
 
 (defn rect
