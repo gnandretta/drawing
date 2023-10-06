@@ -108,6 +108,14 @@
   (.beginPath ctx)
   ctx)
 
+(defn clip
+  "Makes the current path the current clipping region, if there isn't any.
+   Otherwise, it makes the intersection of the clipping region and path the
+   new current clipping region."
+  [ctx]                                                     ; TODO implement other arities
+  (.clip ctx)
+  ctx)
+
 (defn close-path
   "Adds a straight line to the current sub-path from its last point to its
    first point unless they are the same point—the shape is closed or has a
