@@ -1,5 +1,5 @@
 (ns drawing.canvas
-  (:refer-clojure :exclude [get set])
+  (:refer-clojure :exclude [apply get set])
   (:require [goog.dom :as dom]
             [goog.object :as object]))
 
@@ -18,13 +18,13 @@
   "Multiples the drawing's width by the given numbers, returning a proportional
    width."
   [width & ns]
-  (apply * width ns))
+  (clojure.core/apply * width ns))
 
 (defn h
   "Multiples the drawing's height by the given numbers, returning a proportional
    height."
   [height & ns]
-  (apply * height ns))
+  (clojure.core/apply * height ns))
 
 (defn mm [dpi x]
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
@@ -45,6 +45,11 @@
   [ctx nm & args]
   (.apply (object/get ctx nm) ctx (into-array args))
   ctx)
+
+(defn apply
+  "Like call but args are a seq."
+  [ctx nm args]
+  (clojure.core/apply call ctx nm args))
 
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
