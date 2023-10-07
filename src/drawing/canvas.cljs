@@ -47,9 +47,13 @@
   ctx)
 
 (defn apply
-  "Like call but args are a seq."
-  [ctx nm args]
-  (clojure.core/apply call ctx nm args))
+  "Like call except args are a seq, but when a fn is provided instead of a
+   method name calls clojure.core/apply on the fn—which comes in handy in a
+   thread-first macro (->)."
+  [ctx nm-or-f args]
+  (if (fn? nm-or-f)
+    (clojure.core/apply nm-or-f ctx args)
+    (clojure.core/apply call ctx nm-or-f args)))
 
 (defn set-fill-style
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
