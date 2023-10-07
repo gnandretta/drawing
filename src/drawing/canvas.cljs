@@ -68,6 +68,12 @@
   (object/set ctx "font" value)
   ctx)
 
+(defn set-global-composite-operation
+  "Sets the compositing or blending mode operations when drawing shapes."
+  [ctx value]
+  (object/set ctx "globalCompositeOperation" (name value))
+  ctx)
+
 (defn set-line-width
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
