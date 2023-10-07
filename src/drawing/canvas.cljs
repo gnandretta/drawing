@@ -81,6 +81,21 @@
   (object/set ctx "lineWidth" value)
   ctx)
 
+(defn set-shadow-color
+  "Sets the shadow color. rgba(0,0,0,0) by default—fully transparent black, not
+   rendered as any fully transparent shadow."
+  [ctx value]
+  (object/set ctx "shadowColor" value)
+  ctx)
+
+(defn set-shadow-offset
+  "Sets the distance shadows will be offset, vertically and horizontally. [0,0]
+   by default, ignores Infinity and NaN values."
+  [ctx [x y]]
+  (object/set ctx "shadowOffsetX" x)
+  (object/set ctx "shadowOffsetY" y)
+  ctx)
+
 (defn set-stroke-style
   "Sets the CSS color, gradient, or pattern to use for shapes outlines. \"#000\"
    by default."
