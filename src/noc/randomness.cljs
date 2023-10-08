@@ -29,9 +29,9 @@
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
-    (go (loop [p (mapv (partial * 0.5) size)]
-          (>! in p)
-          (recur (traditional-step-4-choices p))))
+    (go (loop [xy (m/v* size 0.5)]
+          (>! in xy)
+          (recur (traditional-step-4-choices xy))))
     (go (while true
           (-> ctx
               (c/set-fill-style "#000")
