@@ -69,27 +69,29 @@
           (<! play)))
     ctrl))
 
+(defn- tends-to-right-step
+  [[x y]]
+  (condp >= (rand)                                          ; idiom
+    0.4 [(inc x) y]
+    0.6 [(dec x) y]
+    0.8 [x (inc y)]
+    1 [x (dec y)]))
+
 (defn random-walk-tends-to-right [& {:keys [size fps]
                                      :or   {size [640 240]
                                             fps  30}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        step (fn [[x y]]
-               (condp >= (rand)
-                 0.4 [(inc x) y]
-                 0.6 [(dec x) y]
-                 0.8 [x (inc y)]
-                 1 [x (dec y)]))
         ctx (c/append ::random-walk-tends-to-right size)]
-    (go (loop [p (mapv (partial * 0.5) size)]
-          (>! in p)
-          (recur (step p))))
+    (go (loop [xy (m/v* size 0.5)]
+          (>! in xy)
+          (recur (tends-to-right-step xy))))
     (-> ctx
-        (c/set-fill-style "#fff")
+        (c/set-fill-style :white)
         (c/fill-rect size))
     (go (while true
           (-> ctx
-              (c/set-fill-style "#000")
+              (c/set-fill-style :black)
               (c/fill-rect (<! in) [1 1]))
           (<! play)))
     ctrl))
