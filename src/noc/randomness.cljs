@@ -28,7 +28,7 @@
         ctx (c/append ::traditional-random-walk size)]
     (-> ctx
         (c/set-fill-style "#fff")
-        (c/fill-rect [0 0] size)
+        (c/fill-rect size)
         (c/set-fill-style "#000"))
     (go (loop [xy (m/v* size 0.5)]
           (>! in xy)
@@ -53,7 +53,7 @@
     (go (while true
           (-> ctx
               (c/set-fill-style "#fff")
-              (c/fill-rect [0 0] size)
+              (c/fill-rect size)
               (c/set-fill-style "#7f7f7f")
               (c/set-stroke-style "#000")
               (c/set-line-width 2))
@@ -84,7 +84,7 @@
           (recur (step p))))
     (-> ctx
         (c/set-fill-style "#fff")
-        (c/fill-rect [0 0] size))
+        (c/fill-rect size))
     (go (while true
           (-> ctx
               (c/set-fill-style "#000")
@@ -100,7 +100,7 @@
         ctx (c/append ::gaussian-distribution size)]
     (-> ctx
         (c/set-fill-style "#fff")
-        (c/fill-rect [0 0] size))
+        (c/fill-rect size))
     (go (while true
           (-> ctx
               (c/set-fill-style "rgba(0,0,0,0.005)")
@@ -129,7 +129,7 @@
     (go (while true
           (-> ctx
               (c/set-fill-style "#fff")
-              (c/fill-rect [0 0] size)
+              (c/fill-rect size)
               (c/set-fill-style "#7f7f7f")
               (c/set-stroke-style "#000")
               (c/set-line-width 2))
@@ -152,7 +152,7 @@
         ctx (c/append ::perlin-noise-walk size)]
     (-> ctx
         (c/set-fill-style "#fff")
-        (c/fill-rect [0 0] size))
+        (c/fill-rect size))
     (go (loop [tx 0 ty 10000]
           (>! in [(* w (+ 1 (m/noise-1d tx)) 0.5)
                   (* h (+ 1 (m/noise-1d ty)) 0.5)])
