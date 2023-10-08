@@ -12,9 +12,9 @@
     2 [x (inc y)]
     3 [x (dec y)]))
 
-(defn- traditional-step-9-choices [[x y]]
-  [(+ x (js/Math.floor (rand 3)) -1)
-   (+ y (js/Math.floor (rand 3)) -1)])
+(defn- traditional-step-9-choices
+  [xy]
+  (mapv + xy (repeatedly #(m/rand-int-off -1 2))))
 
 (defn- traditional-step-infinite-choices [[x y]]
   [(+ x (rand 2) -1) (+ y (rand 2) -1)])
