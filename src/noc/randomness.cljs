@@ -4,30 +4,33 @@
             [drawing.canvas :as c]
             [drawing.math :as m]))
 
+(defn- traditional-step-4-choices [[x y]]
+  (let [choice (js/Math.floor (rand 4))]
+    (case choice
+      0 [(inc x) y]
+      1 [(dec x) y]
+      2 [x (inc y)]
+      3 [x (dec y)])))
+
+(defn- traditional-step-9-choices [[x y]]
+  [(+ x (js/Math.floor (rand 3)) -1)
+   (+ y (js/Math.floor (rand 3)) -1)])
+
+(defn- traditional-step-infinite-choices [[x y]]
+  [(+ x (rand 2) -1) (+ y (rand 2) -1)])
+
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 240]
                                          fps  30}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        step (fn [[x y]]                                    ; 4 choices
-               (let [choice (js/Math.floor (rand 4))]
-                 (case choice
-                   0 [(inc x) y]
-                   1 [(dec x) y]
-                   2 [x (inc y)]
-                   3 [x (dec y)])))
-        #_#_step (fn [[x y]]                                ; 9 choices
-                   [(+ x (js/Math.floor (rand 3)) -1)
-                    (+ y (js/Math.floor (rand 3)) -1)])
-        #_#_step (fn [[x y]]                                ; infinite choices
-                   [(+ x (rand 2) -1) (+ y (rand 2) -1)])
         ctx (c/append "traditional-random-walk" size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
     (go (loop [p (mapv (partial * 0.5) size)]
           (>! in p)
-          (recur (step p))))
+          (recur (traditional-step-4-choices p))))
     (go (while true
           (-> ctx
               (c/set-fill-style "red")
