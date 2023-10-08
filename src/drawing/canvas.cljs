@@ -5,27 +5,6 @@
 
 (def paper-mms {:a3 [297 420]})
 
-(defn d
-  "Multiplies the drawing's dimensions by each the given numbers or dimensions,
-   returning proportional dimensions."
-  [size & xs]
-  (reduce (fn [acc x]
-            (mapv * acc (if (vector? x) x [x x])))
-          size
-          xs))
-
-(defn w
-  "Multiples the drawing's width by the given numbers, returning a proportional
-   width."
-  [width & ns]
-  (clojure.core/apply * width ns))
-
-(defn h
-  "Multiples the drawing's height by the given numbers, returning a proportional
-   height."
-  [height & ns]
-  (clojure.core/apply * height ns))
-
 (defn mm [dpi x]
   (let [f #(js/Math.round (/ (* % dpi) 25.4))]              ; 1 inch = 25.4 mm
     (if (number? x) (f x) (mapv f x))))

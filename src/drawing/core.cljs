@@ -1,5 +1,5 @@
 (ns drawing.core
-  (:require [drawing.canvas :as c :refer [d w]]
+  (:require [drawing.canvas :as c]
             [drawing.math :as m]))
 
 (defn drawing
