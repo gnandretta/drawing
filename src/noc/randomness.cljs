@@ -4,13 +4,13 @@
             [drawing.canvas :as c]
             [drawing.math :as m]))
 
-(defn- traditional-step-4-choices [[x y]]
-  (let [choice (js/Math.floor (rand 4))]
-    (case choice
-      0 [(inc x) y]
-      1 [(dec x) y]
-      2 [x (inc y)]
-      3 [x (dec y)])))
+(defn- traditional-step-4-choices
+  [[x y]]
+  (case (rand-int 4)
+    0 [(inc x) y]
+    1 [(dec x) y]
+    2 [x (inc y)]
+    3 [x (dec y)]))
 
 (defn- traditional-step-9-choices [[x y]]
   [(+ x (js/Math.floor (rand 3)) -1)
