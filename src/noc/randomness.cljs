@@ -104,7 +104,7 @@
               (c/arc [(+ (* (m/rand-std-norm) 60) (* w 0.5)) (* h 0.5)]
                      8
                      0
-                     (* js/Math.PI 2))
+                     (m/pi 2))
               (c/fill))
           (<! play)))
     ctrl))
@@ -160,7 +160,7 @@
                 (c/set-fill-style "rgb(127,127,127)")
                 (c/set-line-width 2)
                 (c/begin-path)
-                (c/arc p 24 0 (* 2 js/Math.PI))
+                (c/arc p 24 0 (m/pi 2))
                 (c/fill)
                 (c/stroke))
             (<! play))))
