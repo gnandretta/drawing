@@ -241,10 +241,10 @@
   ctx)
 
 (defn translate
-  "Adds a translation transformation to the current matrix by moving the canvas
-   origin the given units."
-  [ctx [x y]]
-  (.translate ctx x y)
+  "Adds one or more translation transformations to the current matrix by moving
+   the canvas origin the given units."
+  [ctx & xys]
+  (doseq [[x y] xys] (.translate ctx x y))
   ctx)
 
 (defn- expand-margin [v]
