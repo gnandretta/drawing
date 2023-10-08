@@ -3,7 +3,7 @@
             ["simplex-noise" :refer [createNoise2D]]))
 
 (defn- v-op [op v & xs]
-  (letfn [(f [acc x] (mapv op acc (if (vector? x) x (repeat (count v) x))))]
+  (letfn [(f [acc x] (mapv op acc (if (seqable? x) x (repeat (count v) x))))]
     (reduce f v xs)))
 
 (defn v+
