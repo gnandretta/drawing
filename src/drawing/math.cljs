@@ -78,6 +78,11 @@
           k
           (recur eks))))))
 
+(defn rand-int-off
+  "Returns a random integer  between a (inclusive) and b (exclusive)."
+  [a b]
+  (+ a (rand-int (- b a))))
+
 (defn rand-off
   "Returns a random floating point number between a (inclusive) and b
    (exclusive)."
