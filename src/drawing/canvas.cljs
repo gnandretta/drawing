@@ -186,6 +186,11 @@
   (.moveTo ctx x y)
   ctx)
 
+(defn move-to-origin
+  "Creates a new sub-path that begins at (0,0)."
+  [ctx]
+  (move-to ctx [0 0]))
+
 (defn quadratic-curve-to
   "Adds a quadratic Bézier curve to the current sub-path from its last point to
    (x,y) with the control point (cx,cy)."
