@@ -16,8 +16,9 @@
   [xy]
   (mapv + xy (repeatedly #(m/rand-int-off -1 2))))
 
-(defn- traditional-step-infinite-choices [[x y]]
-  [(+ x (rand 2) -1) (+ y (rand 2) -1)])
+(defn- traditional-step-infinite-choices
+  [xy]
+  (mapv + xy (repeatedly #(m/rand-off -1 1))))
 
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 240]
