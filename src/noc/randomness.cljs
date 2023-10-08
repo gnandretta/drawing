@@ -135,20 +135,18 @@
                                    fps  30}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        [w h] size
         ctx (c/append ::perlin-noise-walk size)]
     (-> ctx
-        (c/set-fill-style "#fff")
-        (c/fill-rect size))
-    (go (loop [tx 0 ty 10000]
-          (>! in [(* w (+ 1 (m/noise-1d tx)) 0.5)
-                  (* h (+ 1 (m/noise-1d ty)) 0.5)])
-          (recur (+ tx 0.006) (+ ty 0.006))))
+        (c/set-fill-style :white)
+        (c/fill-rect size)
+        (c/set-fill-style "rgb(127,127,127)")
+        (c/set-line-width 2))
+    (go (loop [t [0 10000]]
+          (>! in (m/v* size 0.5 (map #(+ 1 (m/noise-1d %)) t)))
+          (recur (m/v+ t 0.006))))
     (go (while true
           (let [p (<! in)]
             (-> ctx
-                (c/set-fill-style "rgb(127,127,127)")
-                (c/set-line-width 2)
                 (c/begin-path)
                 (c/arc p 24 0 (m/pi 2))
                 (c/fill)
