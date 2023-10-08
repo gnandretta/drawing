@@ -61,6 +61,11 @@
   [a h]
   [(adj a h) (opp a h)])
 
+(defn pi
+  "Multiplies PI by the given numbers."
+  [& ns]
+  (apply * js/Math.PI ns))
+
 (defn weighed-rand-key
   "Given a map where the values are weights, returns a random key based on the
    weights."
