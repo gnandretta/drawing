@@ -181,7 +181,7 @@
   (.measureText ctx s))
 
 (defn move-to
-  "Creates a new sub-path that beings at (x,y)."
+  "Creates a new sub-path that begins at (x,y)."
   [ctx [x y]]
   (.moveTo ctx x y)
   ctx)
