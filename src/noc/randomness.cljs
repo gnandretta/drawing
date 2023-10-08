@@ -28,14 +28,13 @@
         ctx (c/append ::traditional-random-walk size)]
     (-> ctx
         (c/set-fill-style "#fff")
-        (c/fill-rect [0 0] size))
+        (c/fill-rect [0 0] size)
+        (c/set-fill-style "#000"))
     (go (loop [xy (m/v* size 0.5)]
           (>! in xy)
           (recur (traditional-step-4-choices xy))))
     (go (while true
-          (-> ctx
-              (c/set-fill-style "#000")
-              (c/fill-rect (<! in) [1 1]))
+          (c/fill-rect ctx (<! in) [1 1])
           (<! play)))
     ctrl))
 
