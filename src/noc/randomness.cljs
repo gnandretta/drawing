@@ -38,32 +38,34 @@
           (<! play)))
     ctrl))
 
+(defn- make-bars [[w h] n counts]
+  (let [bar-w (/ w n)]
+    (map (fn [i c] [[(* i bar-w) h] [(dec bar-w) (* -1 c)]])
+         (range)
+         counts)))
+
 (defn random-distribution [& {:keys [size fps n]
                               :or   {size [640 240]
                                      fps  30
                                      n    20}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        ctx (c/append ::random-distribution size)
-        [w h] size
-        w-bar (/ w n)]
+        ctx (c/append ::random-distribution size)]
     (go (loop [counts (vec (repeat n 0))]
           (>! in counts)
           (recur (update counts (rand-int n) inc))))
     (go (while true
           (-> ctx
-              (c/set-fill-style "#fff")
+              (c/set-fill-style :white)
               (c/fill-rect size)
               (c/set-fill-style "#7f7f7f")
-              (c/set-stroke-style "#000")
               (c/set-line-width 2))
-          (let [counts (<! in)]
-            (doseq [i (range 0 n)]
-              (-> ctx
-                  (c/begin-path)
-                  (c/rect [(* i w-bar) h] [(dec w-bar) (* (counts i) -1)])
-                  (c/fill)
-                  (c/stroke))))
+          (doseq [bar (make-bars size n (<! in))]
+            (-> ctx
+                (c/begin-path)
+                (c/apply c/rect bar)
+                (c/fill)
+                (c/stroke)))
           (<! play)))
     ctrl))
 
