@@ -161,12 +161,13 @@
    ctx))
 
 (defn fill-text                                             ; TODO implement arity with max-width
-  "Draws text at (x,y) using the font and text layout defined by font,
-   text-align, text-baseline and direction, and filling characters according to
-   fill-style."
-  [ctx s [x y]]
-  (.fillText ctx s x y)
-  ctx)
+  "Draws text at (0,0) by default using the font and text layout defined by
+   font, text-align, text-baseline and direction, and filling characters
+   according to fill-style."
+  ([ctx s] (fill-text ctx s [0 0]))
+  ([ctx s [x y]]
+   (.fillText ctx s x y)
+   ctx))
 
 (defn line-to
   "Adds a straight line to the current sub-path from its last point to (x,y)."
