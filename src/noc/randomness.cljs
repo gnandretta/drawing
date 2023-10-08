@@ -6,7 +6,7 @@
 
 (defn- traditional-step-4-choices
   [[x y]]
-  (case (rand-int 4)
+  (case (rand-int 4)                                        ; idiom
     0 [(inc x) y]
     1 [(dec x) y]
     2 [x (inc y)]
@@ -14,7 +14,7 @@
 
 (defn- traditional-step-9-choices
   [xy]
-  (mapv + xy (repeatedly #(m/rand-int-off -1 2))))
+  (mapv + xy (repeatedly #(m/rand-int-off -1 2))))          ; idiom
 
 (defn- traditional-step-infinite-choices
   [xy]
