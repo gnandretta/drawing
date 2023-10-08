@@ -40,20 +40,20 @@
 
 (defn- make-bars [[w h] n counts]
   (let [bar-w (/ w n)]
-    (map (fn [i c] [[(* i bar-w) h] [(dec bar-w) (* -1 c)]])
+    (map (fn [i c] [[(* i bar-w) h] [(dec bar-w) (* -1 c)]]) ; idiom
          (range)
          counts)))
 
-(defn random-distribution [& {:keys [size fps n]
-                              :or   {size [640 240]
-                                     fps  30
-                                     n    20}}]
+(defn- distribution-bars [nm f & {:keys [size fps n]
+                                  :or   {size [640 240]
+                                         fps  30
+                                         n    20}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        ctx (c/append ::random-distribution size)]
+        ctx (c/append nm size)]
     (go (loop [counts (vec (repeat n 0))]
           (>! in counts)
-          (recur (update counts (rand-int n) inc))))
+          (recur (update counts (f n) inc))))
     (go (while true
           (-> ctx
               (c/set-fill-style :white)
@@ -68,6 +68,10 @@
                 (c/stroke)))
           (<! play)))
     ctrl))
+
+(defn random-distribution
+  ([] (random-distribution {}))
+  ([opts] (distribution-bars ::random-distribution rand-int opts)))
 
 (defn- tends-to-right-step
   [[x y]]
