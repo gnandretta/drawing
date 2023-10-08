@@ -120,33 +120,15 @@
           (<! play)))
     ctrl))
 
-(defn accept-reject-distribution [& {:keys [size fps n]
-                                     :or   {size [640 240]
-                                            fps  30
-                                            n    20}}]
-  (let [accept-reject (fn [] (let [r1 (rand) r2 (rand)]
-                               (if (< r2 r1) r1 (recur))))
-        in (chan)
-        [play ctrl] (a/play fps)
-        ctx (c/append ::accept-reject-distribution size)]
-    (go (loop [counts (vec (repeat n 0))]
-          (>! in counts)
-          (recur (update counts (js/Math.floor (* n (accept-reject))) inc))))
-    (go (while true
-          (-> ctx
-              (c/set-fill-style :white)
-              (c/fill-rect size)
-              (c/set-fill-style "#7f7f7f")
-              (c/set-stroke-style :black)
-              (c/set-line-width 2))
-          (doseq [bar (make-bars size n (<! in))]
-            (-> ctx
-                (c/begin-path)
-                (c/apply c/rect bar)
-                (c/fill)
-                (c/stroke)))
-          (<! play)))
-    ctrl))
+(defn- accept-reject []
+  (let [r1 (rand) r2 (rand)]
+    (if (< r2 r1) r1 (recur))))
+
+(defn accept-reject-distribution
+  ([] (accept-reject-distribution {}))
+  ([opts] (distribution-bars ::accept-reject-distribution
+                             #(js/Math.floor (* % (accept-reject)))
+                             opts)))
 
 (defn perlin-noise-walk [& {:keys [size fps]
                             :or   {size [640 240]
