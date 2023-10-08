@@ -98,13 +98,19 @@
   ctx)
 
 (defn arc
-  "Adds a circular arc centered at (x,y) to the current sub-path, clockwise by
-   default."                                                ; TODO doc somewhere how angles are measured (radians from teh positive x-axis) and letter meaning
+  "Adds a circular arc centered at (0,0) by default to the current sub-path,
+   clockwise."                                              ; TODO doc somewhere how angles are measured (radians from teh positive x-axis) and letter meaning
+  ([ctx r a-start a-end] (arc ctx [0 0] r a-start a-end))
   ([ctx [x y] r a-start a-end]
    (.arc ctx x y r a-start a-end)
-   ctx)
-  ([ctx [x y] r a-start a-end counter-clockwise]
-   (.arc ctx x y r a-start a-end counter-clockwise)
+   ctx))
+
+(defn arcc
+  "Adds a circular arc centered at (0,0) by default to the current sub-path,
+   counterclockwise."
+  ([ctx r a-start a-end] (arc ctx [0 0] r a-start a-end))
+  ([ctx [x y] r a-start a-end]
+   (.arc ctx x y r a-start a-end true)
    ctx))
 
 (defn begin-path
