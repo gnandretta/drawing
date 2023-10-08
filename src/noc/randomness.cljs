@@ -25,7 +25,7 @@
                                          fps  30}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        ctx (c/append "traditional-random-walk" size)]
+        ctx (c/append ::traditional-random-walk size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
@@ -45,7 +45,7 @@
                                      n    20}}]
   (let [in (chan)
         [play ctrl] (a/play fps)
-        ctx (c/append "random-distribution" size)
+        ctx (c/append ::random-distribution size)
         [w h] size
         w-bar (/ w n)]
     (go (loop [counts (vec (repeat n 0))]
@@ -79,7 +79,7 @@
                  0.6 [(dec x) y]
                  0.8 [x (inc y)]
                  1 [x (dec y)]))
-        ctx (c/append "random-walk-tends-to-right" size)]
+        ctx (c/append ::random-walk-tends-to-right size)]
     (go (loop [p (mapv (partial * 0.5) size)]
           (>! in p)
           (recur (step p))))
@@ -98,7 +98,7 @@
                                        fps  30}}]
   (let [[play ctrl] (a/play fps)
         [w h] size
-        ctx (c/append "gaussian-distribution" size)]
+        ctx (c/append ::gaussian-distribution size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
@@ -121,7 +121,7 @@
                                (if (< r2 r1) r1 (recur))))
         in (chan)
         [play ctrl] (a/play fps)
-        ctx (c/append "accept-reject-distribution" size)
+        ctx (c/append ::accept-reject-distribution size)
         [w h] size
         w-bar (/ w n)]
     (go (loop [counts (vec (repeat n 0))]
@@ -150,7 +150,7 @@
   (let [in (chan)
         [play ctrl] (a/play fps)
         [w h] size
-        ctx (c/append "perlin-noise-walk" size)]
+        ctx (c/append ::perlin-noise-walk size)]
     (-> ctx
         (c/set-fill-style "#fff")
         (c/fill-rect [0 0] size))
