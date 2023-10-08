@@ -146,12 +146,13 @@
   ctx)
 
 (defn fill-rect
-  "Draws a rectangle filled according to fill-style without modifying the
-   current path. Positive values of w and h are to the right and down,
-   respectively. Negative values to the left and up."
-  [ctx [x y] [w h]]
-  (.fillRect ctx x y w h)
-  ctx)
+  "Draws a rectangle from filled according to fill-style without modifying the
+   current path, starting at (0,0) by default—which vertex is drawn at (x,y)
+   depends on whether w and h are positive or negative."
+  ([ctx d] (fill-rect ctx [0 0] d))
+  ([ctx [x y] [w h]]
+   (.fillRect ctx x y w h)
+   ctx))
 
 (defn fill-text                                             ; TODO implement arity with max-width
   "Draws text at (x,y) using the font and text layout defined by font,
@@ -187,9 +188,10 @@
 
 (defn rect
   "Adds a rectangle to the current path."                   ; TODO doc all values can be negative like in fill-rect, or remove from fill-rect's doc if it's a general pattern
-  [ctx [x y] [w h]]
-  (.rect ctx x y w h)
-  ctx)
+  ([ctx d] (rect ctx [0 0] d))
+  ([ctx [x y] [w h]]
+   (.rect ctx x y w h)
+   ctx))
 
 (defn reset-transform
   "Resets the current transformation matrix to the identity matrix."
@@ -236,9 +238,10 @@
 (defn stroke-rect
   "Draws an outlined rectangle according to stroke-style without modifying the
    current path."                                           ; TODO same as rect
-  [ctx [x y] [w h]]
-  (.strokeRect ctx x y w h)
-  ctx)
+  ([ctx d] (stroke-rect ctx [0 0] d))
+  ([ctx [x y] [w h]]
+   (.strokeRect ctx x y w h)
+   ctx))
 
 (defn translate
   "Adds one or more translation transformations to the current matrix by moving
