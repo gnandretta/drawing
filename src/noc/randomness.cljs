@@ -33,7 +33,7 @@
           (recur (traditional-step-4-choices p))))
     (go (while true
           (-> ctx
-              (c/set-fill-style "red")
+              (c/set-fill-style "#000")
               (c/fill-rect (<! in) [1 1]))
           (<! play)))
     ctrl))
