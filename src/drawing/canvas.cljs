@@ -1,6 +1,7 @@
 (ns drawing.canvas
   (:refer-clojure :exclude [apply get set])
-  (:require [goog.dom :as dom]
+  (:require [drawing.math :as m]
+            [goog.dom :as dom]
             [goog.object :as object]))
 
 (def paper-mms {:a3 [297 420]})
@@ -305,9 +306,9 @@
     {:dimensions  {:canvas canvas :content content}
      :margin      margin
      :top-left    [mt mr]                                   ; TODO maybe add a corners/edges map with each of them?
-     :d           (partial d content)                       ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
-     :w           (partial w width)
-     :h           (partial h height)
+     :d           (partial m/v* content)                    ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
+     :w           (partial m/v* width)
+     :h           (partial m/v* height)
      :draw-margin (fn                                       ; TODO is this fn worth it?
                     ([ctx] (draw-margin ctx canvas margin))
                     ([ctx color] (draw-margin ctx canvas margin color)))}))
