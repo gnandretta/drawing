@@ -3,30 +3,33 @@
             ["simplex-noise" :refer [createNoise2D]]))
 
 (defn- v-op [op v & xs]
-  (letfn [(f [acc x] (mapv op acc (if (seqable? x) x (repeat (count v) x))))]
-    (reduce f v xs)))
+  (reduce (fn [acc x] (mapv op acc (cond (fn? x) (repeatedly x)
+                                         (seqable? x) x
+                                         :else (repeat x))))
+          v
+          xs))
 
 (defn v+
-  "Adds to each element of vector v any given number or the corresponding
-   element of any given vector. All vectors must be the same size."
+  "Adds to each element of vector v numbers, corresponding element of vectors
+   (must be same size as v, at least), or the result of evaluating fns."
   [v & xs]
   (apply v-op + v xs))
 
 (defn v-
-  "Subtracts from each element of vector v any given number or the corresponding
-   element of any given vector. All vectors must be the same size."
+  "Subtracts from each element of vector v numbers, corresponding element of
+   vectors (must be same size as v, at least), or the result of evaluating fns."
   [v & xs]
   (apply v-op - v xs))
 
 (defn v*
-  "Multiplies each element of vector v by any given number or the corresponding
-   element of any given vector. All vectors must be the same size."
+  "Multiplies each element of vector v by numbers, corresponding element of
+   vectors (must be same size as v, at least), or the result of evaluating fns."
   [v & xs]
   (apply v-op * v xs))
 
 (defn v-div
-  "Divides each element of vector v by any given number or the corresponding
-   element of any given vector. All vectors must be the same size."
+  "Divides each element of vector v by numbers, corresponding element of vectors
+   (must be same size as v, at least), or the result of evaluating fns."
   [v & xs]
   (apply v-op / v xs))
 
