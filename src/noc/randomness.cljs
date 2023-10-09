@@ -104,15 +104,14 @@
                                 :or   {size [640 240]
                                        fps  30}}]
   (let [[play ctrl] (a/play fps)
-        ctx (c/append ::gaussian-distribution size)
-        {:keys [d]} (c/layout :size size)]
+        ctx (c/append ::gaussian-distribution size)]
     (-> ctx
         (c/set-fill-style :white)
         (c/fill-rect size))
     (go (while true
           (-> ctx
               (c/set-fill-style "rgba(0,0,0,0.005)")
-              (c/arc (update (d 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
+              (c/arc (update (m/v* size 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
                      8
                      0
                      (m/pi 2))
