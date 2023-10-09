@@ -322,8 +322,8 @@
      :margin      margin
      :top-left    [mt mr]                                   ; TODO maybe add a corners/edges map with each of them?
      :d           (partial m/v* content)                    ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
-     :w           (partial m/v* width)
-     :h           (partial m/v* height)
+     :w           (partial * width)
+     :h           (partial * height)
      :draw-margin (fn                                       ; TODO is this fn worth it?
                     ([ctx] (draw-margin ctx canvas margin))
                     ([ctx color] (draw-margin ctx canvas margin color)))}))
