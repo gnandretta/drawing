@@ -27,9 +27,9 @@
         [play ctrl] (a/play fps)
         ctx (c/append ::traditional-random-walk size)]
     (-> ctx
-        (c/set-fill-style "#fff")
+        (c/set-fill-style :white)
         (c/fill-rect size)
-        (c/set-fill-style "#000"))
+        (c/set-fill-style :black))
     (go (loop [xy (m/v* size 0.5)]
           (>! in xy)
           (recur (traditional-step-4-choices xy))))
@@ -144,10 +144,10 @@
           (>! in (m/v* size 0.5 (map #(+ 1 (m/noise-1d %)) t)))
           (recur (m/v+ t 0.006))))
     (go (while true
-          (let [p (<! in)]
+          (let [xy (<! in)]
             (-> ctx
                 (c/begin-path)
-                (c/arc p 24 0 (m/pi 2))
+                (c/arc xy 24 0 (m/pi 2))
                 (c/fill)
                 (c/stroke))
             (<! play))))
