@@ -26,16 +26,18 @@
                   "rgb(255,195,190)" 2
                   "rgb(255,255,255)" 1}}}]
   (let [ctx (c/append id size)
-        {:keys [d w]} (c/layout :size size)]
+        [w] size
+        make-point (fn [] [(m/sides (rand (m/pi 2))
+                                    (* w ((if (< (rand) p) fhi fho)) r))
+                           (m/weighed-rand-key fgs)])]
     (-> ctx
         (c/set-fill-style bg)
-        (c/fill-rect [0 0] (d))
-        (c/translate (d 0.5)))
-    (doseq [_ (range c)]
-      (let [a (rand (* 2 js/Math.PI))]
-        (-> ctx
-            (c/set-fill-style (m/weighed-rand-key fgs))
-            (c/fill-rect (m/sides a (w ((if (< (rand) p) fhi fho)) r)) [1 1]))))))
+        (c/fill-rect size)
+        (c/translate (m/v* size 0.5)))
+    (doseq [[xy fill] (repeatedly c make-point)]
+      (-> ctx
+          (c/set-fill-style fill)
+          (c/fill-rect xy [1 1])))))
 
 (defn ^:dev/after-load init []
   (drawing :size [608 1080]))
