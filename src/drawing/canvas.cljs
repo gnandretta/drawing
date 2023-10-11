@@ -290,6 +290,7 @@
                   :content [(- w ml mr) (- h mt mb)]}
      :margin     margin}))
 
+; TODO take size from ctx, stop setting fill style, make public, and rename to fill-margin
 (defn- draw-margin                                          ; this isn't drawing anything when there's no margin
   ([ctx size margin] (draw-margin ctx size margin "white"))
   ([ctx [width height] [t r b l] color]

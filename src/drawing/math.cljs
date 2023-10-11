@@ -46,7 +46,7 @@
   (let [dx (- x1 x0) dy (- y1 y0)]
     (js/Math.sqrt (+ (* dx dx) (* dy dy)))))
 
-(defn adj
+(defn adj                                                   ; TODO consider switching args order, see polar notation
   "Given the acute angle of a right triangle and the length of its hypotenuse,
    calculates the length of its adjacent side."
   [a h]
