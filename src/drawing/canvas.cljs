@@ -108,7 +108,7 @@
 (defn arcc
   "Adds a circular arc centered at (0,0) by default to the current sub-path,
    counterclockwise."
-  ([ctx r a-start a-end] (arc ctx [0 0] r a-start a-end))
+  ([ctx r a-start a-end] (arcc ctx [0 0] r a-start a-end))
   ([ctx [x y] r a-start a-end]
    (.arc ctx x y r a-start a-end true)
    ctx))
