@@ -255,6 +255,18 @@
    (.strokeRect ctx x y w h)
    ctx))
 
+(defn transform                                             ; TODO add skew fn?
+  "Multiplies the current transformation matrix by the given matrix, which are
+   described by a c e
+                b d f
+                0 0 1, and transform coordinates into (ax+cy+e,bx+dy+f). When
+   b = c = 0, a and d control horizontal and vertical scaling. When a = d = 1,
+   b and c control horizontal and vertical skewing. e and f control horizontal
+   and vertical translation."
+  [ctx a b c d e f]
+  (.transform ctx a b c d e f)
+  ctx)
+
 (defn translate
   "Adds one or more translation transformations to the current matrix by moving
    the canvas origin the given units."
