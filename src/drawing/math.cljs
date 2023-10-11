@@ -69,6 +69,11 @@
   [& ns]
   (apply * js/Math.PI ns))
 
+(defn pif
+  "Divides PI by the given numbers, computing a fraction."
+  [& ns]
+  (apply / js/Math.PI ns))
+
 (defn weighed-rand-key
   "Given a map where the values are weights, returns a random key based on the
    weights."
