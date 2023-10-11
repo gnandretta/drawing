@@ -186,7 +186,7 @@
   (.moveTo ctx x y)
   ctx)
 
-(defn move-to-origin
+(defn move-to-origin                                        ; TODO do i really want this?
   "Creates a new sub-path that begins at (0,0)."
   [ctx]
   (move-to ctx [0 0]))
