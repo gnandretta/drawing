@@ -141,8 +141,8 @@
         (c/set-fill-style "rgb(127,127,127)")
         (c/set-line-width 2))
     (go (loop [t [0 10000]]
-          (>! in (m/v* size 0.5 (map #(+ 1 (m/noise-1d %)) t)))
-          (recur (m/v+ t 0.006))))
+          (>! in (m/v (* size 0.5 (+ (map m/noise-1d t) 1))))
+          (recur (m/v+ 0.006 t))))
     (go (while true
           (let [xy (<! in)]
             (-> ctx
