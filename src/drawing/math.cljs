@@ -2,36 +2,29 @@
   (:require ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
-(defn- v-op [op v & xs]
-  (reduce (fn [acc x] (mapv op acc (cond (fn? x) (repeatedly x)
-                                         (seqable? x) x
-                                         :else (repeat x))))
-          v
-          xs))
+(defn- v-op [op & xs]
+  (let [parse (fn [x] (cond (fn? x) (repeatedly x)
+                            (seqable? x) x
+                            :else (repeat x)))]
+    (reduce (fn [acc x] (mapv op acc (parse x)))
+            (parse (first xs))
+            (rest xs))))
 
 (defn v+
-  "Adds to each element of vector v numbers, corresponding element of vectors
-   (must be same size as v, at least), or the result of evaluating fns."
-  [v & xs]
-  (apply v-op + v xs))
+  [& xs]
+  (apply v-op + xs))
 
 (defn v-
-  "Subtracts from each element of vector v numbers, corresponding element of
-   vectors (must be same size as v, at least), or the result of evaluating fns."
-  [v & xs]
-  (apply v-op - v xs))
+  [& xs]
+  (apply v-op - xs))
 
 (defn v*
-  "Multiplies each element of vector v by numbers, corresponding element of
-   vectors (must be same size as v, at least), or the result of evaluating fns."
-  [v & xs]
-  (apply v-op * v xs))
+  [& xs]
+  (apply v-op * xs))
 
 (defn v-div
-  "Divides each element of vector v by numbers, corresponding element of vectors
-   (must be same size as v, at least), or the result of evaluating fns."
-  [v & xs]
-  (apply v-op / v xs))
+  [& xs]
+  (apply v-op / xs))
 
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
