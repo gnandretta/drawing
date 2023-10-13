@@ -2,29 +2,29 @@
   (:require ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
-(defn- v-op [op & xs]
+(defn- vf [f xs]
   (let [parse (fn [x] (cond (fn? x) (repeatedly x)
                             (seqable? x) x
                             :else (repeat x)))]
-    (reduce (fn [acc x] (mapv op acc (parse x)))
+    (reduce (fn [acc x] (mapv f acc (parse x)))
             (parse (first xs))
             (rest xs))))
 
 (defn v+
   [& xs]
-  (apply v-op + xs))
+  (vf + xs))
 
 (defn v-
   [& xs]
-  (apply v-op - xs))
+  (vf - xs))
 
 (defn v*
   [& xs]
-  (apply v-op * xs))
+  (vf * xs))
 
 (defn v-div
   [& xs]
-  (apply v-op / xs))
+  (vf / xs))
 
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
