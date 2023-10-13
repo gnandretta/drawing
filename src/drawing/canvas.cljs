@@ -295,12 +295,14 @@
   ([ctx size margin] (draw-margin ctx size margin "white"))
   ([ctx [width height] [t r b l] color]
    (-> ctx
+       (save)
        (reset-transform)
        (set-fill-style color)
        (fill-rect [0 0] [width t])
        (fill-rect [(- width r) t] [r (- height t b)])
        (fill-rect [0 (- height b)] [width b])
-       (fill-rect [0 t] [l (- height t b)]))))
+       (fill-rect [0 t] [l (- height t b)])
+       (restore))))
 
 (defn- size->properties [size]
   (clj->js (zipmap [:width :height] size)))
