@@ -54,6 +54,13 @@
   (object/set ctx "globalCompositeOperation" (name value))
   ctx)
 
+(defn set-line-cap
+  "Sets the shape used to draw the end of lines. :butt by default, other
+   possible values are :round and :square, and add half of the line's width." ; TODO review doc
+  [ctx value]
+  (object/set ctx "lineCap" (name value))
+  ctx)
+
 (defn set-line-width
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
