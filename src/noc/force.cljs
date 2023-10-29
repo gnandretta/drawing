@@ -13,7 +13,7 @@
                  (let [[x vx] (cond (> x w) [w (* -1 vx)]
                                     (< x 0) [0 (* -1 vx)]
                                     :else [x vx])
-                       [y vy] (if (> y h) [y (* -1 vy)] [y vy])]
+                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
         make-mover (fn [] {:xy [(/ (first d) 2) 30]
                            :a  [0 0]
@@ -64,7 +64,7 @@
                  (let [[x vx] (cond (> x w) [w (* -1 vx)]
                                     (< x 0) [0 (* -1 vx)]
                                     :else [x vx])
-                       [y vy] (if (> y h) [y (* -1 vy)] [y vy])]
+                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
         make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
                      {:xy   xy
