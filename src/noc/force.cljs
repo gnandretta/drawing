@@ -10,7 +10,7 @@
                         fps 60}}]
   (let [bounce (fn [[vx vy] [x y] [w h]]                    ; TODO how to model this using a force?
                  (let [[x vx] (cond (> x w) [w (* -1 vx)]
-                                      (< x 0) [0 (* -1 vx)]
+                                    (< x 0) [0 (* -1 vx)]
                                     :else [x vx])
                        [y vy] (if (> y h) [y (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
