@@ -248,3 +248,77 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(defn fluid-resistance [& {:keys [d fps]                    ; example 2.5
+                           :or   {d   [640 240]
+                                  fps 60}}]
+  (let [bounce (fn [[vx vy] [x y] [w h]]
+                 (let [[x vx] (cond (> x w) [w (* -1 vx)]
+                                    (< x 0) [0 (* -1 vx)]
+                                    :else [x vx])
+                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
+                   [[vx vy] [x y]]))
+        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
+                     {:xy   xy
+                      :mass mass
+                      :a    [0 0]
+                      :v    [0 0]})
+        draw-mover (fn [ctx m]
+                     (-> ctx
+                         (c/save)
+                         (c/set-fill-style "rgba(127,127,127,0.5)")
+                         (c/set-stroke-style :black)
+                         (c/set-line-width 2)
+                         (c/begin-path)
+                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/fill)
+                         (c/stroke)
+                         (c/restore)))
+        move (fn [{:keys [a v xy mass] :as m} forces]
+               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+                     [v xy] (bounce v xy d)
+                     v (mapv + v a)
+                     xy (mapv + xy v)]
+                 (merge m {:xy xy :v v :a [0 0]})))
+        make-liquid (fn [& {:keys [h* d c]}]
+                      (let [h (* h* (second d))]
+                        {:xy [0 (- (second d) h)] :d [(first d) h] :c c}))
+        draw-liquid (fn [ctx {:keys [xy d]}]
+                      (-> ctx
+                          (c/save)
+                          (c/set-fill-style "rgb(200,200,200)")
+                          (c/fill-rect xy d)
+                          (c/restore)))
+        in? (fn [[xa ya] [xb yb] [w h]]
+              (and (> xa xb) (< xa (+ xb w))
+                   (> ya yb) (< yb (+ yb h))))
+        calculate-liquid-resistance (fn [v c]
+                                      (let [mag-v (mag v)]
+                                        (m/v* (normalize v) -1 c mag-v mag-v)))
+        ctx (c/append ::fluid-resistance d)
+        in (chan)
+        [play ctrl] (a/play fps)
+        m-down (d/events (c/get ctx) "mousedown")
+        gravity [0 0.1]
+        liquid (make-liquid :h* 0.5 :c 0.1 :d d)]
+    (go (loop [ms nil]
+          (when (nil? ms) (recur (map #(make-mover :xy [% 0] :mass (m/rand-off 0.5 3))
+                                      (for [x (range 9)] (+ 40 (* 70 x))))))
+          (>! in ms)
+          (alt!
+            m-down (recur nil)
+            (timeout 1) (recur (map (fn [m] (move m (cond-> [(m/v* gravity (:mass m))]
+                                                            (in? (:xy m) (:xy liquid) (:d liquid))
+                                                            (conj (calculate-liquid-resistance (:v m) (:c liquid))))))
+                                    ms)))))
+    (go (while true
+          (let [ms (<! in)]
+            (-> ctx
+                (c/save)
+                (c/set-fill-style :white)
+                (c/fill-rect d)
+                (draw-liquid liquid)
+                (jump-> (doseq [m ms] (draw-mover ctx m)))
+                (c/restore))
+            (<! play))))
+    ctrl))
