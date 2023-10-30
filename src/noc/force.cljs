@@ -177,3 +177,74 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(defn- mag [[x y]]                                          ; TODO this fn is also in noc.vectors
+  (js/Math.sqrt (+ (* x x) (* y y))))
+
+(defn- normalize [v]                                        ; TODO this fn is also in noc.vectors
+  (let [mag-v (mag v)]
+    (mapv #(/ % mag-v) v)))
+
+;; TODO p5.js example reacts different, check params
+(defn including-friction [& {:keys [d fps]                  ; example 2.4
+                             :or   {d   [640 240]
+                                    fps 60}}]
+  (let [[w] d
+        bottom? (fn [{:keys [xy r]} [_ h]] (let [[_ y] xy] (> y (- h r 1))))
+        bounce (fn [[vx vy] [x y] r [w h]]
+                 (let [[x vx] (cond (> x (- w r)) [(- w r) (* -1 vx)]
+                                    (< x r) [r (* -1 vx)]
+                                    :else [x vx])
+                       [y vy] (if (> y (- h r)) [(- h r) (* -0.9 vy)] [y vy])]
+                   [[vx vy] [x y]]))
+        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
+                     {:xy   xy
+                      :mass mass
+                      :r    (* 8 mass)
+                      :a    [0 0]
+                      :v    [0 0]})
+        draw-mover (fn [ctx m]
+                     (let [line-width 2]
+                       (-> ctx
+                           (c/save)
+                           (c/set-fill-style "rgba(127,127,127,0.5)")
+                           (c/set-stroke-style :black)
+                           (c/set-line-width line-width)
+                           (c/begin-path)
+                           (c/arc (:xy m) (- (:r m) line-width) 0 (m/pi 2))
+                           (c/fill)
+                           (c/stroke)
+                           (c/restore))))
+        move (fn [{:keys [a v xy r mass] :as m} forces]
+               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+                     [v xy] (bounce v xy r d)
+                     v (mapv + v a)
+                     xy (mapv + xy v)]
+                 (merge m {:xy xy :v v :a [0 0]})))
+        ctx (c/append ::including-friction d)
+        in (chan)
+        [play ctrl] (a/play fps)
+        m-up-down (chan)
+        gravity [0 0.1]
+        wind [0.1 0]]
+    (d/events (c/get ctx) "mouseup" m-up-down)
+    (d/events (c/get ctx) "mousedown" m-up-down)
+    (go (loop [m (make-mover :xy [(/ w 2) 30] :mass 5)
+               m-state :up]
+          (>! in m)
+          (alt!
+            m-up-down (recur m (case m-state :up :down :up))
+            (timeout 1) (recur (move m (cond-> [(m/v* gravity (:mass m))]
+                                               (= m-state :down) (conj wind)
+                                               (bottom? m d) (conj (m/v* -0.1 (normalize (:v m))))))
+                               m-state))))
+    (go (while true
+          (let [m (<! in)]
+            (-> ctx
+                (c/save)
+                (c/set-fill-style :white)
+                (c/fill-rect d)
+                (draw-mover m)
+                (c/restore))
+            (<! play))))
+    ctrl))
