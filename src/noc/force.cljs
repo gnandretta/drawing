@@ -491,3 +491,54 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(defn n-bodies [& {:keys [d fps]                            ; example 2.9
+                   :or   {d   [640 240]
+                          fps 60}}]
+  (let [ctx (c/append ::n-bodies d)
+        in (chan)
+        [play ctrl] (a/play fps)
+        make-body (fn [& {:keys [xy v mass] :or {v    [0 0]
+                                                 mass 8}}]
+                    {:xy   xy
+                     :mass mass
+                     :a    [0 0]
+                     :v    v})
+        draw-body (fn [ctx m]
+                    (-> ctx
+                        (c/save)
+                        (c/set-fill-style "rgba(127,127,127,0.5)")
+                        (c/set-stroke-style :black)
+                        (c/set-line-width 2)
+                        (c/begin-path)
+                        (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2)) ; TODO adjust numbers
+                        (c/fill)
+                        (c/stroke)
+                        (c/restore)))
+        move (fn [{:keys [a v xy mass] :as m} forces]
+               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+                     v (mapv + v a)
+                     xy (mapv + xy v)]
+                 (merge m {:xy xy :v v :a [0 0]})))
+        get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
+                         (let [dist (m/v- (:xy a) (:xy b))
+                               mag-dist (-> (mag dist) (max 5) (min 25))]
+                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+        ]
+    (go (loop [bodies (repeatedly 10 #(make-body :xy (mapv rand-int d) :mass (m/rand-off 0.1 2)))]
+          (>! in bodies)
+          (recur (map (fn [a]
+                        (let [forces (->> bodies (filter (partial not= a))
+                                          (map (fn [b] (get-attraction b a))))]
+                          (move a forces)))
+                      bodies))))
+    (go (while true
+          (let [bodies (<! in)]
+            (-> ctx
+                (c/save)
+                (c/set-fill-style :white)
+                (c/fill-rect d)
+                (jump-> (doseq [m bodies] (draw-body ctx m)))
+                (c/restore))
+            (<! play))))
+    ctrl))
