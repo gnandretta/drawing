@@ -322,3 +322,63 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(defn attraction [& {:keys [d fps]                          ; example 2.6
+                     :or   {d   [640 240]
+                            fps 60}}]
+  (let [make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
+                     {:xy   xy
+                      :mass mass
+                      :a    [0 0]
+                      :v    [1 0]})
+        draw-mover (fn [ctx m]
+                     (-> ctx
+                         (c/save)
+                         (c/set-fill-style "rgba(127,127,127,0.5)")
+                         (c/set-stroke-style :black)
+                         (c/set-line-width 2)
+                         (c/begin-path)
+                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/fill)
+                         (c/stroke)
+                         (c/restore)))
+        move (fn [{:keys [a v xy mass] :as m} forces]
+               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+                     v (mapv + v a)
+                     xy (mapv + xy v)]
+                 (merge m {:xy xy :v v :a [0 0]})))
+        make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
+                         {:xy xy :mass mass})
+        draw-attractor (fn [ctx m]
+                         (-> ctx
+                             (c/save)
+                             (c/set-fill-style "rgba(125,125,125,0.78)")
+                             (c/set-stroke-style :black)
+                             (c/set-line-width 4)
+                             (c/begin-path)
+                             (c/arc (:xy m) (:mass m) 0 (m/pi 2)) ; TODO adjust numbers
+                             (c/fill)
+                             (c/stroke)
+                             (c/restore)))
+        get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
+                         (let [dist (m/v- (:xy a) (:xy b))
+                               mag-dist (-> (mag dist) (max 5) (min 25))]
+                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+        ctx (c/append ::attraction d)
+        in (chan)
+        [play ctrl] (a/play fps)
+        attractor (make-attractor :xy (m/v-div d 2))]
+    (go (loop [m (make-mover :xy [350 50] :mass 2)] ; TODO allow to move attractor
+          (>! in m)
+          (recur (move m [(get-attraction attractor m)]))))
+    (go (while true
+          (let [m (<! in)]
+            (-> ctx
+                (c/save)
+                (c/set-fill-style :white)
+                (c/fill-rect d)
+                (draw-attractor attractor)
+                (draw-mover m)
+                (c/restore))
+            (<! play))))
+    ctrl))
