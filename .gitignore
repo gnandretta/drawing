@@ -19,4 +19,5 @@ pom.xml.asc
 /package-lock.json
 /src/*
 !/src/drawing/
+!/src/mdn/
 !/src/noc/
