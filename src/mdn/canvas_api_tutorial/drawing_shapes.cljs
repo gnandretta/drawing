@@ -28,7 +28,34 @@
       (c/arc [90 65] 5 0 (m/pi 2))
       (c/stroke)))
 
+(defn lines []                                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#lines
+  (-> (c/append ::lines [150 150])
+      (c/begin-path)
+      (c/move-to [25 25])
+      (c/line-to [105 25])
+      (c/line-to [25 105])
+      (c/fill)                                              ; threats sub-path as closed
+      (c/begin-path)
+      (c/move-to [125 125])
+      (c/line-to [125 45])
+      (c/line-to [45 125])
+      (c/close-path)                                        ; must explicitly close the sub-path
+      (c/stroke)))
+
+(defn arcs []                                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#arcs
+  (let [ctx (c/append ::arcs [150 200])]
+    (doseq [i (range 4) j (range 3) :let [xy (map #(+ 25 (* 50 %)) [j i])
+                                          r 20
+                                          a-start 0
+                                          a-end (m/pi (+ 1 (/ j 2)))]]
+      (-> ctx
+          (c/begin-path)
+          ((if (even? i) c/arc c/arcc) xy r a-start a-end)
+          ((if (> i 1) c/fill c/stroke))))))
+
 (comment
   (drawing-shapes)
   (drawing-a-triangle)
-  (moving-the-pen))
+  (moving-the-pen)
+  (lines)
+  (arcs))
