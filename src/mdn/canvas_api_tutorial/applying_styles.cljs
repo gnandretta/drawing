@@ -11,16 +11,16 @@
           (c/set-fill-style (str "rgb(" r "," g ",0)"))     ; TODO implement rgb fn
           (c/fill-rect [(* 25 j) (* 25 i)] [25 25])))))
 
-(defn a-stroke-style-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_strokestyle_example
+(defn a-stroke-style-example []                             ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_strokestyle_example
   (let [ctx (c/append ::a-stroke-style-example [150 150])]
     (doseq [i (range 6) j (range 6) :let [[g b] (map #(js/Math.floor (- 255 (* 42.5 %))) [i j])]]
       (-> ctx
-          (c/set-stroke-style (str "rgb(0," g "," b ")"))     ; TODO when implemented, use rgb fn
+          (c/set-stroke-style (str "rgb(0," g "," b ")"))   ; TODO when implemented, use rgb fn
           (c/begin-path)
           (c/arc (map #(+ 12.5 (* 25 %)) [j i]) 10 0 (m/pi 2))
           (c/stroke)))))
 
-(defn a-global-alpha-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_globalalpha_example
+(defn a-global-alpha-example []                             ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_globalalpha_example
   (let [ctx (c/append ::a-global-alpha-example [150 150])]
     (-> ctx
         (c/set-fill-style "#fd0")
@@ -34,13 +34,13 @@
         (c/set-fill-style "#fff"))
     (set! (.-globalAlpha ctx) 0.2)                          ; TODO implement set-global-alpha
     (doseq [i (range 7)]
-          (-> ctx
-              (c/begin-path)
-              (c/arc [75 75] (+ 10 (* 10 i)) 0 (m/pi 2))
-              (c/fill)))))
+      (-> ctx
+          (c/begin-path)
+          (c/arc [75 75] (+ 10 (* 10 i)) 0 (m/pi 2))
+          (c/fill)))))
 
-(defn an-example-using-rgba []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#an_example_using_rgba
- (let [ctx (c/append ::an-example-using-rgba [150 150])]
+(defn an-example-using-rgba []                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#an_example_using_rgba
+  (let [ctx (c/append ::an-example-using-rgba [150 150])]
     (-> ctx
         (c/set-fill-style "rgb(255, 221, 0)")
         (c/fill-rect [150 37.5])
