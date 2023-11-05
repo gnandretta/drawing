@@ -1,5 +1,7 @@
 (ns mdn.canvas-api-tutorial.applying-styles
-  (:require [cljs.math :as cm]
+  (:require [cljs.core.async :refer [<! >! chan timeout] :refer-macros [go]]
+            [cljs.math :as cm]
+            [drawing.animation :as a]
             [drawing.canvas :as c]
             [drawing.cljs :refer [jump->]]
             [drawing.math :as m]))
@@ -116,6 +118,89 @@
                                   (+ 75 (* 25 (if (even? i) 1 -1)))]))) ; TODO implement +-/set-sign fn?
         (c/stroke))))
 
+(defn using-line-dashes []
+  (let [[w h :as d] [150 150]
+        ctx (c/append ::using-line-dashes d)
+        in (chan)
+        [play ctrl] (a/play)]
+    (go (loop [offset 0]
+          (>! in offset)
+          (<! (timeout 20))
+          (recur (if (= offset 5) 0 (inc offset)))))
+    (c/call ctx "setLineDash" #js [4 2])
+    (go (while true
+          (let [offset (<! in)]
+            (-> ctx
+                (c/call "clearRect" 0 0 w h)                ; TODO replace after implementing clear-rect
+                (c/set "lineDashOffset" (* -1 offset))
+                (c/stroke-rect [10 10] [100 100])))
+          (<! play)))
+    ctrl))
+
+(defn a-create-linear-gradient-example []                   ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createlineargradient_example
+  (let [ctx (c/append ::a-create-linear-gradient-example [150 150])
+        gradient-bg (doto (.createLinearGradient ctx 0 0 0 150) ; TODO implement fn to create linear gradients, also update below
+                      (.addColorStop 0 "#00abeb")           ; TODO be consistent with color format?
+                      (.addColorStop 0.5 "#fff")
+                      (.addColorStop 0.5 "#26c000")         ; same position as above for sharp transition
+                      (.addColorStop 1 "#fff"))
+        gradient-goal-post (doto (.createLinearGradient ctx 0 50 0 95) ; TODO use rgb and rgba fns once implemented
+                             (.addColorStop 0.5 "rgb(0,0,0)") ; implicit color stop at 0 of the same color
+                             (.addColorStop 1 "rgba(0,0,0,0)"))] ; same color as above to make it fade out
+    (-> ctx
+        (c/set "fillStyle" gradient-bg)                     ; TODO update set-fill-style to support gradients
+        (c/set "strokeStyle" gradient-goal-post)            ; TODO update set-stroke-style to support gradients
+        (c/fill-rect [10 10] [130 130])
+        (c/stroke-rect [50 50] [50 50]))))
+
+(defn a-create-radial-gradient-example []                   ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createradialgradient_example
+  (let [ctx (c/append ::a-create-radial-gradient-example [150 150])
+        gradient-yellow (doto (.createRadialGradient ctx 0 150 50 0 140 90) ; TODO implement fn to create radial gradients, also update other gradients
+                          (.addColorStop 0 "#f4f201")
+                          (.addColorStop 0.8 "rgb(228,199,0)")
+                          (.addColorStop 1 "rgba(228,199,0,0)"))
+        gradient-light-blue (doto (.createRadialGradient ctx 95 15 15 102 20 40)
+                              (.addColorStop 0 "#00c9ff")
+                              (.addColorStop 0.8 "#00b5e2") ; close but not the same color as below
+                              (.addColorStop 1 "rgba(0, 201, 255, 0)"))
+        gradient-pink (doto (.createRadialGradient ctx 105 105 20 112 120 50)
+                        (.addColorStop 0 "#ff5f98")
+                        (.addColorStop 0.75 "rgb(255, 1, 136)")
+                        (.addColorStop 1 "rgba(255, 1, 136, 0)"))
+        gradient-green (doto (.createRadialGradient ctx 45 45 10 52 50 30)
+                         (.addColorStop 0 "#a7d30c")
+                         (.addColorStop 0.9 "rgb(1, 159, 98)")
+                         (.addColorStop 1 "rgba(1, 159, 98, 0)"))]
+    (-> ctx                                                 ;TODO use a vector of gradients instead of 4 vars
+        (c/set "fillStyle" gradient-yellow)                 ; TODO replace (all) with set-fill-style once updated
+        (c/fill-rect [150 150])
+        (c/set "fillStyle" gradient-light-blue)
+        (c/fill-rect [150 150])
+        (c/set "fillStyle" gradient-pink)
+        (c/fill-rect [150 150])
+        (c/set "fillStyle" gradient-green)
+        (c/fill-rect [150 150]))))
+
+(defn a-create-conic-gradient-example []                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createconicgradient_example
+  (let [^js/CanvasRenderingContext2D ctx (c/append ::a-create-conic-gradient-example [250 150]) ; TODO figure out why it doesn't work without the hint, see https://clojurescript.org/reference/compiler-options#infer-externs
+        gradient-a (doto (.createConicGradient ctx 2 62 75) ; positioned at center of rectangle
+                     (.addColorStop 0 "#a7d30c")            ; TODO implement fn to create conic gradients, also update other gradient
+                     (.addColorStop 1 "#fff"))
+        gradient-b (doto (.createConicGradient ctx 0 187 75) ; positioned at center of rectangle
+                     (.addColorStop 0 "black")
+                     (.addColorStop 0.25 "black")
+                     (.addColorStop 0.25 "white")
+                     (.addColorStop 0.5 "white")
+                     (.addColorStop 0.5 "black")
+                     (.addColorStop 0.75 "black")
+                     (.addColorStop 0.75 "white")
+                     (.addColorStop 1 "white"))]
+    (-> ctx
+        (c/set "fillStyle" gradient-a)
+        (c/fill-rect [12 25] [100 100])
+        (c/set "fillStyle" gradient-b)
+        (c/fill-rect [137 25] [100 100]))))
+
 (comment
   (a-fill-style-example)
   (a-stroke-style-example)
@@ -124,4 +209,8 @@
   (a-line-width-example)
   (a-line-cap-example)
   (a-line-join-example)
-  (a-demo-of-the-miter-limit-property))
+  (a-demo-of-the-miter-limit-property)
+  (def a (using-line-dashes)) (go (>! a :toggle))
+  (a-create-linear-gradient-example)
+  (a-create-radial-gradient-example)
+  (a-create-conic-gradient-example))
