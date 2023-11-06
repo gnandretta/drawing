@@ -169,9 +169,12 @@
   specifies the algorithm that determines if a point is inside or outside the
   filling region. \"nonzero\" by default and the other possible value is
   \"evenodd\"."
-  [ctx]
-  (.fill ctx)
-  ctx)
+  ([ctx]
+   (.fill ctx)
+   ctx)
+  ([ctx path]
+   (.fill ctx path)
+   ctx))
 
 (defn fill-rect
   "Draws a rectangle from filled according to fill-style without modifying the
@@ -268,14 +271,17 @@
   (.scale ctx x y)
   ctx)
 
-(defn stroke                                                ; TODO implement other arities
+(defn stroke
   "Outlines the current or given path with the current stroke-style. Strokes
    are aligned to the center of a path (half of the stroke is drawn on the
    inner side, and half on the outer side) and drawn using the non-zero winding
    rule (path intersections will still get filled)."
-  [ctx]
-  (.stroke ctx)
-  ctx)
+  ([ctx]
+   (.stroke ctx)
+   ctx)
+  ([ctx path]
+   (.stroke ctx path)
+   ctx))
 
 (defn stroke-rect
   "Draws an outlined rectangle according to stroke-style without modifying the
