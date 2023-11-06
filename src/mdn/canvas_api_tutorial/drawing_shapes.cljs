@@ -149,12 +149,12 @@
   (let [rectangle (c/rect (js/Path2D.) [10 10] [50 50])     ; TODO add fn to create a path
         circle (c/arc (js/Path2D.) [100 35] 25 0 (m/pi 2))]
     (-> (c/append ::path-2d-example [150 150])
-        (c/call "stroke" rectangle)                         ; TODO implement stroke arity for path
-        (c/call "fill" circle))))                           ; TODO implement fill arity for path
+        (c/stroke rectangle)
+        (c/fill circle))))
 
 (defn using-svg-paths []                                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#using_svg_paths
-  (-> (c/append ::using-svg-paths [150 150])                ; TODO refactor when canvas fns from path-2d-example are implemented
-      (c/call "fill" (js/Path2D. "M10 10 h 80 v 80 h -80 Z"))))
+  (-> (c/append ::using-svg-paths [150 150])
+      (c/fill (js/Path2D. "M10 10 h 80 v 80 h -80 Z")))) ; TODO use fn to create path when implemented
 
 (comment
   (drawing-shapes)
