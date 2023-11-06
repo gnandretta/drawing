@@ -95,9 +95,9 @@
         (c/fill)
 
         (jump->                                             ; fruits
-          (doseq [i (range 8)] (c/fill-rect ctx [(+ 51 (* 16 i)) 35] [4 4])) ; TODO range fn with no end (range-n)
-          (doseq [i (range 6)] (c/fill-rect ctx [115 (+ 51 (* 16 i)) 35] [4 4]))
-          (doseq [i (range 8)] (c/fill-rect ctx [(+ 51 (* 16 i)) 99] [4 4])))
+          (doseq [x (m/range-n 51 8 16)] (c/fill-rect ctx [x 35] [4 4]))
+          (doseq [y (m/range-n 51 6 16)] (c/fill-rect ctx [115 y] [4 4]))
+          (doseq [x (m/range-n 51 8 16)] (c/fill-rect ctx [x 99] [4 4])))
 
         (c/begin-path)                                      ; ghost
         (c/move-to [83 116])
