@@ -239,6 +239,14 @@
   (.rotate ctx a)
   ctx)
 
+(defn round-rect
+  "Adds a rounded rectangle to the current path with the given radii—which works
+   pretty much like CSS border-radius property."
+  ([ctx d radii] (round-rect ctx [0 0] d radii))            ; radii is the plural of radius, also radiuses
+  ([^js/CanvasRenderingContext2D ctx [x y] [w h] radii]
+   (.roundRect ctx x y w h radii)
+   ctx))
+
 (defn save
   "Pushes the current drawing state onto a stack."          ; TODO doc what makes the drawing state
   [ctx]
