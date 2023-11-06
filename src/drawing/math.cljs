@@ -113,6 +113,12 @@
   [[x y]]
   (noise-2d-generator x y))
 
+(defn range-n
+  "Returns a lazy sequence of start, start+step, start+2*step, ...,
+   start+n*step."
+  [start n step]
+  (take n (iterate (partial + step) start)))
+
 (defn grid
   "Returns a lazy sequence of normalized coordinates of the intersections in a
    grid with v (or n) vertical lines and h (or n) horizontal lines."
