@@ -310,6 +310,21 @@
   (doseq [[x y] xys] (.translate ctx x y))
   ctx)
 
+(defn copy-path
+  "Makes a new path from an existing path."
+  [path]
+  (js/Path2D. path))
+
+(defn path
+  "Makes an empty path."
+  []
+  (js/Path2D.))
+
+(defn svg->path
+  "Makes a path from SVG path data."
+  [d]
+  (js/Path2D. d))
+
 (defn- expand-margin [v]
   (case (count v)
     1 (vec (repeat 4 (first v)))
