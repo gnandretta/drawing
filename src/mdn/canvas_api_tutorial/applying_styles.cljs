@@ -120,7 +120,7 @@
         (c/stroke))))
 
 (defn using-line-dashes []
-  (let [[w h :as d] [150 150]
+  (let [d [150 150]
         ctx (c/append ::using-line-dashes d)
         in (chan)
         [play ctrl] (a/play)]
@@ -132,7 +132,7 @@
     (go (while true
           (let [offset (<! in)]
             (-> ctx
-                (c/call "clearRect" 0 0 w h)                ; TODO replace after implementing clear-rect
+                (c/clear-rect d)
                 (c/set "lineDashOffset" (* -1 offset))
                 (c/stroke-rect [10 10] [100 100])))
           (<! play)))

@@ -6,7 +6,7 @@
 (defn drawing-shapes []                                     ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#rectangular_shape_example
   (-> (c/append ::drawing-shapes [150 150])
       (c/fill-rect [25 25] [100 100])
-      (c/call "clearRect" 45 45 60 60)                      ; TODO implement clear-rect
+      (c/clear-rect [45 45] [60 60])
       (c/stroke-rect [50 50] [50 50])))
 
 (defn drawing-a-triangle []                                 ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#drawing_a_triangle
