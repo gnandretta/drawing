@@ -139,10 +139,10 @@
     (-> ctx
         (c/begin-path)
         (c/move-to [x (+ y r)])
-        (c/call "arcTo" x (+ y h) (+ x r) (+ y h) r)        ; TODO implement arc-to
-        (c/call "arcTo" (+ x w) (+ y h) (+ x w) (- (+ y h) r) r)
-        (c/call "arcTo" (+ x w) y (- (+ x w) r) y r)
-        (c/call "arcTo" x y x (+ y r) r)
+        (c/arc-to [x (+ y h)] [(+ x r) (+ y h)] r)
+        (c/arc-to [(+ x w) (+ y h)] [(+ x w) (- (+ y h) r)] r)
+        (c/arc-to [(+ x w) y] [(- (+ x w) r) y] r)
+        (c/arc-to [x y] [x (+ y r)] r)
         (c/stroke))))
 
 (defn path-2d-example []                                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#path2d_example
