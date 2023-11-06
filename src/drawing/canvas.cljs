@@ -112,6 +112,13 @@
    (.arc ctx x y r a-start a-end)
    ctx))
 
+(defn arc-to
+  "Adds a circular arc to the current sub-path connected to the last point with
+   a straight line."
+  [ctx [ax ay] [bx by] r]
+  (.arcTo ctx ax ay bx by r)
+  ctx)
+
 (defn arcc
   "Adds a circular arc centered at (0,0) by default to the current sub-path,
    counterclockwise."
