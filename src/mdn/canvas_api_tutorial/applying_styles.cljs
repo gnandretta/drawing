@@ -1,10 +1,11 @@
 (ns mdn.canvas-api-tutorial.applying-styles
-  (:require [cljs.core.async :refer [<! >! chan timeout] :refer-macros [go]]
+  (:require [cljs.core.async :refer [<! >! chan put! timeout] :refer-macros [go]]
             [cljs.math :as cm]
             [drawing.animation :as a]
             [drawing.canvas :as c]
             [drawing.cljs :refer [jump->]]
-            [drawing.math :as m]))
+            [drawing.math :as m]
+            [goog.dom :as dom]))
 
 (defn a-fill-style-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_fillstyle_example
   (let [ctx (c/append ::a-fill-style-example [150 150])]
@@ -201,6 +202,34 @@
         (c/set "fillStyle" gradient-b)
         (c/fill-rect [137 25] [100 100]))))
 
+(defn- load-image [url]                                     ; TODO move it to a drawing ns for reuse
+  (let [c (chan)
+        img (js/Image.)]
+    (dom/setProperties img #js {:onload #(put! c img) :src url})
+    c))
+
+(defn a-create-pattern-example []                           ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createpattern_example
+  (go (let [url "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors/canvas_createpattern.png"
+            img (<! (load-image url))
+            ctx (c/append ::a-create-pattern-example [150 150])]
+        (-> ctx
+            (c/set "fillStyle" (.createPattern ctx img "repeat")) ; TODO implement fn (or fns?) to create a pattern and update call to set-fill-style once it supports patterns
+            (c/fill-rect [100 100])))))
+
+(defn a-shadow-text-example []                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_shadowed_text_example
+  (-> (c/append ::a-shadow-text-example [150 150])
+      (c/set-shadow-offset [2 2])
+      (c/set-shadow-color "rgba(0,0,0,0.5)")
+      (c/set-font "20px Times New Roman")
+      (c/fill-text "Sample String" [5 30])))
+
+(defn canvas-fill-rules []                                  ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#canvas_fill_rules
+  (-> (c/append ::canvas-fill-rules [150 150])
+      (c/begin-path)
+      (c/arc [50 50] 30 0 (m/pi 2))
+      (c/arc [50 50] 15 0 (m/pi 2))
+      (c/call "fill" "evenodd")))                           ; TODO update fill to take the fill rule
+
 (comment
   (a-fill-style-example)
   (a-stroke-style-example)
@@ -213,4 +242,7 @@
   (def a (using-line-dashes)) (go (>! a :toggle))
   (a-create-linear-gradient-example)
   (a-create-radial-gradient-example)
-  (a-create-conic-gradient-example))
+  (a-create-conic-gradient-example)
+  (a-create-pattern-example)
+  (a-shadow-text-example)
+  (canvas-fill-rules))
