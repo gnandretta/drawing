@@ -133,6 +133,14 @@
   (.bezierCurveTo ctx ax ay bx by x y)
   ctx)
 
+(defn clear-rect
+  "Sets pixels in the given rectangle to transparent black without affecting
+   the current path."
+  ([ctx d] (clear-rect ctx [0 0] d))
+  ([ctx [x y] [w h]]
+   (.clearRect ctx x y w h)
+   ctx))
+
 (defn clip
   "Makes the current path the current clipping region, if there isn't any.
    Otherwise, it makes the intersection of the clipping region and path the
