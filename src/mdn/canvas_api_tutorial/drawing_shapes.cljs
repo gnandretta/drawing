@@ -81,12 +81,12 @@
 (defn making-combinations []                                ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#making_combinations
   (let [ctx (c/append ::making-combinations [150 150])]
     (-> ctx
-        (c/call "roundRect" 12 12 150 150 15)               ; bg
-        (c/call "roundRect" 19 19 150 150 9)                ; TODO implement round-rect
-        (c/call "roundRect" 53 53 49 33 10)
-        (c/call "roundRect" 53 119 49 16 6)
-        (c/call "roundRect" 135 53 49 33 10)
-        (c/call "roundRect" 135 119 25 49 10)
+        (c/round-rect [12 12] [150 150] 15)                 ; bg
+        (c/round-rect [19 19] [150 150] 9)
+        (c/round-rect [53 53] [49 33] 10)
+        (c/round-rect [53 119] [49 16] 6)
+        (c/round-rect [135 53] [49 33] 10)
+        (c/round-rect [135 119] [25 49] 10)
         (c/stroke)
 
         (c/begin-path)                                      ; pacman
