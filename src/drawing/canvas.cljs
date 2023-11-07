@@ -61,6 +61,13 @@
   (object/set ctx "globalCompositeOperation" (name value))
   ctx)
 
+(defn set-miter-limit
+  "Sets the miter limit ratio, see set-line-join. 10.0 by default, 0, negative,
+   ##Inf, and ##NaN values are ignored."
+  [ctx value]
+  (object/set ctx "miterLimit" value)
+  ctx)
+
 (defn set-line-cap
   "Sets the shape used to draw the end of lines. :butt by default, other
    possible values are :round and :square, and add half of the line's width." ; TODO review doc
