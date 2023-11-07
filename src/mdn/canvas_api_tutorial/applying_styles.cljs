@@ -91,9 +91,9 @@
 (defn a-line-join-example []                                ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_linejoin_example
   (let [ctx (c/append ::a-line-join-example [150 150])]
     (c/set-line-width ctx 10)
-    (doseq [[i line-join] (map-indexed list ["round" "bevel" "miter"])]
-      (set! (.-lineJoin ctx) line-join)                     ; TODO implement set-line-join
+    (doseq [[i line-join] (map-indexed list [:round :bevel :miter])]
       (-> ctx
+          (c/set-line-join line-join)
           (c/begin-path)
           (c/move-to [-5 (+ 5 (* 40 i))])
           (c/line-to [35 (+ 45 (* 40 i))])
