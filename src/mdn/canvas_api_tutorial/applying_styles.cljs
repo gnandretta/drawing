@@ -147,8 +147,8 @@
         gradient-goal-post (c/linear-gradient ctx [0 50] [0 95] [[0.5 "rgb(0,0,0)"] ; implicit color stop at 0 of the same color
                                                                  [1 "rgba(0,0,0,0)"]])] ; same color as above to make it fade out
     (-> ctx
-        (c/set "fillStyle" gradient-bg)                     ; TODO update set-fill-style to support gradients
-        (c/set "strokeStyle" gradient-goal-post)            ; TODO update set-stroke-style to support gradients
+        (c/set-fill-style gradient-bg)
+        (c/set-stroke-style gradient-goal-post)
         (c/fill-rect [10 10] [130 130])
         (c/stroke-rect [50 50] [50 50]))))
 
@@ -168,13 +168,13 @@
                                                                      [0.9 "rgb(1, 159, 98)"]
                                                                      [1 "rgba(1, 159, 98, 0)"]])]
     (-> ctx                                                 ;TODO use a vector of gradients instead of 4 vars
-        (c/set "fillStyle" gradient-yellow)                 ; TODO replace (all) with set-fill-style once updated
+        (c/set-fill-style gradient-yellow)
         (c/fill-rect [150 150])
-        (c/set "fillStyle" gradient-light-blue)
+        (c/set-fill-style gradient-light-blue)
         (c/fill-rect [150 150])
-        (c/set "fillStyle" gradient-pink)
+        (c/set-fill-style gradient-pink)
         (c/fill-rect [150 150])
-        (c/set "fillStyle" gradient-green)
+        (c/set-fill-style gradient-green)
         (c/fill-rect [150 150]))))
 
 (defn a-create-conic-gradient-example []                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createconicgradient_example
@@ -190,9 +190,9 @@
                                                      [0.75 "white"]
                                                      [1 "white"]])]
     (-> ctx
-        (c/set "fillStyle" gradient-a)
+        (c/set-fill-style gradient-a)
         (c/fill-rect [12 25] [100 100])
-        (c/set "fillStyle" gradient-b)
+        (c/set-fill-style gradient-b)
         (c/fill-rect [137 25] [100 100]))))
 
 (defn- load-image [url]                                     ; TODO move it to a drawing ns for reuse
