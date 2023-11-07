@@ -379,6 +379,12 @@
   []
   (js/Path2D.))
 
+(defn pattern
+  "Creates a pattern from many image sources. Possible values for repeat are
+   :repeat, :repeat-x, :repeat-y, and :no-repeat."
+  [ctx img repeat]
+  (.createPattern ctx img repeat))
+
 (defn radial-gradient
   "Creates a gradient from circle a to circle b. Coordinates are global."
   [ctx [ax ay] ra [bx by] rb stops]
