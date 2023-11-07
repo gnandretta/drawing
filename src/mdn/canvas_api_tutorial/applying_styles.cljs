@@ -219,7 +219,7 @@
       (c/begin-path)
       (c/arc [50 50] 30 0 (m/pi 2))
       (c/arc [50 50] 15 0 (m/pi 2))
-      (c/call "fill" "evenodd")))                           ; TODO update fill to take the fill rule
+      (c/fill :evenodd)))
 
 (comment
   (a-fill-style-example)
