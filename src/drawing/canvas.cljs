@@ -141,6 +141,12 @@
   (object/set ctx "textBaseline" value)
   ctx)
 
+(defn set-transform
+  "Sets the transformation matrix—see transform."
+  [ctx a b c d e f]
+  (.setTransform ctx a b c d e f)
+  ctx)
+
 (defn arc
   "Adds a circular arc centered at (0,0) by default to the current sub-path,
    clockwise."                                              ; TODO doc somewhere how angles are measured (radians from teh positive x-axis) and letter meaning
