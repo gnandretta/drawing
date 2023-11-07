@@ -340,6 +340,18 @@
   (.transform ctx a b c d e f)
   ctx)
 
+(defn add-color-stop
+  "Adds a color stop, an offset/color pair, to a gradient and returns the
+   gradient. off is a number between 0 (start of the gradient) and 1 (end)."
+  [g [off c]]
+  (doto g (.addColorStop off (name c))))
+
+(defn add-color-stops
+  "Adds a list of color stops to a gradient and returns it—see add-color-stop."
+  [g stops]
+  (doseq [stop stops] (add-color-stop g stop))
+  g)
+
 (defn translate
   "Adds one or more translation transformations to the current matrix by moving
    the canvas origin the given units."
@@ -355,9 +367,7 @@
 (defn linear-gradient
   "Creates a gradient along the line connecting the given global coordinates." ; global coordinates means relative to the current coordinate space
   [ctx [ax ay] [bx by] stops]
-  (let [g (.createLinearGradient ctx ax ay bx by)]
-    (doseq [[offset color] stops] (.addColorStop g offset (name color)))
-    g))
+  (add-color-stops (.createLinearGradient ctx ax ay bx by) stops))
 
 (defn path
   "Makes an empty path."
