@@ -34,8 +34,8 @@
         (c/fill-rect [0 75] [75 75])
         (c/set-fill-style "#f30")
         (c/fill-rect [75 75] [75 75])
-        (c/set-fill-style "#fff"))
-    (set! (.-globalAlpha ctx) 0.2)                          ; TODO implement set-global-alpha
+        (c/set-fill-style "#fff")
+        (c/set-global-alpha 0.2))
     (doseq [i (range 7)]
       (-> ctx
           (c/begin-path)
