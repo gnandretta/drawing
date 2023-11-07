@@ -39,7 +39,7 @@
   "Sets the CSS color, gradient, or pattern to use inside shapes. \"#000\" by
    default."
   [ctx value]
-  (object/set ctx "fillStyle" (name value))
+  (object/set ctx "fillStyle" (cond-> value (keyword? value) name))
   ctx)
 
 (defn set-font
@@ -124,7 +124,7 @@
   "Sets the CSS color, gradient, or pattern to use for shapes outlines. \"#000\"
    by default."
   [ctx value]
-  (object/set ctx "strokeStyle" (name value))
+  (object/set ctx "strokeStyle" (cond-> value (keyword? value) name))
   ctx)
 
 (defn set-text-align
