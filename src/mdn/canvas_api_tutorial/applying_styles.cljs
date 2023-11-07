@@ -154,22 +154,19 @@
 
 (defn a-create-radial-gradient-example []                   ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createradialgradient_example
   (let [ctx (c/append ::a-create-radial-gradient-example [150 150])
-        gradient-yellow (doto (.createRadialGradient ctx 0 150 50 0 140 90) ; TODO implement fn to create radial gradients, also update other gradients
-                          (.addColorStop 0 "#f4f201")
-                          (.addColorStop 0.8 "rgb(228,199,0)")
-                          (.addColorStop 1 "rgba(228,199,0,0)"))
-        gradient-light-blue (doto (.createRadialGradient ctx 95 15 15 102 20 40)
-                              (.addColorStop 0 "#00c9ff")
-                              (.addColorStop 0.8 "#00b5e2") ; close but not the same color as below
-                              (.addColorStop 1 "rgba(0, 201, 255, 0)"))
-        gradient-pink (doto (.createRadialGradient ctx 105 105 20 112 120 50)
-                        (.addColorStop 0 "#ff5f98")
-                        (.addColorStop 0.75 "rgb(255, 1, 136)")
-                        (.addColorStop 1 "rgba(255, 1, 136, 0)"))
-        gradient-green (doto (.createRadialGradient ctx 45 45 10 52 50 30)
-                         (.addColorStop 0 "#a7d30c")
-                         (.addColorStop 0.9 "rgb(1, 159, 98)")
-                         (.addColorStop 1 "rgba(1, 159, 98, 0)"))]
+        gradient-yellow (c/radial-gradient ctx [0 150] 50 [0 140] 90 [[0 "#f4f201"]
+                                                                      [0.8 "rgb(228,199,0)"]
+                                                                      [1 "rgba(228,199,0,0)"]])
+        gradient-light-blue (c/radial-gradient ctx [95 15] 15 [102 20] 40 [[0 "#00c9ff"]
+                                                                           [0.8 "#00b5e2"] ; close but not the same color as below
+                                                                           [1 "rgba(0, 201, 255, 0)"]])
+        gradient-pink (c/radial-gradient ctx [105 105] 20 [112 120] 50 [
+                                                                        [0 "#ff5f98"]
+                                                                        [0.75 "rgb(255, 1, 136)"]
+                                                                        [1 "rgba(255, 1, 136, 0)"]])
+        gradient-green (c/radial-gradient ctx [45 45] 10 [52 50] 30 [[0 "#a7d30c"]
+                                                                     [0.9 "rgb(1, 159, 98)"]
+                                                                     [1 "rgba(1, 159, 98, 0)"]])]
     (-> ctx                                                 ;TODO use a vector of gradients instead of 4 vars
         (c/set "fillStyle" gradient-yellow)                 ; TODO replace (all) with set-fill-style once updated
         (c/fill-rect [150 150])
