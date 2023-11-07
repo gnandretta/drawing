@@ -359,6 +359,11 @@
   (doseq [[x y] xys] (.translate ctx x y))
   ctx)
 
+(defn conic-gradient
+  "Creates a gradient around a point (in global coordinates) from an angle."
+  [^js/CanvasRenderingContext2D ctx a-start [x y] stops]    ; TODO figure out why it doesn't work without the hint, see https://clojurescript.org/reference/compiler-options#infer-externs
+  (add-color-stops (.createConicGradient ctx a-start x y) stops))
+
 (defn copy-path
   "Makes a new path from an existing path."
   [path]
