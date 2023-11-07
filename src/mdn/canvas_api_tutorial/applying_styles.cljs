@@ -11,14 +11,14 @@
   (let [ctx (c/append ::a-fill-style-example [150 150])]
     (doseq [i (range 6) j (range 6) :let [[r g] (map #(js/Math.floor (- 255 (* 42.5 %))) [i j])]]
       (-> ctx
-          (c/set-fill-style (str "rgb(" r "," g ",0)"))     ; TODO implement rgb fn
+          (c/set-fill-style (c/rgb [r g 0]))
           (c/fill-rect [(* 25 j) (* 25 i)] [25 25])))))
 
 (defn a-stroke-style-example []                             ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_strokestyle_example
   (let [ctx (c/append ::a-stroke-style-example [150 150])]
     (doseq [i (range 6) j (range 6) :let [[g b] (map #(js/Math.floor (- 255 (* 42.5 %))) [i j])]]
       (-> ctx
-          (c/set-stroke-style (str "rgb(0," g "," b ")"))   ; TODO when implemented, use rgb fn
+          (c/set-stroke-style (c/rgb [0 g b]))
           (c/begin-path)
           (c/arc (map #(+ 12.5 (* 25 %)) [j i]) 10 0 (m/pi 2))
           (c/stroke)))))
@@ -54,7 +54,7 @@
         (c/set-fill-style "rgb(255, 51, 0)")
         (c/fill-rect [0 112.5] [150 37.5]))
     (doseq [i (range 10) j (range 4)]
-      (c/set-fill-style ctx (str "rgba(255,255,255," (/ (inc i) 10)))
+      (c/set-fill-style ctx (c/rgba [255 255 255 (/ (inc i) 10)]))
       (c/fill-rect ctx [(+ 5 (* 14 i)) (+ 5 (* 37.5 j))] [14 27.5]))))
 
 (defn a-line-width-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_linewidth_example
