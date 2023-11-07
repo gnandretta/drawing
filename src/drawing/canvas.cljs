@@ -352,6 +352,13 @@
   [path]
   (js/Path2D. path))
 
+(defn linear-gradient
+  "Creates a gradient along the line connecting the given global coordinates." ; global coordinates means relative to the current coordinate space
+  [ctx [ax ay] [bx by] stops]
+  (let [g (.createLinearGradient ctx ax ay bx by)]
+    (doseq [[offset color] stops] (.addColorStop g offset (name color)))
+    g))
+
 (defn path
   "Makes an empty path."
   []
