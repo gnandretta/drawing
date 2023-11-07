@@ -178,19 +178,17 @@
         (c/fill-rect [150 150]))))
 
 (defn a-create-conic-gradient-example []                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createconicgradient_example
-  (let [^js/CanvasRenderingContext2D ctx (c/append ::a-create-conic-gradient-example [250 150]) ; TODO figure out why it doesn't work without the hint, see https://clojurescript.org/reference/compiler-options#infer-externs
-        gradient-a (doto (.createConicGradient ctx 2 62 75) ; positioned at center of rectangle
-                     (.addColorStop 0 "#a7d30c")            ; TODO implement fn to create conic gradients, also update other gradient
-                     (.addColorStop 1 "#fff"))
-        gradient-b (doto (.createConicGradient ctx 0 187 75) ; positioned at center of rectangle
-                     (.addColorStop 0 "black")
-                     (.addColorStop 0.25 "black")
-                     (.addColorStop 0.25 "white")
-                     (.addColorStop 0.5 "white")
-                     (.addColorStop 0.5 "black")
-                     (.addColorStop 0.75 "black")
-                     (.addColorStop 0.75 "white")
-                     (.addColorStop 1 "white"))]
+  (let [ctx (c/append ::a-create-conic-gradient-example [250 150]) ;
+        gradient-a (c/conic-gradient ctx 2 [62 75] [[0 "#a7d30c"] ; positioned at center of rectangle
+                                                    [1 "#fff"]])
+        gradient-b (c/conic-gradient ctx 0 [187 75] [[0 "black"] ; positioned at center of rectangle
+                                                     [0.25 "black"]
+                                                     [0.25 "white"]
+                                                     [0.5 "white"]
+                                                     [0.5 "black"]
+                                                     [0.75 "black"]
+                                                     [0.75 "white"]
+                                                     [1 "white"]])]
     (-> ctx
         (c/set "fillStyle" gradient-a)
         (c/fill-rect [12 25] [100 100])
