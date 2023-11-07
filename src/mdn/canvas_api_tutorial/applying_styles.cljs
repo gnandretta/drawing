@@ -128,12 +128,12 @@
           (>! in offset)
           (<! (timeout 20))
           (recur (if (= offset 5) 0 (inc offset)))))
-    (c/call ctx "setLineDash" #js [4 2])                    ; TODO implement set-line-dash
+    (c/set-line-dash ctx [4 2])
     (go (while true
           (let [offset (<! in)]
             (-> ctx
                 (c/clear-rect d)
-                (c/set "lineDashOffset" (* -1 offset))      ; TODO implement set-line-dash-offset
+                (c/set-line-dash-offset (* -1 offset))
                 (c/stroke-rect [10 10] [100 100])))
           (<! play)))
     ctrl))
