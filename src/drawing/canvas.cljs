@@ -325,6 +325,14 @@
   [d]
   (js/Path2D. d))
 
+(defn rgb
+  [[r g b]]
+  (str "rgb(" r "," g "," b ")"))
+
+(defn rgba
+  [[r g b a]]
+  (str "rgba(" r "," g "," b "," a ")"))
+
 (defn- expand-margin [v]
   (case (count v)
     1 (vec (repeat 4 (first v)))
