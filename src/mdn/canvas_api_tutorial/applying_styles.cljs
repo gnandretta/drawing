@@ -59,12 +59,12 @@
 
 (defn a-line-width-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_linewidth_example
   (let [ctx (c/append ::a-line-width-example [150 150])]
-    (doseq [i (range 10)]
+    (doseq [i (range 10) :let [x (+ 5 (* 14 i))]]
       (-> ctx
           (c/set-line-width (inc i))                        ; odd-widths produce crisp lines, can void using .5px coords
           (c/begin-path)
-          (c/move-to [(+ 5 (* 14 i)) 5])
-          (c/line-to [(+ 5 (* 14 i)) 140])
+          (c/move-to [x 5])
+          (c/line-to [x 140])
           (c/stroke)))))
 
 (defn a-line-cap-example []                                 ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_linecap_example
