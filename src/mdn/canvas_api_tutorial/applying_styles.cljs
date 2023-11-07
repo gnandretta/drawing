@@ -140,14 +140,12 @@
 
 (defn a-create-linear-gradient-example []                   ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_createlineargradient_example
   (let [ctx (c/append ::a-create-linear-gradient-example [150 150])
-        gradient-bg (doto (.createLinearGradient ctx 0 0 0 150) ; TODO implement fn to create linear gradients, also update below
-                      (.addColorStop 0 "#00abeb")           ; TODO be consistent with color format?
-                      (.addColorStop 0.5 "#fff")
-                      (.addColorStop 0.5 "#26c000")         ; same position as above for sharp transition
-                      (.addColorStop 1 "#fff"))
-        gradient-goal-post (doto (.createLinearGradient ctx 0 50 0 95) ; TODO use rgb and rgba fns once implemented
-                             (.addColorStop 0.5 "rgb(0,0,0)") ; implicit color stop at 0 of the same color
-                             (.addColorStop 1 "rgba(0,0,0,0)"))] ; same color as above to make it fade out
+        gradient-bg (c/linear-gradient ctx [0 0] [0 150] [[0 "#00abeb"] ; TODO be consistent with color format?
+                                                          [0.5 "#fff"]
+                                                          [0.5 "#26c000"] ; same position as above for sharp transition
+                                                          [1 "#fff"]])
+        gradient-goal-post (c/linear-gradient ctx [0 50] [0 95] [[0.5 "rgb(0,0,0)"] ; implicit color stop at 0 of the same color
+                                                                 [1 "rgba(0,0,0,0)"]])] ; same color as above to make it fade out
     (-> ctx
         (c/set "fillStyle" gradient-bg)                     ; TODO update set-fill-style to support gradients
         (c/set "strokeStyle" gradient-goal-post)            ; TODO update set-stroke-style to support gradients
