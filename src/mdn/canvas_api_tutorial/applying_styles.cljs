@@ -105,8 +105,8 @@
 (defn a-demo-of-the-miter-limit-property []                 ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_demo_of_the_miterlimit_property
   (let [miter-limit 10
         ctx (c/append ::a-demo-of-the-miter-limit-property [150 150])]
-    (set! (.-miterLimit ctx) miter-limit)                   ; TODO implement set-miter-limit
     (-> ctx
+        (c/set-miter-limit miter-limit)
         (c/set-stroke-style "#09f")                         ; guides
         (c/set-line-width 2)
         (c/stroke-rect [-5 50] [160 50])
