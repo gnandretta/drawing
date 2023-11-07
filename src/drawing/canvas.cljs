@@ -374,6 +374,11 @@
   []
   (js/Path2D.))
 
+(defn radial-gradient
+  "Creates a gradient from circle a to circle b. Coordinates are global."
+  [ctx [ax ay] ra [bx by] rb stops]
+  (add-color-stops (.createRadialGradient ctx ax ay ra bx by rb) stops))
+
 (defn svg->path
   "Makes a path from SVG path data."
   [d]
