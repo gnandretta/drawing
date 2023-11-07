@@ -204,7 +204,7 @@
             img (<! (load-image url))
             ctx (c/append ::a-create-pattern-example [150 150])]
         (-> ctx
-            (c/set "fillStyle" (.createPattern ctx img "repeat")) ; TODO implement fn (or fns?) to create a pattern and update call to set-fill-style once it supports patterns
+            (c/set-fill-style (c/pattern ctx img :repeat))
             (c/fill-rect [100 100])))))
 
 (defn a-shadow-text-example []                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_shadowed_text_example
