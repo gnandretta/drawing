@@ -68,6 +68,14 @@
   (object/set ctx "lineCap" (name value))
   ctx)
 
+(defn set-line-join
+  "Sets the shape used to join two line segments. :miter by default (see
+   set-miter-limit), other possible values are :round and :bevel. Has no effect
+   on connected segments with the same direction and segments with no length."
+  [ctx value]
+  (object/set ctx "lineJoin" (name value))
+  ctx)
+
 (defn set-line-width
   "Sets the thickness of lines, in coordinate space units. 1.0 by default,
    zero, negative, Infinity, and NaN values are ignored."   ; see scale() to know more about "coordinate space units"
