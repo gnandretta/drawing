@@ -48,6 +48,13 @@
   (object/set ctx "font" value)
   ctx)
 
+(defn set-global-alpha
+  "Sets an alpha number between 0 and 1 that is applied to shapes and images.
+   1.0 by default, ##NaN and ##Inf are ignored."
+  [ctx value]
+  (object/set ctx "globalAlpha" value)
+  ctx)
+
 (defn set-global-composite-operation
   "Sets the compositing or blending mode operations when drawing shapes."
   [ctx value]
