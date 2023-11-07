@@ -209,8 +209,8 @@
   ([ctx]
    (.fill ctx)
    ctx)
-  ([ctx path]
-   (.fill ctx path)
+  ([ctx path-or-rule]
+   (.fill ctx (cond-> path-or-rule (keyword? path-or-rule) name))
    ctx))
 
 (defn fill-rect
