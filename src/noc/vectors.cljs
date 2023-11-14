@@ -384,3 +384,15 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(comment
+  (def a (bouncing-ball-with-no-vectors)) (go (>! a :toggle))
+  (def b (bouncing-ball-with-vectors)) (go (>! b :toggle))
+  (def c (vector-subtraction)) (go (>! c :toggle))
+  (def d (vector-multiplication)) (go (>! c :toggle))
+  (def e (vector-magnitude)) (go (>! e :toggle))
+  (def f (vector-normalize)) (go (>! f :toggle))
+  (def g (motion-101-velocity)) (go (>! g :toggle))
+  (def h (motion-101-velocity-and-constant-acceleration)) (go (>! h :toggle))
+  (def i (motion-101-velocity-and-random-acceleration)) (go (>! i :toggle))
+  (def j (accelerating-towards-the-mouse)) (go (>! j :toggle)))

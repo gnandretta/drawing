@@ -152,3 +152,9 @@
                 (c/stroke))
             (<! play))))
     ctrl))
+
+(comment
+  (def a (traditional-random-walk)) (go (>! a :toggle))
+  (def b (random-distribution)) (go (>! b :toggle))
+  (def c (accept-reject-distribution)) (go (>! c :toggle))
+  (def d (perlin-noise-walk)) (go (>! d :toggle)))

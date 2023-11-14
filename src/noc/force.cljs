@@ -542,3 +542,14 @@
                 (c/restore))
             (<! play))))
     ctrl))
+
+(comment
+  (def a (forces)) (go (>! a :toggle))
+  (def b (forces-acting-on-two-objects)) (go (>! b :toggle))
+  (def c (gravity-scaled-by-mass)) (go (>! c :toggle))
+  (def d (including-friction)) (go (>! d :toggle))
+  (def e (fluid-resistance)) (go (>! e :toggle))
+  (def f (attraction)) (go (>! f :toggle))
+  (def g (attraction-with-many-movers)) (go (>! g :toggle))
+  (def h (two-bodies-attraction)) (go (>! h :toggle))
+  (def i (n-bodies)) (go (>! i :toggle)))
