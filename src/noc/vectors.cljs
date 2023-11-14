@@ -126,13 +126,14 @@
                 (c/stroke)
                 (c/set-stroke-style :black)
                 (c/set-line-width 2)
-                  (c/begin-path)
-                  (c/move-to [0 0])
+                (c/begin-path)
+                (c/move-to [0 0])
                 (c/line-to (mapv (partial * 0.5) xy))
                 (c/stroke)
                 (c/restore))
             (<! play))))
     ctrl))
+
 
 (defn- mag [[x y]]                                          ; TODO move to math ns
   (js/Math.sqrt (+ (* x x) (* y y))))
