@@ -57,6 +57,16 @@
   [a h]
   [(adj a h) (opp a h)])
 
+(defn deg->rad
+  "Converts degrees to radians."
+  [a]
+  (* a (/ js/Math.PI 180)))
+
+(defn rad->deg
+  "Converts radians to degrees."
+  [a]
+  (* a (/ 180 js/Math.PI)))
+
 (defn pi
   "Multiplies PI by the given numbers."
   [& ns]
