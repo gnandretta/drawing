@@ -2,7 +2,7 @@
   (:require ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
-(defn- vf [f xs]
+(defn- op [f xs]
   (let [parse (fn [x] (cond (fn? x) (repeatedly x)
                             (seqable? x) x
                             :else (repeat x)))]
@@ -10,21 +10,26 @@
             (parse (first xs))
             (rest xs))))
 
-(defn v+
+(defn add
   [& xs]
-  (vf + xs))
+  (op + xs))
 
-(defn v-
+(defn sub
   [& xs]
-  (vf - xs))
+  (op - xs))
 
-(defn v*
+(defn mul
   [& xs]
-  (vf * xs))
+  (op * xs))
 
-(defn v-div
+(defn div
   [& xs]
-  (vf / xs))
+  (op / xs))
+
+(def v+ add)                                                ; TODO remove v* fns after updating all drawings
+(def v- sub)
+(def v* mul)
+(def v-div div)
 
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
