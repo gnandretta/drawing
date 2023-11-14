@@ -2,7 +2,7 @@
   (:require [cljs.core.async :refer [<! >! chan timeout] :refer-macros [go]]
             [drawing.animation :as a]
             [drawing.canvas :as c]
-            [drawing.math :as m]))
+            [drawing.math :as m :include-macros true]))
 
 (defn- traditional-step-4-choices
   [[x y]]
