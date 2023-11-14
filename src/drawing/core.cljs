@@ -33,7 +33,7 @@
     (-> ctx
         (c/set-fill-style bg)
         (c/fill-rect size)
-        (c/translate (m/v* size 0.5)))
+        (c/translate (m/mul size 0.5)))
     (doseq [[xy fill] (repeatedly c make-point)]
       (-> ctx
           (c/set-fill-style fill)

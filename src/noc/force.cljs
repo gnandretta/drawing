@@ -83,7 +83,7 @@
                          (c/stroke)
                          (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy d)
                      v (mapv + v a)
                      xy (mapv + xy v)]
@@ -143,7 +143,7 @@
                            (c/stroke)
                            (c/restore))))
         move (fn [{:keys [a v xy r mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy r d)
                      v (mapv + v a)
                      xy (mapv + xy v)]
@@ -163,7 +163,7 @@
           (alt!
             m-up-down (recur ms (case m-state :up :down :up))
             (timeout 1) (recur (map #(move %
-                                           (cond-> [(m/v* gravity (:mass %))]
+                                           (cond-> [(m/mul gravity (:mass %))]
                                                    (= m-state :down) (conj wind)))
                                     ms)
                                m-state))))
@@ -216,7 +216,7 @@
                            (c/stroke)
                            (c/restore))))
         move (fn [{:keys [a v xy r mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy r d)
                      v (mapv + v a)
                      xy (mapv + xy v)]
@@ -234,9 +234,9 @@
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
-            (timeout 1) (recur (move m (cond-> [(m/v* gravity (:mass m))]
+            (timeout 1) (recur (move m (cond-> [(m/mul gravity (:mass m))]
                                                (= m-state :down) (conj wind)
-                                               (bottom? m d) (conj (m/v* -0.1 (normalize (:v m))))))
+                                               (bottom? m d) (conj (m/mul -0.1 (normalize (:v m))))))
                                m-state))))
     (go (while true
           (let [m (<! in)]
@@ -275,7 +275,7 @@
                          (c/stroke)
                          (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy d)
                      v (mapv + v a)
                      xy (mapv + xy v)]
@@ -294,7 +294,7 @@
                    (> ya yb) (< yb (+ yb h))))
         calculate-liquid-resistance (fn [v c]
                                       (let [mag-v (mag v)]
-                                        (m/v* (normalize v) -1 c mag-v mag-v)))
+                                        (m/mul (normalize v) -1 c mag-v mag-v)))
         ctx (c/append ::fluid-resistance d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -307,7 +307,7 @@
           (>! in ms)
           (alt!
             m-down (recur nil)
-            (timeout 1) (recur (map (fn [m] (move m (cond-> [(m/v* gravity (:mass m))]
+            (timeout 1) (recur (map (fn [m] (move m (cond-> [(m/mul gravity (:mass m))]
                                                             (in? (:xy m) (:xy liquid) (:d liquid))
                                                             (conj (calculate-liquid-resistance (:v m) (:c liquid))))))
                                     ms)))))
@@ -343,7 +343,7 @@
                          (c/stroke)
                          (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
                  (merge m {:xy xy :v v :a [0 0]})))
@@ -361,13 +361,13 @@
                              (c/stroke)
                              (c/restore)))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
-                         (let [dist (m/v- (:xy a) (:xy b))
+                         (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ctx (c/append ::attraction d)
         in (chan)
         [play ctrl] (a/play fps)
-        attractor (make-attractor :xy (m/v-div d 2))]
+        attractor (make-attractor :xy (m/div d 2))]
     (go (loop [m (make-mover :xy [350 50] :mass 2)]         ; TODO allow to move attractor
           (>! in m)
           (recur (move m [(get-attraction attractor m)]))))
@@ -403,7 +403,7 @@
                          (c/stroke)
                          (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
                  (merge m {:xy xy :v v :a [0 0]})))
@@ -421,13 +421,13 @@
                              (c/stroke)
                              (c/restore)))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
-                         (let [dist (m/v- (:xy a) (:xy b))
+                         (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ctx (c/append ::attraction-with-many-movers d)
         in (chan)
         [play ctrl] (a/play fps)
-        attractor (make-attractor :xy (m/v-div d 2))]
+        attractor (make-attractor :xy (m/div d 2))]
     (go (loop [ms (repeatedly 10 #(make-mover :xy (mapv rand d) :mass (m/rand-off 0.5 3)))] ; TODO allow to move attractor
           (>! in ms)
           (recur (map #(move % [(get-attraction attractor %)]) ms))))
@@ -467,14 +467,14 @@
                         (c/stroke)
                         (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
                  (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
-                         (let [dist (m/v- (:xy a) (:xy b))
+                         (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         body-a (make-body :xy [320 40] :v [1 0])
         body-b (make-body :xy [320 200] :v [-1 0])]
     (go (loop [body-a body-a body-b body-b]
@@ -516,14 +516,14 @@
                         (c/stroke)
                         (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/v-div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
                  (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
-                         (let [dist (m/v- (:xy a) (:xy b))
+                         (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/v* (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ]
     (go (loop [bodies (repeatedly 10 #(make-body :xy (mapv rand-int d) :mass (m/rand-off 0.1 2)))]
           (>! in bodies)

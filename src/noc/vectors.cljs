@@ -274,14 +274,14 @@
                                   d))
         limit (fn [v n]                                     ; TODO extract fn, probably more efficient to use mag^2
                 (let [mag-v (mag v)]
-                  (cond-> v (> mag-v n) (m/v-div mag-v))))
+                  (cond-> v (> mag-v n) (m/div mag-v))))
         in (chan)
         [play ctrl] (a/play fps)
         ctx (c/append ::motion-101-velocity-and-constant-acceleration d)]
     (go (loop [{:keys [v xy] :as m} (make-mover)]
           (>! in m)
-          (let [v (limit (m/v+ v (:a m)) 10)
-                xy (teleport (m/v+ xy v) d)]
+          (let [v (limit (m/add v (:a m)) 10)
+                xy (teleport (m/add xy v) d)]
             (recur (merge m {:v v :xy xy})))))
     (go (while true
           (let [m (<! in)]
@@ -319,15 +319,15 @@
                                   d))
         limit (fn [v n]
                 (let [mag-v (mag v)]
-                  (cond-> v (> mag-v n) (m/v-div mag-v))))
+                  (cond-> v (> mag-v n) (m/div mag-v))))
         in (chan)
         [play ctrl] (a/play fps)
         ctx (c/append ::motion-101-velocity-and-random-acceleration d)]
     (go (loop [{:keys [v xy] :as m} (make-mover)]
           (>! in m)
           (let [a (rand-v)
-                v (limit (m/v+ v a) 10)
-                xy (teleport (m/v+ xy v) d)]
+                v (limit (m/add v a) 10)
+                xy (teleport (m/add xy v) d)]
             (recur (merge m {:v v :xy xy})))))
     (go (while true
           (let [m (<! in)]
@@ -360,20 +360,19 @@
                          (c/restore)))
         limit (fn [v n]
                 (let [mag-v (mag v)]
-                  (cond-> v (> mag-v n) (m/v-div mag-v))))
+                  (cond-> v (> mag-v n) (m/div mag-v))))
         ctx (c/append ::accelerating-towards-the-mouse d)
         in (chan)
         [play ctrl] (a/play fps)
         mouse (async/map (fn [e] [(.-offsetX e) (.-offsetY e)])
-                         [(d/events (c/get ctx) "mousemove" (chan (async/sliding-buffer 1)))])
-        ]
+                         [(d/events (c/get ctx) "mousemove" (chan (async/sliding-buffer 1)))])]
     (go (loop [{:keys [v xy] :as m} (make-mover) m-xy [0 0]]
           (>! in m)
           (let [m-xy (alt! mouse ([m-xy] m-xy)
                            (timeout 10) m-xy)
-                a (m/v* 0.2 (normalize (mapv - m-xy xy)))
-                v (limit (m/v+ v a) 10)
-                xy (m/v+ xy v)]
+                a (m/mul 0.2 (normalize (mapv - m-xy xy)))
+                v (limit (m/add v a) 10)
+                xy (m/add xy v)]
             (recur (merge m {:v v :xy xy}) m-xy))))
     (go (while true
           (let [m (<! in)]

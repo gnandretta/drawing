@@ -471,7 +471,7 @@
     {:dimensions  {:canvas canvas :content content}
      :margin      margin
      :top-left    [mt mr]                                   ; TODO maybe add a corners/edges map with each of them?
-     :d           (partial m/v* content)                    ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
+     :d           (partial m/mul content)                   ; TODO are the letter fns worth it? i.e., (w 0.5) vs (* w 0.5)
      :w           (partial * width)
      :h           (partial * height)
      :draw-margin (fn                                       ; TODO is this fn worth it?

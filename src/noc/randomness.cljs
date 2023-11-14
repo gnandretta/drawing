@@ -14,11 +14,11 @@
 
 (defn- traditional-step-9-choices
   [xy]
-  (m/v+ xy #(m/rand-int-off -1 2)))
+  (m/add xy #(m/rand-int-off -1 2)))
 
 (defn- traditional-step-infinite-choices
   [xy]
-  (m/v+ xy #(m/rand-off -1 1)))
+  (m/add xy #(m/rand-off -1 1)))
 
 (defn traditional-random-walk [& {:keys [size fps]
                                   :or   {size [640 240]
@@ -30,7 +30,7 @@
         (c/set-fill-style :white)
         (c/fill-rect size)
         (c/set-fill-style :black))
-    (go (loop [xy (m/v* size 0.5)]
+    (go (loop [xy (m/mul size 0.5)]
           (>! in xy)
           (recur (traditional-step-4-choices xy))))
     (go (while true
@@ -87,7 +87,7 @@
   (let [in (chan)
         [play ctrl] (a/play fps)
         ctx (c/append ::random-walk-tends-to-right size)]
-    (go (loop [xy (m/v* size 0.5)]
+    (go (loop [xy (m/mul size 0.5)]
           (>! in xy)
           (recur (tends-to-right-step xy))))
     (-> ctx
@@ -111,7 +111,7 @@
     (go (while true
           (-> ctx
               (c/set-fill-style "rgba(0,0,0,0.005)")
-              (c/arc (update (m/v* size 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
+              (c/arc (update (m/mul size 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
                      8
                      0
                      (m/pi 2))
@@ -142,7 +142,7 @@
         (c/set-line-width 2))
     (go (loop [t [0 10000]]
           (>! in (m/v (* size 0.5 (+ (map m/noise-1d t) 1))))
-          (recur (m/v+ 0.006 t))))
+          (recur (m/add 0.006 t))))
     (go (while true
           (let [xy (<! in)]
             (-> ctx
