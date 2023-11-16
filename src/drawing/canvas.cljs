@@ -365,6 +365,17 @@
   (doseq [[x y] xys] (.translate ctx x y))
   ctx)
 
+(defn smooth-curve
+  "Adds many quadratic Bézier curves to the current sub-path from its last point
+   to last xy, passing through the middle point between adjacent xys with (all
+   except the last) xys as control points."
+  [ctx xys]
+  (doseq [[cxy xy] (concat (let [xys' (drop-last xys)]
+                             (map #(vector %1 (mapv (partial m/lerp 0.5) %1 %2)) xys' (rest xys')))
+                           (list (vec (take-last 2 xys))))]
+    (quadratic-curve-to ctx cxy xy))
+  ctx)
+
 (defn conic-gradient
   "Creates a gradient around a point (in global coordinates) from an angle."
   [^js/CanvasRenderingContext2D ctx a-start [x y] stops]    ; TODO figure out why it doesn't work without the hint, see https://clojurescript.org/reference/compiler-options#infer-externs
