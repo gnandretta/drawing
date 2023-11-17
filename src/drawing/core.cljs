@@ -27,7 +27,7 @@
                   "rgb(255,255,255)" 1}}}]
   (let [ctx (c/append id size)
         [w] size
-        make-point (fn [] [(m/sides (* w ((if (< (rand) p) fhi fho)) r)
+        make-point (fn [] [(m/coord (* w ((if (< (rand) p) fhi fho)) r)
                                     (rand (m/pi 2)))
                            (m/weighed-rand-key fgs)])]
     (-> ctx

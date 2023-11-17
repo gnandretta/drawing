@@ -58,11 +58,10 @@
   [h a]
   (* (js/Math.sin a) h))
 
-(defn sides
-  "Given the length of the hypotenuse of a right triangle and its acute angle,
-   returns a vector with the length of its adjacent and opposite sides."
-  [h a]
-  [(adj h a) (opp h a)])
+(defn coord
+  "Converts a polar coordinate to a Cartesian coordinate."
+  [r a]
+  [(adj r a) (opp r a)])
 
 (defn rad
   "Converts degrees to radians."
