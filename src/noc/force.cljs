@@ -25,7 +25,7 @@
                          (c/set-stroke-style :black)
                          (c/set-line-width 2)
                          (c/begin-path)
-                         (c/arc (:xy m) 24 0 (m/pi 2))
+                         (c/arc (:xy m) 24 (m/pii 2))
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
@@ -78,7 +78,7 @@
                          (c/set-stroke-style :black)
                          (c/set-line-width 2)
                          (c/begin-path)
-                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/arc (:xy m) (* 8 (:mass m)) (m/pii 2))
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
@@ -138,7 +138,7 @@
                            (c/set-stroke-style :black)
                            (c/set-line-width line-width)
                            (c/begin-path)
-                           (c/arc (:xy m) (- (:r m) line-width) 0 (m/pi 2))
+                           (c/arc (:xy m) (- (:r m) line-width) (m/pii 2))
                            (c/fill)
                            (c/stroke)
                            (c/restore))))
@@ -211,7 +211,7 @@
                            (c/set-stroke-style :black)
                            (c/set-line-width line-width)
                            (c/begin-path)
-                           (c/arc (:xy m) (- (:r m) line-width) 0 (m/pi 2))
+                           (c/arc (:xy m) (- (:r m) line-width) (m/pii 2))
                            (c/fill)
                            (c/stroke)
                            (c/restore))))
@@ -270,7 +270,7 @@
                          (c/set-stroke-style :black)
                          (c/set-line-width 2)
                          (c/begin-path)
-                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/arc (:xy m) (* 8 (:mass m)) (m/pii 2))
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
@@ -338,7 +338,7 @@
                          (c/set-stroke-style :black)
                          (c/set-line-width 2)
                          (c/begin-path)
-                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/arc (:xy m) (* 8 (:mass m)) (m/pii 2))
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
@@ -356,7 +356,7 @@
                              (c/set-stroke-style :black)
                              (c/set-line-width 4)
                              (c/begin-path)
-                             (c/arc (:xy m) (:mass m) 0 (m/pi 2)) ; TODO adjust numbers
+                             (c/arc (:xy m) (:mass m) (m/pii 2)) ; TODO adjust numbers
                              (c/fill)
                              (c/stroke)
                              (c/restore)))
@@ -398,7 +398,7 @@
                          (c/set-stroke-style :black)
                          (c/set-line-width 2)
                          (c/begin-path)
-                         (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2))
+                         (c/arc (:xy m) (* 8 (:mass m)) (m/pii 2))
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
@@ -416,7 +416,7 @@
                              (c/set-stroke-style :black)
                              (c/set-line-width 4)
                              (c/begin-path)
-                             (c/arc (:xy m) (:mass m) 0 (m/pi 2)) ; TODO adjust numbers
+                             (c/arc (:xy m) (:mass m) (m/pii 2)) ; TODO adjust numbers
                              (c/fill)
                              (c/stroke)
                              (c/restore)))
@@ -462,7 +462,7 @@
                         (c/set-stroke-style :black)
                         (c/set-line-width 2)
                         (c/begin-path)
-                        (c/arc (:xy m) (* 4 (js/Math.sqrt (:mass m))) 0 (m/pi 2)) ; TODO adjust numbers
+                        (c/arc (:xy m) (* 4 (js/Math.sqrt (:mass m))) (m/pii 2)) ; TODO adjust numbers
                         (c/fill)
                         (c/stroke)
                         (c/restore)))
@@ -511,7 +511,7 @@
                         (c/set-stroke-style :black)
                         (c/set-line-width 2)
                         (c/begin-path)
-                        (c/arc (:xy m) (* 8 (:mass m)) 0 (m/pi 2)) ; TODO adjust numbers
+                        (c/arc (:xy m) (* 8 (:mass m)) (m/pii 2)) ; TODO adjust numbers
                         (c/fill)
                         (c/stroke)
                         (c/restore)))

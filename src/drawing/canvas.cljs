@@ -150,8 +150,8 @@
 (defn arc
   "Adds a circular arc centered at (0,0) by default to the current sub-path,
    clockwise."                                              ; TODO doc somewhere how angles are measured (radians from teh positive x-axis) and letter meaning
-  ([ctx r a-start a-end] (arc ctx [0 0] r a-start a-end))   ; TODO simplify a-start = 0
-  ([ctx [x y] r a-start a-end]
+  ([ctx r [a-start a-end]] (arc ctx [0 0] r [a-start a-end]))
+  ([ctx [x y] r [a-start a-end]]
    (.arc ctx x y r a-start a-end)
    ctx))
 

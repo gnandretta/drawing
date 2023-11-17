@@ -20,13 +20,13 @@
 (defn moving-the-pen []                                     ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#moving_the_pen
   (-> (c/append ::moving-the-pen [150 150])
       (c/begin-path)
-      (c/arc [75 75] 50 0 (m/pi 2))
+      (c/arc [75 75] 50 (m/pii 2))
       (c/move-to [110 75])                                  ; remove c/move-to calls to see connecting lines
-      (c/arc [75 75] 35 0 (m/pi))
+      (c/arc [75 75] 35 (m/pii))
       (c/move-to [65 65])
-      (c/arc [60 65] 5 0 (m/pi 2))
+      (c/arc [60 65] 5 (m/pii 2))
       (c/move-to [95 65])
-      (c/arc [90 65] 5 0 (m/pi 2))
+      (c/arc [90 65] 5 (m/pii 2))
       (c/stroke)))
 
 (defn lines []                                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#lines
@@ -51,7 +51,7 @@
                                           a-end (m/pi (+ 1 (/ j 2)))]]
       (-> ctx
           (c/begin-path)
-          ((if (even? i) c/arc c/arcc) xy r a-start a-end)
+          ((if (even? i) c/arc c/arcc) xy r [a-start a-end])
           ((if (> i 1) c/fill c/stroke))))))
 
 (defn quadratic-bezier-curves []                            ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#quadratic_bezier_curves
@@ -90,7 +90,7 @@
         (c/stroke)
 
         (c/begin-path)                                      ; pacman
-        (c/arc [37 37] 13 (m/pif 7) (m/pif -7))
+        (c/arc [37 37] 13 (m/pii (/ 1 7) (/ 1 -7)))
         (c/line-to [31 37])
         (c/fill)
 
@@ -129,9 +129,9 @@
 
         (c/set-fill-style :black)                           ; eye dots
         (c/begin-path)
-        (c/arc [101 102] 2 0 (m/pi 2))
+        (c/arc [101 102] 2 (m/pii 2))
         #_(c/move-to [89 102])                              ; to avoid straight line between arcs, which isn't filled
-        (c/arc [89 102] 2 0 (m/pi 2))
+        (c/arc [89 102] 2 (m/pii 2))
         (c/fill))))
 
 (comment
@@ -147,7 +147,7 @@
 
 (defn path-2d-example []                                    ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#path2d_example
   (let [rectangle (c/rect (c/path) [10 10] [50 50])
-        circle (c/arc (c/path) [100 35] 25 0 (m/pi 2))]
+        circle (c/arc (c/path) [100 35] 25 (m/pii 2))]
     (-> (c/append ::path-2d-example [150 150])
         (c/stroke rectangle)
         (c/fill circle))))

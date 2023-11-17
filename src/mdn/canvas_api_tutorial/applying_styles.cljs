@@ -20,7 +20,7 @@
       (-> ctx
           (c/set-stroke-style (c/rgb [0 g b]))
           (c/begin-path)
-          (c/arc (map #(+ 12.5 (* 25 %)) [j i]) 10 0 (m/pi 2))
+          (c/arc (map #(+ 12.5 (* 25 %)) [j i]) 10 (m/pii 2))
           (c/stroke)))))
 
 (defn a-global-alpha-example []                             ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_globalalpha_example
@@ -39,7 +39,7 @@
     (doseq [i (range 7)]
       (-> ctx
           (c/begin-path)
-          (c/arc [75 75] (+ 10 (* 10 i)) 0 (m/pi 2))
+          (c/arc [75 75] (+ 10 (* 10 i)) (m/pii 2))
           (c/fill)))))
 
 (defn an-example-using-rgba []                              ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#an_example_using_rgba
@@ -217,8 +217,8 @@
 (defn canvas-fill-rules []                                  ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#canvas_fill_rules
   (-> (c/append ::canvas-fill-rules [150 150])
       (c/begin-path)
-      (c/arc [50 50] 30 0 (m/pi 2))
-      (c/arc [50 50] 15 0 (m/pi 2))
+      (c/arc [50 50] 30 (m/pii 2))
+      (c/arc [50 50] 15 (m/pii 2))
       (c/fill :evenodd)))
 
 (comment

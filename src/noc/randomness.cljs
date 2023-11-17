@@ -113,8 +113,7 @@
               (c/set-fill-style "rgba(0,0,0,0.005)")
               (c/arc (update (m/mul size 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
                      8
-                     0
-                     (m/pi 2))
+                     (m/pii 2))
               (c/fill))
           (<! play)))
     ctrl))
@@ -147,7 +146,7 @@
           (let [xy (<! in)]
             (-> ctx
                 (c/begin-path)
-                (c/arc xy 24 0 (m/pi 2))
+                (c/arc xy 24 (m/pii 2))
                 (c/fill)
                 (c/stroke))
             (<! play))))
