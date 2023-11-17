@@ -4,6 +4,12 @@
             [goog.dom :as dom]
             [goog.object :as object]))
 
+(defn j>
+  "Returns its first argument. Useful for side effects in the middle of the body
+   of a thread-first macro (->)—j stands for jump. "
+  [x & _]
+  x)
+
 (def paper-mms {:a3 [297 420]})
 
 (defn mm [dpi x]
