@@ -38,8 +38,8 @@
   ([n] (partial lerp n))
   ([n [c d]] (lerp n [0 1] [c d]))                          ; also works when d < c
   ([n [a b] [c d]] (+ (* (- d c)
-                     (/ (- n a) (- b a)))
-                  c)))
+                         (/ (- n a) (- b a)))
+                      c)))
 
 (defn lerpv
   "Returns a vector with the mappings of n from [0,1] to [ax,bx] and [ay,by]."
