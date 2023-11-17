@@ -11,8 +11,8 @@
     (if (number? x) (f x) (mapv f x))))
 
 (defn get
-  ([ctx] (get ctx "canvas"))
-  ([ctx nm] (object/get ctx nm)))                           ; TODO not sure about this arity, maybe take keywords?
+  ([ctx] (get ctx :canvas))
+  ([ctx nm] (object/get ctx (name nm))))
 
 (defn set
   "Sets a property on a drawing context and returns the context."
