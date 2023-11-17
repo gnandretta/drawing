@@ -408,12 +408,12 @@
   (js/Path2D. d))
 
 (defn rgb
-  [[r g b]]
-  (str "rgb(" r "," g "," b ")"))
+  ([[r g b]] (rgb r g b))
+  ([r g b] (str "rgb(" r "," g "," b ")")))
 
 (defn rgba
-  [[r g b a]]
-  (str "rgba(" r "," g "," b "," a ")"))
+  ([[r g b a]] (rgba r g b a))
+  ([r g b a] (str "rgba(" r "," g "," b "," a ")")))
 
 (defn- expand-margin [v]
   (case (count v)
