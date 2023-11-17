@@ -22,7 +22,7 @@
         (c/fill-rect [150 150])
         (c/translate [75 75])
         (c/begin-path)
-        (c/arc 60 (m/pii 2))
+        (c/circle 60)
         (c/clip)
         (c/set-fill-style (c/linear-gradient ctx [0 -75] [0 75]
                                              [[0 "#232256"]
