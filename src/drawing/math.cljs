@@ -1,5 +1,6 @@
 (ns drawing.math
-  (:require ["random$default" :as random]
+  (:require [cljs.math :as m]
+            ["random$default" :as random]
             ["simplex-noise" :refer [createNoise2D]]))
 
 (defn- op [f xs]
@@ -44,19 +45,19 @@
   "Returns the Euclidean distance between (x0,y0) and (x1, y1)."
   [[x0 y0] [x1 y1]]
   (let [dx (- x1 x0) dy (- y1 y0)]
-    (js/Math.sqrt (+ (* dx dx) (* dy dy)))))
+    (m/sqrt (+ (* dx dx) (* dy dy)))))
 
 (defn adj
   "Given the length of the hypotenuse of a right triangle and its acute angle,
    calculates the length of its adjacent side."
   [h a]
-  (* (js/Math.cos a) h))
+  (* (m/cos a) h))
 
 (defn opp
   "Given the length of the hypotenuse of a right triangle and its acute angle,
    calculates the length of its opposite side."
   [h a]
-  (* (js/Math.sin a) h))
+  (* (m/sin a) h))
 
 (defn coord
   "Converts a polar coordinate to a Cartesian coordinate."
@@ -66,22 +67,22 @@
 (defn rad
   "Converts degrees to radians."
   [deg]
-  (* deg (/ js/Math.PI 180)))
+  (* deg (/ m/PI 180)))
 
 (defn deg
   "Converts radians to degrees."
   [rad]
-  (* rad (/ 180 js/Math.PI)))
+  (* rad (/ 180 m/PI)))
 
 (defn pi
   "Multiplies PI by the given numbers."
   [& ns]
-  (apply * js/Math.PI ns))
+  (apply * m/PI ns))
 
 (defn pif
   "Divides PI by the given numbers, computing a fraction."
   [& ns]
-  (apply / js/Math.PI ns))
+  (apply / m/PI ns))
 
 (defn weighed-rand-key
   "Given a map where the values are weights, returns a random key based on the
