@@ -2,8 +2,7 @@
   (:require [cljs.core.async :refer [<! >! chan put! timeout] :refer-macros [go]]
             [cljs.math :as cm]
             [drawing.animation :as a]
-            [drawing.canvas :as c]
-            [drawing.cljs :refer [jump->]]
+            [drawing.canvas :as c :refer [j>]]
             [goog.dom :as dom]))
 
 (defn a-fill-style-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_fillstyle_example
@@ -113,9 +112,9 @@
         (c/set-line-width 10)
         (c/begin-path)
         (c/move-to [0 100])
-        (jump-> (doseq [i (range 24)]
-                  (c/line-to ctx [(* 2 (cm/pow i 1.5))
-                                  (+ 75 (* 25 (if (even? i) 1 -1)))]))) ; TODO implement +-/set-sign fn?
+        (j> (doseq [i (range 24)]
+              (c/line-to ctx [(* 2 (cm/pow i 1.5))
+                              (+ 75 (* 25 (if (even? i) 1 -1)))]))) ; TODO implement +-/set-sign fn?
         (c/stroke))))
 
 (defn using-line-dashes []

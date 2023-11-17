@@ -1,6 +1,5 @@
 (ns mdn.canvas-api-tutorial.drawing-shapes
-  (:require [drawing.canvas :as c]
-            [drawing.cljs :refer [jump->]]
+  (:require [drawing.canvas :as c :refer [j>]]
             [drawing.math :as m]))
 
 (defn drawing-shapes []                                     ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes#rectangular_shape_example
@@ -94,7 +93,7 @@
         (c/line-to [31 37])
         (c/fill)
 
-        (jump->                                             ; fruits
+        (j>                                                 ; fruits
           (doseq [x (m/range-n 51 8 16)] (c/fill-rect ctx [x 35] [4 4]))
           (doseq [y (m/range-n 51 6 16)] (c/fill-rect ctx [115 y] [4 4]))
           (doseq [x (m/range-n 51 8 16)] (c/fill-rect ctx [x 99] [4 4])))

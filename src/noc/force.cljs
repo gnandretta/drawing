@@ -1,8 +1,7 @@
 (ns noc.force
   (:require [cljs.core.async :refer [<! >! chan timeout] :refer-macros [alt! go]]
             [drawing.animation :as a]
-            [drawing.canvas :as c]
-            [drawing.cljs :refer [jump->]]
+            [drawing.canvas :as c :refer [j>]]
             [drawing.dom :as d]
             [drawing.math :as m]))
 
@@ -110,7 +109,7 @@
                 (c/save)
                 (c/set-fill-style :white)
                 (c/fill-rect d)
-                (jump-> (doseq [m ms] (draw-mover ctx m)))
+                (j> (doseq [m ms] (draw-mover ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))
@@ -173,7 +172,7 @@
                 (c/save)
                 (c/set-fill-style :white)
                 (c/fill-rect d)
-                (jump-> (doseq [m ms] (draw-mover ctx m)))
+                (j> (doseq [m ms] (draw-mover ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))
@@ -318,7 +317,7 @@
                 (c/set-fill-style :white)
                 (c/fill-rect d)
                 (draw-liquid liquid)
-                (jump-> (doseq [m ms] (draw-mover ctx m)))
+                (j> (doseq [m ms] (draw-mover ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))
@@ -438,7 +437,7 @@
                 (c/set-fill-style :white)
                 (c/fill-rect d)
                 (draw-attractor attractor)
-                (jump-> (doseq [m ms] (draw-mover ctx m)))
+                (j> (doseq [m ms] (draw-mover ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))
@@ -487,7 +486,7 @@
                 (c/save)
                 (c/set-fill-style :white)
                 (c/fill-rect d)
-                (jump-> (doseq [m bodies] (draw-body ctx m)))
+                (j> (doseq [m bodies] (draw-body ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))
@@ -538,7 +537,7 @@
                 (c/save)
                 (c/set-fill-style :white)
                 (c/fill-rect d)
-                (jump-> (doseq [m bodies] (draw-body ctx m)))
+                (j> (doseq [m bodies] (draw-body ctx m)))
                 (c/restore))
             (<! play))))
     ctrl))

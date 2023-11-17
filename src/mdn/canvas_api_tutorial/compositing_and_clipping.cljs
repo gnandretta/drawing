@@ -1,6 +1,5 @@
 (ns mdn.canvas-api-tutorial.compositing-and-clipping
-  (:require [drawing.canvas :as c]
-            [drawing.cljs :refer [jump->]]
+  (:require [drawing.canvas :as c :refer [j>]]
             [drawing.math :as m]))
 
 (defn a-clip-example []                                     ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Compositing#a_clip_example
@@ -9,11 +8,10 @@
                         (c/save)
                         (c/begin-path)
                         (c/move-to [r 0])
-                        (jump->
-                          (doseq [i (range 9) :let [x (cond-> r (even? i) (* 0.200811 (/ 1 0.525731)))]]
-                            (-> ctx
-                                (c/rotate (m/pif 5))
-                                (c/line-to [x 0]))))
+                        (j> (doseq [i (range 9) :let [x (cond-> r (even? i) (* 0.200811 (/ 1 0.525731)))]]
+                              (-> ctx
+                                  (c/rotate (m/pif 5))
+                                  (c/line-to [x 0]))))
                         (c/close-path)
                         (c/fill)
                         (c/restore)))
