@@ -61,8 +61,8 @@
 
 (defn coord
   "Converts a polar coordinate to a Cartesian coordinate."
-  [r a]
-  [(adj r a) (opp r a)])
+  ([[r a]] (coord r a))
+  ([r a] [(adj r a) (opp r a)]))
 
 (defn rad
   "Converts degrees to radians."
@@ -97,15 +97,15 @@
           (recur eks))))))
 
 (defn rand-int-off
-  "Returns a random integer  between a (inclusive) and b (exclusive)."
-  [a b]
-  (+ a (rand-int (- b a))))
+  "Returns a random integer between a (inclusive) and b (exclusive)."
+  ([[a b]] (rand-int-off a b))
+  ([a b] (+ a (rand-int (- b a)))))
 
 (defn rand-off
   "Returns a random floating point number between a (inclusive) and b
    (exclusive)."
-  [a b]
-  (+ a (rand (- b a))))
+  ([[a b]] (rand-off a b))
+  ([a b] (+ a (rand (- b a)))))
 
 (defonce rand-std-norm-generator (.normal random))          ; TODO allow to set (and get?) a seed
 
