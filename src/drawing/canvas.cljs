@@ -183,6 +183,11 @@
   (.bezierCurveTo ctx ax ay bx by x y)
   ctx)
 
+(defn circle
+  "Shortcut to add an arc from 0 to 2π."
+  ([ctx r] (circle ctx [0 0] r))
+  ([ctx xy r] (arc ctx xy r (m/pii 2))))
+
 (defn clear-rect
   "Sets pixels in the given rectangle to transparent black without affecting
    the current path."
