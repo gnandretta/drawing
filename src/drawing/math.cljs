@@ -84,6 +84,11 @@
   [& ns]
   (apply / m/PI ns))
 
+(defn pir
+  "Returns an interval of multiples of PI"
+  ([[a b]] (pir a b))
+  ([a b] (mapv pi [a b])))
+
 (defn weighed-rand-key
   "Given a map where the values are weights, returns a random key based on the
    weights."
