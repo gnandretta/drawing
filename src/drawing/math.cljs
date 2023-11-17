@@ -27,11 +27,6 @@
   [& xs]
   (op / xs))
 
-(def v+ add)                                                ; TODO remove v* fns after updating all drawings
-(def v- sub)
-(def v* mul)
-(def v-div div)
-
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
   ([n [c d]] (lerp n [0 1] [c d]))                          ; also works when d < c
