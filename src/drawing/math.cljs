@@ -46,23 +46,23 @@
   (let [dx (- x1 x0) dy (- y1 y0)]
     (js/Math.sqrt (+ (* dx dx) (* dy dy)))))
 
-(defn adj                                                   ; TODO consider switching args order, see polar notation
-  "Given the acute angle of a right triangle and the length of its hypotenuse,
+(defn adj
+  "Given the length of the hypotenuse of a right triangle and its acute angle,
    calculates the length of its adjacent side."
-  [a h]
+  [h a]
   (* (js/Math.cos a) h))
 
 (defn opp
-  "Given the acute angle of a right triangle and the length of its hypotenuse,
+  "Given the length of the hypotenuse of a right triangle and its acute angle,
    calculates the length of its opposite side."
-  [a h]
+  [h a]
   (* (js/Math.sin a) h))
 
 (defn sides
-  "Given the acute angle of a right triangle and the length of its hypotenuse,
+  "Given the length of the hypotenuse of a right triangle and its acute angle,
    returns a vector with the length of its adjacent and opposite sides."
-  [a h]
-  [(adj a h) (opp a h)])
+  [h a]
+  [(adj h a) (opp h a)])
 
 (defn rad
   "Converts degrees to radians."
