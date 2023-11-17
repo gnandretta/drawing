@@ -9,8 +9,6 @@
    arbitrarily chosen."
   ([r] (squiggle r 0))
   ([r a] (squiggle r a [-0.01 0.01] [(m/pi 0.16) (m/pi 1.6)]))
-  ([r a dr da] (lazy-seq (cons (m/coord r a)
-                               (squiggle (+ r (apply m/rand-off dr))
-                                         (+ a (apply m/rand-off da))
-                                         dr
-                                         da)))))
+  ([r a dr da]
+   (map m/coord (iterate #(m/add % (map m/rand-off [dr da]))
+                         [r a]))))
