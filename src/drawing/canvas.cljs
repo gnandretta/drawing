@@ -177,7 +177,7 @@
    ctx))
 
 (defn begin-path
-  "Creates a new path by emptying the list of sub-paths."   ; TODO what's the difference between path and sub-path?
+  "Creates a new path by emptying the list of sub-paths."
   [ctx]
   (.beginPath ctx)
   ctx)
