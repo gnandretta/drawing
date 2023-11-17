@@ -371,7 +371,7 @@
    except the last) xys as control points."
   [ctx xys]
   (doseq [[cxy xy] (concat (let [xys' (drop-last xys)]
-                             (map (fn [a b] [a (mapv (m/lerp 0.5) (map vector a b))]) xys' (rest xys')))
+                             (map (fn [a b] [a (m/lerpv 0.5 a b)]) xys' (rest xys')))
                            (list (vec (take-last 2 xys))))]
     (quadratic-curve-to ctx cxy xy))
   ctx)

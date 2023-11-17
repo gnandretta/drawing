@@ -41,6 +41,11 @@
                      (/ (- n a) (- b a)))
                   c)))
 
+(defn lerpv
+  "Returns a vector with the mappings of n from [0,1] to [ax,bx] and [ay,by]."
+  [n a b]
+  (mapv #(lerp n %) (map vector a b)))
+
 (defn dist
   "Returns the Euclidean distance between (x0,y0) and (x1, y1)."
   [[x0 y0] [x1 y1]]
