@@ -87,9 +87,11 @@
   [& ns]
   (apply / m/PI ns))
 
-(defn pir
-  "Returns an interval of multiples of PI"
-  ([[a b]] (pir a b))
+(defn pii
+  "Returns an interval of multiples of PI— [aπ,bπ]. a defaults to 0, and b
+   defaults to 1."
+  ([] (pii 0 1))
+  ([b] (pii 0 b))
   ([a b] (mapv pi [a b])))
 
 (defn weighed-rand-key
