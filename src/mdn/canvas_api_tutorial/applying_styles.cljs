@@ -3,6 +3,7 @@
             [cljs.math :as cm]
             [drawing.animation :as a]
             [drawing.canvas :as c :refer [j>]]
+            [drawing.math :as m]
             [goog.dom :as dom]))
 
 (defn a-fill-style-example []                               ; https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#a_fillstyle_example
@@ -114,7 +115,7 @@
         (c/move-to [0 100])
         (j> (doseq [i (range 24)]
               (c/line-to ctx [(* 2 (cm/pow i 1.5))
-                              (+ 75 (* 25 (if (even? i) 1 -1)))]))) ; TODO implement +-/set-sign fn?
+                              (+ 75 (m/sign 25 (even? i)))])))
         (c/stroke))))
 
 (defn using-line-dashes []
