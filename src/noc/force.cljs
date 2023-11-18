@@ -177,13 +177,6 @@
             (<! play))))
     ctrl))
 
-(defn- mag [[x y]]                                          ; TODO this fn is also in noc.vectors
-  (js/Math.sqrt (+ (* x x) (* y y))))
-
-(defn- normalize [v]                                        ; TODO this fn is also in noc.vectors
-  (let [mag-v (mag v)]
-    (mapv #(/ % mag-v) v)))
-
 ;; TODO p5.js example reacts different, check params
 (defn including-friction [& {:keys [d fps]                  ; example 2.4
                              :or   {d   [640 240]
@@ -235,7 +228,7 @@
             m-up-down (recur m (case m-state :up :down :up))
             (timeout 1) (recur (move m (cond-> [(m/mul gravity (:mass m))]
                                                (= m-state :down) (conj wind)
-                                               (bottom? m d) (conj (m/mul -0.1 (normalize (:v m))))))
+                                               (bottom? m d) (conj (m/mul -0.1 (m/normalize (:v m))))))
                                m-state))))
     (go (while true
           (let [m (<! in)]
@@ -292,8 +285,7 @@
               (and (> xa xb) (< xa (+ xb w))
                    (> ya yb) (< yb (+ yb h))))
         calculate-liquid-resistance (fn [v c]
-                                      (let [mag-v (mag v)]
-                                        (m/mul (normalize v) -1 c mag-v mag-v)))
+                                      (m/mul (m/normalize v) -1 c (m/mag2 v)))
         ctx (c/append ::fluid-resistance d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -361,8 +353,8 @@
                              (c/restore)))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
-                               mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                               mag-dist (-> (m/mag dist) (max 5) (min 25))]
+                           (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ctx (c/append ::attraction d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -421,8 +413,8 @@
                              (c/restore)))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
-                               mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                               mag-dist (-> (m/mag dist) (max 5) (min 25))]
+                           (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ctx (c/append ::attraction-with-many-movers d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -472,8 +464,8 @@
                  (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
-                               mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                               mag-dist (-> (m/mag dist) (max 5) (min 25))]
+                           (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         body-a (make-body :xy [320 40] :v [1 0])
         body-b (make-body :xy [320 200] :v [-1 0])]
     (go (loop [body-a body-a body-b body-b]
@@ -521,8 +513,8 @@
                  (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
-                               mag-dist (-> (mag dist) (max 5) (min 25))]
-                           (m/mul (normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+                               mag-dist (-> (m/mag dist) (max 5) (min 25))]
+                           (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
         ]
     (go (loop [bodies (repeatedly 10 #(make-body :xy (mapv rand-int d) :mass (m/rand-off 0.1 2)))]
           (>! in bodies)

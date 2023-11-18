@@ -134,10 +134,6 @@
             (<! play))))
     ctrl))
 
-
-(defn- mag [[x y]]                                          ; TODO move to math ns
-  (js/Math.sqrt (+ (* x x) (* y y))))
-
 (defn vector-magnitude [& {:keys [d fps]
                            :or   {d   [640 240]
                                   fps 60}}]
@@ -153,7 +149,7 @@
           (<! (timeout 1))))
     (go (while true
           (let [xy (mapv - (<! in) center)
-                mag-xy (mag xy)]
+                mag-xy (m/mag xy)]
             (-> ctx
                 (c/save)
                 (c/set-fill-style :white)
@@ -169,9 +165,6 @@
             (<! play))))
     ctrl))
 
-(defn- normalize [v]                                        ; TODO move to math ns
-  (let [mag-v (mag v)]
-    (mapv #(/ % mag-v) v)))
 
 (defn vector-normalize [& {:keys [d fps]
                            :or   {d   [640 240]
@@ -204,7 +197,7 @@
                 (c/set-line-width 8)
                 (c/begin-path)
                 (c/move-to [0 0])
-                (c/line-to (mapv (partial * 50) (normalize xy)))
+                (c/line-to (mapv (partial * 50) (m/normalize xy)))
                 (c/stroke)
                 (c/restore))
             (<! play))))
@@ -274,7 +267,7 @@
                                   xy
                                   d))
         limit (fn [v n]                                     ; TODO extract fn, probably more efficient to use mag^2
-                (let [mag-v (mag v)]
+                (let [mag-v (m/mag v)]
                   (cond-> v (> mag-v n) (m/div mag-v))))
         in (chan)
         [play ctrl] (a/play fps)
@@ -319,7 +312,7 @@
                                   xy
                                   d))
         limit (fn [v n]
-                (let [mag-v (mag v)]
+                (let [mag-v (m/mag v)]
                   (cond-> v (> mag-v n) (m/div mag-v))))
         in (chan)
         [play ctrl] (a/play fps)
@@ -360,7 +353,7 @@
                          (c/stroke)
                          (c/restore)))
         limit (fn [v n]
-                (let [mag-v (mag v)]
+                (let [mag-v (m/mag v)]
                   (cond-> v (> mag-v n) (m/div mag-v))))
         ctx (c/append ::accelerating-towards-the-mouse d)
         in (chan)
@@ -371,7 +364,7 @@
           (>! in m)
           (let [m-xy (alt! mouse ([m-xy] m-xy)
                            (timeout 10) m-xy)
-                a (m/mul 0.2 (normalize (mapv - m-xy xy)))
+                a (m/mul 0.2 (m/normalize (mapv - m-xy xy)))
                 v (limit (m/add v a) 10)
                 xy (m/add xy v)]
             (recur (merge m {:v v :xy xy}) m-xy))))
