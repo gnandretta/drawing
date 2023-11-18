@@ -42,6 +42,15 @@
   [v]
   (div v (mag v)))
 
+(defn bound
+  "Constrains n to the interval [a,b]. When provided, returns lta when n < a or
+   gtb when n > b."
+  ([n [a b]] (-> n (max a) (min b)))
+  ([n [a b] lta gtb]
+   (cond (< n a) lta
+         (> n b) gtb
+         :else n)))
+
 (defn sign
   "Returns n if positive? is true and -n otherwise."
   [n positive?]
