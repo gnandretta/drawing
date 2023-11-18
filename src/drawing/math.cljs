@@ -27,6 +27,21 @@
   [& xs]
   (op / xs))
 
+(defn mag
+  "Returns the magnitude of a vector or sets it."
+  ([[x y]] (m/sqrt (+ (* x x) (* y y))))
+  ([v n] (mul v (/ n (mag v)))))
+
+(defn mag2
+  "Returns the square of the magnitude of a vector."
+  [[x y]]
+  (+ (* x x) (* y y)))
+
+(defn normalize
+  "Returns a vector with the same direction as v and magnitude = 1."
+  [v]
+  (div v (mag v)))
+
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
   ([n [c d]] (lerp n [0 1] [c d]))                          ; also works when d < c
