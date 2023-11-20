@@ -1,4 +1,4 @@
-(ns noc.vectors
+(ns noc.vector
   (:require [cljs.core.async :as async :refer [<! >! chan timeout] :refer-macros [alt! go]]
             [drawing.animation :as a]
             [drawing.canvas :as c]
