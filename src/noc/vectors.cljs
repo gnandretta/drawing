@@ -203,6 +203,13 @@
             (<! play))))
     ctrl))
 
+(defn- teleport [xy d]
+  (mapv (fn [n b] (cond (< n 0) b
+                        (> n b) 0
+                        :else n))
+        xy
+        d))
+
 (defn motion-101-velocity [& {:keys [d fps]
                               :or   {d   [640 240]
                                      fps 60}}]
@@ -220,7 +227,6 @@
                          (c/stroke)
                          (c/restore)))
         move (fn [xy v] (mapv + xy v))
-        teleport (fn [xy d] (mapv #(m/bound %1 [0 %2] %2 0) xy d))
         in (chan)
         [play ctrl] (a/play fps)
         ctx (c/append ::motion-101-velocity d)]
@@ -257,7 +263,6 @@
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
-        teleport (fn [xy d] (mapv #(m/bound %1 [0 %2] %2 0) xy d))
         limit (fn [v n]                                     ; TODO extract fn, probably more efficient to use mag^2
                 (let [mag-v (m/mag v)]
                   (cond-> v (> mag-v n) (m/div mag-v))))
@@ -298,7 +303,6 @@
                          (c/fill)
                          (c/stroke)
                          (c/restore)))
-        teleport (fn [xy d] (mapv #(m/bound %1 [0 %2] %2 0) xy d))
         limit (fn [v n]
                 (let [mag-v (m/mag v)]
                   (cond-> v (> mag-v n) (m/div mag-v))))
