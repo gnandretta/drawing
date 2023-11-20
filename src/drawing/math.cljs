@@ -167,7 +167,6 @@
   [[x y]]
   (noise-2d-generator x y))
 
-
 (defn steps
   "Returns a lazy sequence of n numbers that begins with start, and each
   following number is the sum of step and the preceding one."
