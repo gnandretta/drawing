@@ -166,7 +166,8 @@
   [[x y]]
   (noise-2d-generator x y))
 
-(defn range-n
+
+(defn steps
   "Returns a lazy sequence of start, start+step, start+2*step, ...,
    start+n*step."
   [start n step]
