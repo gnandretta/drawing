@@ -42,6 +42,16 @@
   [v]
   (div v (mag v)))
 
+(defn constrain
+  "Constrains x to the interval [a,b], that is, returns x when a ≤ x ≤ b, a
+   when x < a, and b when x > b. If x is a vector, instead of a number, the
+   constraint happens by component—vx to [ax,bx] and vy to [ay,by]."
+  [x [a b]]
+  (let [f (fn [x a b] (-> x (max a) (min b)))]
+    (cond
+      (number? x) (f x a b)
+      (vector? x) (mapv f x a b))))
+
 (defn sign
   "Returns n if positive? is true and -n otherwise."
   [n positive?]
