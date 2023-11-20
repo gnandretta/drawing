@@ -63,10 +63,12 @@
                          (/ (- n a) (- b a)))
                       c)))
 
-(defn lerpv
-  "Returns a vector with the mappings of n from [0,1] to [ax,bx] and [ay,by]."
+(defn blend
+  "Blends a percentage of vector b into vector a, n must be within [0,1]—more
+   precisely, returns a vector whose components are a linear interpolation of
+   the components of a and b."
   [n a b]
-  (mapv #(lerp n %) (map vector a b)))
+  (mapv (partial lerp n) (map vector a b)))
 
 (defn dist
   "Returns the Euclidean distance between (x0,y0) and (x1, y1)."
