@@ -168,10 +168,10 @@
 
 
 (defn steps
-  "Returns a lazy sequence of start, start+step, start+2*step, ...,
-   start+n*step."
+  "Returns a lazy sequence of n numbers that begins with start, and each
+  following number is the sum of step and the preceding one."
   [n start step]
-  (take n (iterate (partial + step) start)))
+  (range start (+ start (* n step)) step))
 
 (defn divisions
   "Returns a lazy sequence of n equidistant numbers between start (inclusive)
