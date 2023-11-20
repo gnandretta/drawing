@@ -173,6 +173,12 @@
   [n start step]
   (take n (iterate (partial + step) start)))
 
+(defn divisions
+  "Returns a lazy sequence of n equidistant numbers between start (inclusive)
+   and end (exclusive)."
+  [n start end]
+  (range start end (/ (- end start) n)))
+
 (defn grid
   "Returns a lazy sequence of normalized coordinates of cell center points."
   [r c]
