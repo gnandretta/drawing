@@ -170,7 +170,7 @@
 (defn steps
   "Returns a lazy sequence of start, start+step, start+2*step, ...,
    start+n*step."
-  [start n step]
+  [n start step]
   (take n (iterate (partial + step) start)))
 
 (defn grid
