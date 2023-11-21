@@ -169,7 +169,7 @@
 
 (defn steps
   "Returns a lazy sequence of n numbers that begins with start, and each
-  following number is the sum of step and the preceding one."
+   following number is the sum of step and the preceding one."
   [n start step]
   (range start (+ start (* n step)) step))
 
