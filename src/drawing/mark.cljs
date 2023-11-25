@@ -12,3 +12,14 @@
   ([r a dr da]
    (map m/xy (iterate #(m/add % (map m/rand-off [dr da]))
                       [r a]))))
+
+(defn variably-thick-line                                   ; TODO n = total hatch marks? keep iterating, add docs when happy
+  [n w moments]
+  (mapcat (fn [[xa aa] [xb ab]]
+            (when-not (= xa xb)
+              (for [i (range 0 n) :let [x (m/lerp i [0 (dec n)] [xa xb])
+                                        a (m/lerp i [0 (dec n)] [aa ab])
+                                        start [x 0]]]
+                [start (m/add start (m/xy w a))])))
+          moments
+          (rest moments)))
