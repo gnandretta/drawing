@@ -167,11 +167,11 @@
   [[x y]]
   (noise-2d-generator x y))
 
-(defn steps
-  "Returns a lazy sequence of n numbers that begins with start, and each
-   following number is the sum of step and the preceding one."
-  [n start step]
-  (range start (+ start (* n step)) step))
+(defn aseq                                                  ; arithmetic sequence
+  "Returns a lazy sequence of n numbers that begins with a (0 by default) and
+   the difference from any number to the preceding one is d."
+  ([n d] (aseq n 0 d))
+  ([n a d] (range a (+ a (* n d)) d)))
 
 (defn grid
   "Returns a lazy sequence of normalized coordinates of cell center points."

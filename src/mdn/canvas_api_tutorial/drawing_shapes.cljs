@@ -94,9 +94,9 @@
         (c/fill)
 
         (j>                                                 ; fruits
-          (doseq [x (m/steps 8 51 6)] (c/fill-rect ctx [x 35] [4 4]))
-          (doseq [y (m/steps 6 51 6)] (c/fill-rect ctx [115 y] [4 4]))
-          (doseq [x (m/steps 8 51 6)] (c/fill-rect ctx [x 99] [4 4])))
+          (doseq [x (m/aseq 8 51 6)] (c/fill-rect ctx [x 35] [4 4]))
+          (doseq [y (m/aseq 6 51 6)] (c/fill-rect ctx [115 y] [4 4]))
+          (doseq [x (m/aseq 8 51 6)] (c/fill-rect ctx [x 99] [4 4])))
 
         (c/begin-path)                                      ; ghost
         (c/move-to [83 116])
