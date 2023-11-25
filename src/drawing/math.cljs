@@ -173,6 +173,15 @@
   ([n d] (aseq n 0 d))
   ([n a d] (range a (+ a (* n d)) d)))
 
+(defn rpart                                                 ; regular partition (of an interval)
+  "Returns a lazy sequence of n numbers that begins with a (0 by default) ends
+   with b and the difference from any number to the preceding one is constant."
+  {:arglists '[[n b] [n [a b]]]}
+  [n x]
+  (let [[a b] (if (vector? x) x [0 x])]
+    (concat (range a b (/ (- b a) (dec n)))
+            (lazy-seq [b]))))
+
 (defn grid
   "Returns a lazy sequence of normalized coordinates of cell center points."
   [r c]
