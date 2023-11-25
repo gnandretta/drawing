@@ -23,3 +23,12 @@
                 [start (m/add start (m/xy w a))])))
           moments
           (rest moments)))
+
+(defn grid
+  "Returns a lazy sequence of pairs of line end points that from an r x c grid
+   of size w x h."
+  [r c [w h]]
+  (concat (for [y (m/rpart (inc r) w)]
+            [[0 y] [w y]])
+          (for [x (m/rpart (inc c) h)]
+            [[x 0] [x h]])))
