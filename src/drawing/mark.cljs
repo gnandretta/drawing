@@ -1,7 +1,7 @@
 (ns drawing.mark
   (:require [drawing.math :as m]))
 
-(defn squiggle
+(defn squiggle                                              ; TODO there are not normalized coordinates, remove defaults
   "Returns an infinite sequence of normalized coordinates, starting with the
    cartesian equivalent of the polar coordinate (r,a), followed by coordinates
    that result of adding random numbers from the intervals dr and da to the
