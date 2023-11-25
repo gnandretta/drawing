@@ -173,14 +173,6 @@
   [n start step]
   (range start (+ start (* n step)) step))
 
-(defn divisions
-  "Returns a lazy sequence of n equidistant numbers between a (inclusive) and b
-   (exclusive) by default. Adds b to the sequence when inclusive? is true."
-  ([n [a b]] (divisions n [a b] false))
-  ([n [a b] inclusive?]
-   (cond-> (range a b (/ (- b a) n))
-           inclusive? (conj b))))
-
 (defn grid
   "Returns a lazy sequence of normalized coordinates of cell center points."
   [r c]
