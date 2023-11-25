@@ -89,9 +89,9 @@
   [h a]
   (* (m/sin a) h))
 
-(defn coord
+(defn xy
   "Converts a polar coordinate to a Cartesian coordinate."
-  ([[r a]] (coord r a))
+  ([[r a]] (xy r a))
   ([r a] [(adj r a) (opp r a)]))
 
 (defn rad
