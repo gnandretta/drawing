@@ -13,7 +13,7 @@
    (map m/xy (iterate #(m/add % (map m/rand-off [dr da]))
                       [r a]))))
 
-(defn variably-thick-line                                   ; TODO n = total hatch marks? keep iterating, add docs when happy
+(defn variably-thick-line                                   ; TODO n = total hatch marks? keep iterating, follow a path (another fn?), add docs when happy
   [n w moments]
   (mapcat (fn [[xa aa] [xb ab]]
             (when-not (= xa xb)
@@ -24,7 +24,7 @@
           moments
           (rest moments)))
 
-(defn drunken-ant-path
+(defn drunken-ant-path                                      ; TODO rename to random walk or something like that and review doc
   "Returns an infinite sequence of points that begins with xy and each
    successive point is the result of applying some random acceleration
    (magnified by drinks) and some random angular acceleration."
