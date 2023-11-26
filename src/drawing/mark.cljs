@@ -24,6 +24,19 @@
           moments
           (rest moments)))
 
+(defn drunken-ant-path
+  "Returns an infinite sequence of points that begins with xy and each
+   successive point is the result of applying some random acceleration
+   (magnified by drinks) and some random angular acceleration."
+  [xy drinks]
+  (let [a-mags (iterate (fn [a] (+ a (* (m/rand-off -0.1 0.1) drinks))) 0)
+        aa-mags (rest (iterate (fn [aa] (+ aa (m/rand-off -1 1))) 0))
+        acc (fn [v [a aa]] (m/mag (m/rotate v aa)
+                                  (+ (m/mag v) a)))]
+    (reductions m/add xy (reductions acc
+                                     (m/normalize [(rand) (rand)])
+                                     (map vector a-mags aa-mags)))))
+
 (defn grid
   "Returns a lazy sequence of pairs of line end points that from an r x c grid
    of size w x h."
