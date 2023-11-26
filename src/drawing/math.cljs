@@ -32,7 +32,7 @@
   ([[x y]] (m/sqrt (+ (* x x) (* y y))))
   ([v n] (mul v (/ n (mag v)))))
 
-(defn mag2
+(defn mag-square
   "Returns the square of the magnitude of a vector."
   [[x y]]
   (+ (* x x) (* y y)))

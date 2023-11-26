@@ -285,7 +285,7 @@
               (and (> xa xb) (< xa (+ xb w))
                    (> ya yb) (< yb (+ yb h))))
         calculate-liquid-resistance (fn [v c]
-                                      (m/mul (m/normalize v) -1 c (m/mag2 v)))
+                                      (m/mul (m/normalize v) -1 c (m/mag-square v)))
         ctx (c/append ::fluid-resistance d)
         in (chan)
         [play ctrl] (a/play fps)
