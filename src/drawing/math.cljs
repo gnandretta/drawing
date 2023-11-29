@@ -42,6 +42,13 @@
   [v]
   (div v (mag v)))
 
+(defn rotate
+  "Rotates a vector."
+  [[x y] a]
+  (let [s (m/sin a) c (m/cos a)]
+    [(- (* c x) (* s y))
+     (+ (* s x) (* c y))]))
+
 (defn constrain
   "Constrains x to the interval [a,b], that is, returns x when a ≤ x ≤ b, a
    when x < a, and b when x > b. If x is a vector, instead of a number, the
