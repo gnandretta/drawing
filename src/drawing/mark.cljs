@@ -37,6 +37,28 @@
                                      (m/normalize [(rand) (rand)])
                                      (map vector a-mags aa-mags)))))
 
+(defn drifting-dash-polyline
+  "Returns a sequence of pairs of line end points that go through xys, have
+   length l-line, (mostly) separated by gaps of length l-gap and randomly moved
+   a little bit n-drift times. If trace? is true, the movements are added to
+   the sequence along with the original lines."
+  [xys [l-line l-gap] n-drifts trace?]
+  (->> (mapcat (fn [a b]                                    ; make dashed lines between neighbour xys
+                 (let [dir (m/sub b a)
+                       l (+ l-line l-gap)]
+                   (->> (iterate #(m/add % (m/mag dir l)) a)
+                        (take-while #(>= (m/dist % b) l))
+                        (map #(vector % (m/add % (m/mag dir l-line)))))))
+               xys
+               (rest xys))
+       (iterate (fn [xy-pairs]                              ; move lines a little bit or make them
+                  (cond->> (map #(mapv (partial m/add %2) %1)
+                                xy-pairs
+                                (partition 2 (repeatedly #(m/rand-off -10 10)))) ; random direction *vectors*
+                           trace? (interleave xy-pairs))))
+       (drop n-drifts)
+       (first)))
+
 (defn grid
   "Returns a lazy sequence of pairs of line end points that from an r x c grid
    of size w x h."
