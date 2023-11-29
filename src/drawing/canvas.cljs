@@ -83,7 +83,7 @@
 
 (defn set-line-dash
   "Sets the line dash pattern used when stroking lines from a vector with the
-   length of lines (odd position) and gaps (even possition), in coordinate
+   length of lines (odd position) and gaps (even position), in coordinate
    space units. [] clears the pattern, and elements of vectors with odd counts
    are repeated."
   [ctx segments]
