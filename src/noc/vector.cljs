@@ -18,7 +18,7 @@
             (>! in {:x x :y y})
             (recur x
                    y
-                   (* vx (if (or (> x w) (< x 0)) -1 1))
+                   (* vx (if (or (> x w) (< x 0)) -1 1))    ; TODO use sign, extract noc.util/in? x [0 w]
                    (* vy (if (or (> y h) (< y 0)) -1 1))))))
     (go (while true
           (let [{:keys [x y]} (<! in)]
