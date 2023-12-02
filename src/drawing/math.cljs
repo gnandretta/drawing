@@ -174,6 +174,11 @@
   [[x y]]
   (noise-2d-generator x y))
 
+(defn in?
+  "Returns true if n belongs to the interval [a,b]."
+  [n [a b]]
+  (and (>= n a) (<= n b)))
+
 (defn aseq                                                  ; arithmetic sequence
   "Returns a lazy sequence of n numbers that begins with a (0 by default) and
    the difference from any number to the preceding one is d."
