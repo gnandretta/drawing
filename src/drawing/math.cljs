@@ -60,9 +60,9 @@
       (vector? x) (mapv f x a b))))
 
 (defn sign
-  "Returns n if positive? is true and -n otherwise."
-  [n positive?]
-  (cond-> n (not positive?) (* -1)))
+  "Returns n (defaults to 1) if positive? is true and -n otherwise."
+  ([positive?] (sign 1 positive?))
+  ([n positive?] (cond-> n (not positive?) (* -1))))
 
 (defn lerp
   "Maps n from [a,b] (defaults to [0,1]) to [c,d] with a linear interpolation."
