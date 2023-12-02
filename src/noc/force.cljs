@@ -68,11 +68,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :a    [0 0]
-                      :v    [0 0]})
         draw-mover (fn [ctx m]
                      (-> ctx
                          (c/save)
