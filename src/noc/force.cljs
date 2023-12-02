@@ -7,11 +7,11 @@
 
 (defn- make-mover [& {:as attrs}]
   (let [mass (get attrs :mass 1)]
-    (merge {:xy [0 0]
-            :r (* 8 mass)
+    (merge {:xy   [0 0]
+            :r    (* 8 mass)
             :mass mass
-            :a  [0 0]
-            :v  [0 0]}
+            :a    [0 0]
+            :v    [0 0]}
            attrs)))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
