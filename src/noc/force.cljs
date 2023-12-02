@@ -6,10 +6,13 @@
             [drawing.math :as m]))
 
 (defn- make-mover [& {:as attrs}]
-  (merge {:xy [0 0]
-          :a  [0 0]
-          :v  [0 0]}
-         attrs))
+  (let [mass (get attrs :mass 1)]
+    (merge {:xy [0 0]
+            :r (* 8 mass)
+            :mass mass
+            :a  [0 0]
+            :v  [0 0]}
+           attrs)))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
@@ -121,12 +124,6 @@
                                     :else [x vx])
                        [y vy] (if (> y (- h r)) [(- h r) (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :r    (* 8 mass)
-                      :a    [0 0]
-                      :v    [0 0]})
         draw-mover (fn [ctx m]
                      (let [line-width 2]
                        (-> ctx
