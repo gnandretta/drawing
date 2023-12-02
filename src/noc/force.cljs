@@ -5,6 +5,12 @@
             [drawing.dom :as d]
             [drawing.math :as m]))
 
+(defn- make-mover [& {:as attrs}]
+  (merge {:xy [0 0]
+          :a  [0 0]
+          :v  [0 0]}
+         attrs))
+
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
                         fps 60}}]
@@ -14,9 +20,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        make-mover (fn [] {:xy [(/ (first d) 2) 30]
-                           :a  [0 0]
-                           :v  [0 0]})
         draw-mover (fn [ctx m]
                      (-> ctx
                          (c/save)
@@ -36,7 +39,7 @@
         wind [0.1 0]]
     (d/events (c/get ctx) "mouseup" m-up-down)
     (d/events (c/get ctx) "mousedown" m-up-down)
-    (go (loop [{:keys [a v xy] :as m} (make-mover) m-state :up]
+    (go (loop [{:keys [a v xy] :as m} (make-mover :xy [(/ (first d) 2) 30]) m-state :up]
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
