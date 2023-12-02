@@ -184,12 +184,6 @@
                                     :else [x vx])
                        [y vy] (if (> y (- h r)) [(- h r) (* -0.9 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :r    (* 8 mass)
-                      :a    [0 0]
-                      :v    [0 0]})
         draw-mover (fn [ctx m]
                      (let [line-width 2]
                        (-> ctx
@@ -245,11 +239,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :a    [0 0]
-                      :v    [0 0]})
         draw-mover (fn [ctx m]
                      (-> ctx
                          (c/save)
@@ -312,12 +301,7 @@
 (defn attraction [& {:keys [d fps]                          ; example 2.6
                      :or   {d   [640 240]
                             fps 60}}]
-  (let [make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :a    [0 0]
-                      :v    [1 0]})
-        draw-mover (fn [ctx m]
+  (let [draw-mover (fn [ctx m]
                      (-> ctx
                          (c/save)
                          (c/set-fill-style "rgba(127,127,127,0.5)")
@@ -354,7 +338,7 @@
         in (chan)
         [play ctrl] (a/play fps)
         attractor (make-attractor :xy (m/div d 2))]
-    (go (loop [m (make-mover :xy [350 50] :mass 2)]         ; TODO allow to move attractor
+    (go (loop [m (make-mover :xy [350 50] :mass 2 :v [1 0])] ; TODO allow to move attractor
           (>! in m)
           (recur (move m [(get-attraction attractor m)]))))
     (go (while true
@@ -372,12 +356,7 @@
 (defn attraction-with-many-movers [& {:keys [d fps]         ; example 2.7
                                       :or   {d   [640 240]
                                              fps 60}}]
-  (let [make-mover (fn [& {:keys [xy mass] :or {mass 1}}]
-                     {:xy   xy
-                      :mass mass
-                      :a    [0 0]
-                      :v    [1 0]})
-        draw-mover (fn [ctx m]
+  (let [draw-mover (fn [ctx m]
                      (-> ctx
                          (c/save)
                          (c/set-fill-style "rgba(127,127,127,0.5)")
@@ -414,7 +393,7 @@
         in (chan)
         [play ctrl] (a/play fps)
         attractor (make-attractor :xy (m/div d 2))]
-    (go (loop [ms (repeatedly 10 #(make-mover :xy (mapv rand d) :mass (m/rand-off 0.5 3)))] ; TODO allow to move attractor
+    (go (loop [ms (repeatedly 10 #(make-mover :xy (mapv rand d) :mass (m/rand-off 0.5 3) :v [1 0]))] ; TODO allow to move attractor
           (>! in ms)
           (recur (map #(move % [(get-attraction attractor %)]) ms))))
     (go (while true
