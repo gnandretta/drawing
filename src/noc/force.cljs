@@ -350,7 +350,7 @@
                              (c/set-stroke-style :black)
                              (c/set-line-width 4)
                              (c/begin-path)
-                             (c/circle (:xy m) (:mass m)) ; TODO adjust numbers
+                             (c/circle (:xy m) (:mass m))   ; TODO adjust numbers
                              (c/fill)
                              (c/stroke)
                              (c/restore)))
@@ -410,7 +410,7 @@
                              (c/set-stroke-style :black)
                              (c/set-line-width 4)
                              (c/begin-path)
-                             (c/circle (:xy m) (:mass m)) ; TODO adjust numbers
+                             (c/circle (:xy m) (:mass m))   ; TODO adjust numbers
                              (c/fill)
                              (c/stroke)
                              (c/restore)))
@@ -505,7 +505,7 @@
                         (c/set-stroke-style :black)
                         (c/set-line-width 2)
                         (c/begin-path)
-                        (c/circle (:xy m) (* 8 (:mass m))) ; TODO adjust numbers
+                        (c/circle (:xy m) (* 8 (:mass m)))  ; TODO adjust numbers
                         (c/fill)
                         (c/stroke)
                         (c/restore)))
