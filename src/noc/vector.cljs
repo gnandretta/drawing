@@ -18,8 +18,8 @@
             (>! in {:x x :y y})
             (recur x
                    y
-                   (* vx (if (or (> x w) (< x 0)) -1 1))    ; TODO use sign, extract noc.util/in? x [0 w]
-                   (* vy (if (or (> y h) (< y 0)) -1 1))))))
+                   (m/sign vx (m/in? x [0 w]))
+                   (m/sign vy (m/in? y [0 h]))))))
     (go (while true
           (let [{:keys [x y]} (<! in)]
             (-> ctx
@@ -37,14 +37,13 @@
 (defn bouncing-ball-with-vectors [& {:keys [d fps]
                                      :or   {d   [640 240]
                                             fps 30}}]
-  (let [in (chan)
+  (let [[w h] d
+        in (chan)
         [play ctrl] (a/play fps)
         ctx (c/append ::bouncing-ball-with-vectors d)]
     (go (loop [xy [100 100] v [2.5 2]]
           (let [xy (mapv + xy v)
-                v (mapv (fn [v' xy' d']
-                          (* v' (if (or (> xy' d') (< xy' 0)) -1 1)))
-                        v xy d)]
+                v (mapv m/sign v (mapv m/in? xy [[0 w] [0 h]]))]
             (>! in xy)
             (recur xy v))))
     (go (while true
