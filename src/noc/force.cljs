@@ -15,16 +15,17 @@
            attrs)))
 
 (defn- draw-mover [ctx m]
-  (-> ctx
-      (c/save)
-      (c/set-fill-style "rgba(127,127,127,0.5)")
-      (c/set-stroke-style :black)
-      (c/set-line-width 2)
-      (c/begin-path)
-      (c/circle (:xy m) 24)
-      (c/fill)
-      (c/stroke)
-      (c/restore)))
+  (let [line-width 2]
+    (-> ctx
+        (c/save)
+        (c/set-fill-style "rgba(127,127,127,0.5)")
+        (c/set-stroke-style :black)
+        (c/set-line-width line-width)
+        (c/begin-path)
+        (c/circle (:xy m) (- (:r m) line-width))
+        (c/fill)
+        (c/stroke)
+        (c/restore))))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
@@ -58,7 +59,7 @@
                 (c/save)
                 (c/set-fill-style :white)
                 (c/fill-rect d)
-                (draw-mover m)
+                (draw-mover (assoc m :r 24))
                 (c/restore))
             (<! play))))
     ctrl))
