@@ -73,17 +73,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        draw-mover (fn [ctx m]
-                     (-> ctx
-                         (c/save)
-                         (c/set-fill-style "rgba(127,127,127,0.5)")
-                         (c/set-stroke-style :black)
-                         (c/set-line-width 2)
-                         (c/begin-path)
-                         (c/circle (:xy m) (* 8 (:mass m)))
-                         (c/fill)
-                         (c/stroke)
-                         (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy d)
@@ -126,18 +115,6 @@
                                     :else [x vx])
                        [y vy] (if (> y (- h r)) [(- h r) (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        draw-mover (fn [ctx m]
-                     (let [line-width 2]
-                       (-> ctx
-                           (c/save)
-                           (c/set-fill-style "rgba(127,127,127,0.5)")
-                           (c/set-stroke-style :black)
-                           (c/set-line-width line-width)
-                           (c/begin-path)
-                           (c/circle (:xy m) (- (:r m) line-width))
-                           (c/fill)
-                           (c/stroke)
-                           (c/restore))))
         move (fn [{:keys [a v xy r mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy r d)
@@ -186,18 +163,6 @@
                                     :else [x vx])
                        [y vy] (if (> y (- h r)) [(- h r) (* -0.9 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        draw-mover (fn [ctx m]
-                     (let [line-width 2]
-                       (-> ctx
-                           (c/save)
-                           (c/set-fill-style "rgba(127,127,127,0.5)")
-                           (c/set-stroke-style :black)
-                           (c/set-line-width line-width)
-                           (c/begin-path)
-                           (c/circle (:xy m) (- (:r m) line-width))
-                           (c/fill)
-                           (c/stroke)
-                           (c/restore))))
         move (fn [{:keys [a v xy r mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy r d)
@@ -241,17 +206,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        draw-mover (fn [ctx m]
-                     (-> ctx
-                         (c/save)
-                         (c/set-fill-style "rgba(127,127,127,0.5)")
-                         (c/set-stroke-style :black)
-                         (c/set-line-width 2)
-                         (c/begin-path)
-                         (c/circle (:xy m) (* 8 (:mass m)))
-                         (c/fill)
-                         (c/stroke)
-                         (c/restore)))
         move (fn [{:keys [a v xy mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      [v xy] (bounce v xy d)
@@ -303,18 +257,7 @@
 (defn attraction [& {:keys [d fps]                          ; example 2.6
                      :or   {d   [640 240]
                             fps 60}}]
-  (let [draw-mover (fn [ctx m]
-                     (-> ctx
-                         (c/save)
-                         (c/set-fill-style "rgba(127,127,127,0.5)")
-                         (c/set-stroke-style :black)
-                         (c/set-line-width 2)
-                         (c/begin-path)
-                         (c/circle (:xy m) (* 8 (:mass m)))
-                         (c/fill)
-                         (c/stroke)
-                         (c/restore)))
-        move (fn [{:keys [a v xy mass] :as m} forces]
+  (let [move (fn [{:keys [a v xy mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
@@ -358,18 +301,7 @@
 (defn attraction-with-many-movers [& {:keys [d fps]         ; example 2.7
                                       :or   {d   [640 240]
                                              fps 60}}]
-  (let [draw-mover (fn [ctx m]
-                     (-> ctx
-                         (c/save)
-                         (c/set-fill-style "rgba(127,127,127,0.5)")
-                         (c/set-stroke-style :black)
-                         (c/set-line-width 2)
-                         (c/begin-path)
-                         (c/circle (:xy m) (* 8 (:mass m)))
-                         (c/fill)
-                         (c/stroke)
-                         (c/restore)))
-        move (fn [{:keys [a v xy mass] :as m} forces]
+  (let [move (fn [{:keys [a v xy mass] :as m} forces]
                (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
                      v (mapv + v a)
                      xy (mapv + xy v)]
