@@ -14,6 +14,18 @@
             :v    [0 0]}
            attrs)))
 
+(defn- draw-mover [ctx m]
+  (-> ctx
+      (c/save)
+      (c/set-fill-style "rgba(127,127,127,0.5)")
+      (c/set-stroke-style :black)
+      (c/set-line-width 2)
+      (c/begin-path)
+      (c/circle (:xy m) 24)
+      (c/fill)
+      (c/stroke)
+      (c/restore)))
+
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
                         fps 60}}]
@@ -23,17 +35,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        draw-mover (fn [ctx m]
-                     (-> ctx
-                         (c/save)
-                         (c/set-fill-style "rgba(127,127,127,0.5)")
-                         (c/set-stroke-style :black)
-                         (c/set-line-width 2)
-                         (c/begin-path)
-                         (c/circle (:xy m) 24)
-                         (c/fill)
-                         (c/stroke)
-                         (c/restore)))
         ctx (c/append ::forces d)
         in (chan)
         [play ctrl] (a/play fps)
