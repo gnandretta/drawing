@@ -213,17 +213,19 @@
                      xy (mapv + xy v)]
                  (merge m {:xy xy :v v :a [0 0]})))
         make-liquid (fn [& {:keys [h* d c]}]
-                      (let [h (* h* (second d))]
-                        {:xy [0 (- (second d) h)] :d [(first d) h] :c c}))
+                      (let [h (* h* (second d))
+                            xy [0 (- (second d) h)]
+                            d [(first d) h]]
+                        {:xy    xy
+                         :xy-opp (m/add xy d)
+                         :d     d
+                         :c     c}))
         draw-liquid (fn [ctx {:keys [xy d]}]
                       (-> ctx
                           (c/save)
                           (c/set-fill-style "rgb(200,200,200)")
                           (c/fill-rect xy d)
                           (c/restore)))
-        in? (fn [[xa ya] [xb yb] [w h]]
-              (and (> xa xb) (< xa (+ xb w))
-                   (> ya yb) (< yb (+ yb h))))
         calculate-liquid-resistance (fn [v c]
                                       (m/mul (m/normalize v) -1 c (m/mag-square v)))
         ctx (c/append ::fluid-resistance d)
@@ -239,7 +241,9 @@
           (alt!
             m-down (recur nil)
             (timeout 1) (recur (map (fn [m] (move m (cond-> [(m/mul gravity (:mass m))]
-                                                            (in? (:xy m) (:xy liquid) (:d liquid))
+                                                            (every? true? (map m/in? (:xy m) (map vector
+                                                                                                  (:xy liquid)
+                                                                                                  (:xy-opp liquid))))
                                                             (conj (calculate-liquid-resistance (:v m) (:c liquid))))))
                                     ms)))))
     (go (while true
