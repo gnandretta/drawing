@@ -35,12 +35,14 @@
     (merge m {:xy xy :v v :a a})))
 
 (defn bounce                                                ; TODO how to model this using a force?
-  [[vx vy] [x y] [w h]]
-  (let [[x vx] (cond (> x w) [w (* -1 vx)]
+  [{:keys [xy v] :as m} [w h]]
+  (let [[vx vy] v
+        [x y] xy
+        [x vx] (cond (> x w) [w (* -1 vx)]
                      (< x 0) [0 (* -1 vx)]
                      :else [x vx])
         [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
-    [[vx vy] [x y]]))
+    (merge m {:xy [x y] :v [vx vy]})))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
@@ -53,14 +55,13 @@
         wind [0.1 0]]
     (d/events (c/get ctx) "mouseup" m-up-down)
     (d/events (c/get ctx) "mousedown" m-up-down)
-    (go (loop [{:keys [v xy] :as m} (make-mover :xy [(/ (first d) 2) 30]) m-state :up]
+    (go (loop [m (make-mover :xy [(/ (first d) 2) 30]) m-state :up]
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
-            (timeout 1) (let [[v xy] (bounce v xy d)]
-                          (recur (move (merge m {:xy xy :v v})
-                                       (cond-> [gravity] (= m-state :down) (conj wind)))
-                                 m-state)))))
+            (timeout 1) (recur (move (bounce m d)
+                                     (cond-> [gravity] (= m-state :down) (conj wind)))
+                               m-state))))
     (go (while true
           (let [m (<! in)]
             (-> ctx
@@ -90,10 +91,7 @@
           (alt!
             m-up-down (recur ms (case m-state :up :down :up))
             (timeout 1) (let [forces (cond-> [gravity] (= m-state :down) (conj wind))]
-                          (recur (map (fn [{:keys [v xy] :as m}]
-                                        (let [[v xy] (bounce v xy d)]
-                                          (move (merge m {:xy xy :v v}) forces)))
-                                      ms)
+                          (recur (map #(move (bounce % d) forces) ms)
                                  m-state)))))
     (go (while true
           (let [ms (<! in)]
