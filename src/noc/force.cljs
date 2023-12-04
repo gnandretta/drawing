@@ -223,27 +223,33 @@
             (<! play))))
     ctrl))
 
+(defn- make-attractor
+  [& {:keys [xy mass] :or {mass 20}}]
+  {:xy xy :mass mass})
+
+(defn- draw-attractor
+  [ctx m]
+  (-> ctx
+      (c/save)
+      (c/set-fill-style "rgba(125,125,125,0.78)")
+      (c/set-stroke-style :black)
+      (c/set-line-width 4)
+      (c/begin-path)
+      (c/circle (:xy m) (:mass m))                          ; TODO adjust numbers
+      (c/fill)
+      (c/stroke)
+      (c/restore)))
+
+(defn- get-attraction                                        ; force experienced by b due to a's attraction
+  [a b]
+  (let [dist (m/sub (:xy a) (:xy b))
+        mag-dist (-> (m/mag dist) (max 5) (min 25))]
+    (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
+
 (defn attraction [& {:keys [d fps]                          ; example 2.6
                      :or   {d   [640 240]
                             fps 60}}]
-  (let [make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
-                         {:xy xy :mass mass})
-        draw-attractor (fn [ctx m]
-                         (-> ctx
-                             (c/save)
-                             (c/set-fill-style "rgba(125,125,125,0.78)")
-                             (c/set-stroke-style :black)
-                             (c/set-line-width 4)
-                             (c/begin-path)
-                             (c/circle (:xy m) (:mass m))   ; TODO adjust numbers
-                             (c/fill)
-                             (c/stroke)
-                             (c/restore)))
-        get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
-                         (let [dist (m/sub (:xy a) (:xy b))
-                               mag-dist (-> (m/mag dist) (max 5) (min 25))]
-                           (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
-        ctx (c/append ::attraction d)
+  (let [ctx (c/append ::attraction d)
         in (chan)
         [play ctrl] (a/play fps)
         attractor (make-attractor :xy (m/div d 2))]
