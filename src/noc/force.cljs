@@ -34,16 +34,18 @@
         xy (m/add xy v)]
     (merge m {:xy xy :v v :a a})))
 
+(defn bounce                                                ; TODO how to model this using a force?
+  [[vx vy] [x y] [w h]]
+  (let [[x vx] (cond (> x w) [w (* -1 vx)]
+                     (< x 0) [0 (* -1 vx)]
+                     :else [x vx])
+        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
+    [[vx vy] [x y]]))
+
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
                         fps 60}}]
-  (let [bounce (fn [[vx vy] [x y] [w h]]                    ; TODO how to model this using a force?
-                 (let [[x vx] (cond (> x w) [w (* -1 vx)]
-                                    (< x 0) [0 (* -1 vx)]
-                                    :else [x vx])
-                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
-                   [[vx vy] [x y]]))
-        ctx (c/append ::forces d)
+  (let [ctx (c/append ::forces d)
         in (chan)
         [play ctrl] (a/play fps)
         m-up-down (chan)
@@ -73,13 +75,7 @@
 (defn forces-acting-on-two-objects [& {:keys [d fps]        ; example 2.2
                                        :or   {d   [640 240]
                                               fps 60}}]
-  (let [bounce (fn [[vx vy] [x y] [w h]]
-                 (let [[x vx] (cond (> x w) [w (* -1 vx)]
-                                    (< x 0) [0 (* -1 vx)]
-                                    :else [x vx])
-                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
-                   [[vx vy] [x y]]))
-        ctx (c/append ::forces-acting-on-two-objects d)
+  (let [ctx (c/append ::forces-acting-on-two-objects d)
         in (chan)
         [play ctrl] (a/play fps)
         m-up-down (chan)
