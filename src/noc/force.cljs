@@ -176,19 +176,7 @@
 (defn fluid-resistance [& {:keys [d fps]                    ; example 2.5
                            :or   {d   [640 240]
                                   fps 60}}]
-  (let [bounce (fn [[vx vy] [x y] [w h]]
-                 (let [[x vx] (cond (> x w) [w (* -1 vx)]
-                                    (< x 0) [0 (* -1 vx)]
-                                    :else [x vx])
-                       [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
-                   [[vx vy] [x y]]))
-        move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     [v xy] (bounce v xy d)
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
-        make-liquid (fn [& {:keys [h* d c]}]
+  (let [make-liquid (fn [& {:keys [h* d c]}]
                       (let [h (* h* (second d))
                             xy [0 (- (second d) h)]
                             d [(first d) h]]
@@ -216,11 +204,12 @@
           (>! in ms)
           (alt!
             m-down (recur nil)
-            (timeout 1) (recur (map (fn [m] (move m (cond-> [(m/mul gravity (:mass m))]
-                                                            (every? true? (map m/in? (:xy m) (map vector
-                                                                                                  (:xy liquid)
-                                                                                                  (:xy-opp liquid))))
-                                                            (conj (calculate-liquid-resistance (:v m) (:c liquid))))))
+            (timeout 1) (recur (map (fn [m] (move (bounce m d)
+                                                  (cond-> [(m/mul gravity (:mass m))]
+                                                          (every? true? (map m/in? (:xy m) (map vector
+                                                                                                (:xy liquid)
+                                                                                                (:xy-opp liquid))))
+                                                          (conj (calculate-liquid-resistance (:v m) (:c liquid))))))
                                     ms)))))
     (go (while true
           (let [ms (<! in)]
@@ -237,12 +226,7 @@
 (defn attraction [& {:keys [d fps]                          ; example 2.6
                      :or   {d   [640 240]
                             fps 60}}]
-  (let [move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
-        make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
+  (let [make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
                          {:xy xy :mass mass})
         draw-attractor (fn [ctx m]
                          (-> ctx
@@ -281,12 +265,7 @@
 (defn attraction-with-many-movers [& {:keys [d fps]         ; example 2.7
                                       :or   {d   [640 240]
                                              fps 60}}]
-  (let [move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
-        make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
+  (let [make-attractor (fn [& {:keys [xy mass] :or {mass 20}}]
                          {:xy xy :mass mass})
         draw-attractor (fn [ctx m]
                          (-> ctx
@@ -345,11 +324,6 @@
                         (c/fill)
                         (c/stroke)
                         (c/restore)))
-        move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (m/mag dist) (max 5) (min 25))]
@@ -394,11 +368,6 @@
                         (c/fill)
                         (c/stroke)
                         (c/restore)))
-        move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
         get-attraction (fn [a b]                            ; force experienced by b due to a's attraction
                          (let [dist (m/sub (:xy a) (:xy b))
                                mag-dist (-> (m/mag dist) (max 5) (min 25))]
