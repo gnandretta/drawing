@@ -144,18 +144,6 @@
                                     fps 60}}]
   (let [[w] d
         bottom? (fn [{:keys [xy r]} [_ h]] (let [[_ y] xy] (> y (- h r 1))))
-        bounce (fn [[vx vy] [x y] r [w h]]
-                 (let [[x vx] (cond (> x (- w r)) [(- w r) (* -1 vx)]
-                                    (< x r) [r (* -1 vx)]
-                                    :else [x vx])
-                       [y vy] (if (> y (- h r)) [(- h r) (* -0.9 vy)] [y vy])]
-                   [[vx vy] [x y]]))
-        move (fn [{:keys [a v xy r mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     [v xy] (bounce v xy r d)
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
         ctx (c/append ::including-friction d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -169,9 +157,10 @@
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
-            (timeout 1) (recur (move m (cond-> [(m/mul gravity (:mass m))]
-                                               (= m-state :down) (conj wind)
-                                               (bottom? m d) (conj (m/mul -0.1 (m/normalize (:v m))))))
+            (timeout 1) (recur (move (bounce m (m/sub d (:r m)) 0.9)
+                                     (cond-> [(m/mul gravity (:mass m))]
+                                             (= m-state :down) (conj wind)
+                                             (bottom? m d) (conj (m/mul -0.1 (m/normalize (:v m))))))
                                m-state))))
     (go (while true
           (let [m (<! in)]
