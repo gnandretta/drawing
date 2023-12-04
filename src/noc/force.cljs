@@ -290,18 +290,20 @@
             (<! play))))
     ctrl))
 
+(defn- make-body
+  [& {:keys [xy v mass] :or {v    [0 0]
+                             mass 8}}]
+  {:xy   xy
+   :mass mass
+   :a    [0 0]
+   :v    v})
+
 (defn two-bodies-attraction [& {:keys [d fps]               ; example 2.8
                                 :or   {d   [640 240]
                                        fps 60}}]
   (let [ctx (c/append ::two-bodies-attraction d)
         in (chan)
         [play ctrl] (a/play fps)
-        make-body (fn [& {:keys [xy v mass] :or {v    [1 0]
-                                                 mass 8}}]
-                    {:xy   xy
-                     :mass mass
-                     :a    [0 0]
-                     :v    v})
         draw-body (fn [ctx m]
                     (-> ctx
                         (c/save)
@@ -336,12 +338,6 @@
   (let [ctx (c/append ::n-bodies d)
         in (chan)
         [play ctrl] (a/play fps)
-        make-body (fn [& {:keys [xy v mass] :or {v    [0 0]
-                                                 mass 8}}]
-                    {:xy   xy
-                     :mass mass
-                     :a    [0 0]
-                     :v    v})
         draw-body (fn [ctx m]
                     (-> ctx
                         (c/save)
