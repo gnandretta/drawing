@@ -79,12 +79,6 @@
                                     :else [x vx])
                        [y vy] (if (> y h) [h (* -1 vy)] [y vy])]
                    [[vx vy] [x y]]))
-        move (fn [{:keys [a v xy mass] :as m} forces]
-               (let [a (apply mapv + a (map #(m/div % mass) forces)) ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-                     [v xy] (bounce v xy d)
-                     v (mapv + v a)
-                     xy (mapv + xy v)]
-                 (merge m {:xy xy :v v :a [0 0]})))
         ctx (c/append ::forces-acting-on-two-objects d)
         in (chan)
         [play ctrl] (a/play fps)
@@ -100,7 +94,11 @@
           (alt!
             m-up-down (recur ms (case m-state :up :down :up))
             (timeout 1) (let [forces (cond-> [gravity] (= m-state :down) (conj wind))]
-                          (recur (map #(move % forces) ms) m-state)))))
+                          (recur (map (fn [{:keys [v xy] :as m}]
+                                        (let [[v xy] (bounce v xy d)]
+                                          (move (merge m {:xy xy :v v}) forces)))
+                                      ms)
+                                 m-state)))))
     (go (while true
           (let [ms (<! in)]
             (-> ctx
