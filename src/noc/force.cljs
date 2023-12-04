@@ -28,11 +28,11 @@
         (c/restore))))
 
 (defn- move
-  [{:keys [a v xy mass] :as m} forces]
-  (let [a (apply mapv + a (map #(m/div % mass) forces))     ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
-        v (mapv + v a)
-        xy (mapv + xy v)]
-    (merge m {:xy xy :v v :a [0 0]})))
+  [{:keys [v xy mass] :as m} forces]
+  (let [a (apply m/add (map #(m/div % mass) forces))
+        v (m/add v a)
+        xy (m/add xy v)]
+    (merge m {:xy xy :v v :a a})))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
@@ -51,7 +51,7 @@
         wind [0.1 0]]
     (d/events (c/get ctx) "mouseup" m-up-down)
     (d/events (c/get ctx) "mousedown" m-up-down)
-    (go (loop [{:keys [a v xy] :as m} (make-mover :xy [(/ (first d) 2) 30]) m-state :up]
+    (go (loop [{:keys [v xy] :as m} (make-mover :xy [(/ (first d) 2) 30]) m-state :up]
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
