@@ -36,13 +36,13 @@
 
 (defn bounce                                                ; TODO how to model this using a force?
   ([m d] (bounce m d 1))
-  ([{:keys [xy v] :as m} [w h] ratio]
+  ([{:keys [xy v] :as m} [w h] v-ratio]                       ; ratio of conserved energy/speed
    (let [[vx vy] v
          [x y] xy
-         [x vx] (cond (> x w) [w (* -1 ratio vx)]
-                      (< x 0) [0 (* -1 ratio vx)]
+         [x vx] (cond (> x w) [w (* -1 v-ratio vx)]
+                      (< x 0) [0 (* -1 v-ratio vx)]
                       :else [x vx])
-         [y vy] (if (> y h) [h (* -1 ratio vy)] [y vy])]
+         [y vy] (if (> y h) [h (* -1 v-ratio vy)] [y vy])]
      (merge m {:xy [x y] :v [vx vy]}))))
 
 (defn forces [& {:keys [d fps]                              ; example 2.1
