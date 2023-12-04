@@ -36,7 +36,7 @@
 
 (defn bounce                                                ; TODO how to model this using a force?
   ([m d] (bounce m d 1))
-  ([{:keys [xy v] :as m} [w h] v-ratio]                       ; ratio of conserved energy/speed
+  ([{:keys [xy v] :as m} [w h] v-ratio]                     ; ratio of conserved energy/speed
    (let [[vx vy] v
          [x y] xy
          [x vx] (cond (> x w) [w (* -1 v-ratio vx)]
@@ -240,7 +240,7 @@
       (c/stroke)
       (c/restore)))
 
-(defn- get-attraction                                        ; force experienced by b due to a's attraction
+(defn- get-attraction                                       ; force experienced by b due to a's attraction
   [a b]
   (let [dist (m/sub (:xy a) (:xy b))
         mag-dist (-> (m/mag dist) (max 5) (min 25))]
