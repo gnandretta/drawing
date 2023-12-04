@@ -294,10 +294,22 @@
   [& {:keys [xy v mass] :or {v    [0 0]
                              mass 8}}]
   {:xy   xy
-   :r (* 2 (js/Math.sqrt mass))
+   :r    (* 4 (js/Math.sqrt mass))
    :mass mass
    :a    [0 0]
    :v    v})
+
+(defn- draw-body [ctx m]
+  (-> ctx
+      (c/save)
+      (c/set-fill-style "rgba(127,127,127,0.5)")
+      (c/set-stroke-style :black)
+      (c/set-line-width 2)
+      (c/begin-path)
+      (c/circle (:xy m) (:r m))
+      (c/fill)
+      (c/stroke)
+      (c/restore)))
 
 (defn two-bodies-attraction [& {:keys [d fps]               ; example 2.8
                                 :or   {d   [640 240]
@@ -305,17 +317,6 @@
   (let [ctx (c/append ::two-bodies-attraction d)
         in (chan)
         [play ctrl] (a/play fps)
-        draw-body (fn [ctx m]
-                    (-> ctx
-                        (c/save)
-                        (c/set-fill-style "rgba(127,127,127,0.5)")
-                        (c/set-stroke-style :black)
-                        (c/set-line-width 2)
-                        (c/begin-path)
-                        (c/circle (:xy m) (* 4 (js/Math.sqrt (:mass m)))) ; TODO adjust numbers
-                        (c/fill)
-                        (c/stroke)
-                        (c/restore)))
         body-a (make-body :xy [320 40] :v [1 0])
         body-b (make-body :xy [320 200] :v [-1 0])]
     (go (loop [body-a body-a body-b body-b]
@@ -338,19 +339,8 @@
                           fps 60}}]
   (let [ctx (c/append ::n-bodies d)
         in (chan)
-        [play ctrl] (a/play fps)
-        draw-body (fn [ctx m]
-                    (-> ctx
-                        (c/save)
-                        (c/set-fill-style "rgba(127,127,127,0.5)")
-                        (c/set-stroke-style :black)
-                        (c/set-line-width 2)
-                        (c/begin-path)
-                        (c/circle (:xy m) (* 8 (:mass m)))  ; TODO adjust numbers
-                        (c/fill)
-                        (c/stroke)
-                        (c/restore)))]
-    (go (loop [bodies (repeatedly 10 #(make-body :xy (mapv rand-int d) :mass (m/rand-off 0.1 2)))]
+        [play ctrl] (a/play fps)]
+    (go (loop [bodies (repeatedly 10 #(make-body :xy (mapv rand-int d) :mass (m/rand-off 0.04 16)))]
           (>! in bodies)
           (recur (map (fn [a]
                         (let [forces (->> bodies (filter (partial not= a))
