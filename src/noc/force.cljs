@@ -180,10 +180,10 @@
                       (let [h (* h* (second d))
                             xy [0 (- (second d) h)]
                             d [(first d) h]]
-                        {:xy    xy
+                        {:xy     xy
                          :xy-opp (m/add xy d)
-                         :d     d
-                         :c     c}))
+                         :d      d
+                         :c      c}))
         draw-liquid (fn [ctx {:keys [xy d]}]
                       (-> ctx
                           (c/save)
