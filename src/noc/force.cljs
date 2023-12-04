@@ -294,6 +294,7 @@
   [& {:keys [xy v mass] :or {v    [0 0]
                              mass 8}}]
   {:xy   xy
+   :r (* 2 (js/Math.sqrt mass))
    :mass mass
    :a    [0 0]
    :v    v})
