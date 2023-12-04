@@ -27,6 +27,13 @@
         (c/stroke)
         (c/restore))))
 
+(defn- move
+  [{:keys [a v xy mass] :as m} forces]
+  (let [a (apply mapv + a (map #(m/div % mass) forces))     ; TODO a always is [0 0] because is reset at the end, seems counter intuitive
+        v (mapv + v a)
+        xy (mapv + xy v)]
+    (merge m {:xy xy :v v :a [0 0]})))
+
 (defn forces [& {:keys [d fps]                              ; example 2.1
                  :or   {d   [640 240]
                         fps 60}}]
@@ -48,11 +55,10 @@
           (>! in m)
           (alt!
             m-up-down (recur m (case m-state :up :down :up))
-            (timeout 1) (let [a (mapv + a gravity (case m-state :down wind [0 0]))
-                              [v xy] (bounce v xy d)
-                              v (mapv + v a)
-                              xy (mapv + xy v)]
-                          (recur (merge {:xy xy :v v :a [0 0]}) m-state)))))
+            (timeout 1) (let [[v xy] (bounce v xy d)]
+                          (recur (move (merge m {:xy xy :v v})
+                                       (cond-> [gravity] (= m-state :down) (conj wind)))
+                                 m-state)))))
     (go (while true
           (let [m (<! in)]
             (-> ctx
