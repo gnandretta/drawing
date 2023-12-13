@@ -55,7 +55,7 @@
   [ctx m]
   (draw ctx m :fill-style "rgba(125,125,125,0.78)" :line-width 4))
 
-(defn get-attraction                                       ; force experienced by b due to a's attraction
+(defn get-attraction                                        ; force experienced by b due to a's attraction
   [a b]
   (let [dist (m/sub (:xy a) (:xy b))
         mag-dist (-> (m/mag dist) (max 5) (min 25))]
