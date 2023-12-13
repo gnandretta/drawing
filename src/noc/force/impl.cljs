@@ -2,7 +2,7 @@
   (:require [drawing.canvas :as c]
             [drawing.math :as m]))
 
-(defn make-mover [& {:as attrs}]
+(defn- make [& {:as attrs}]
   (let [mass (get attrs :mass 1)]
     (merge {:xy   [0 0]
             :r    (* 8 mass)
@@ -10,6 +10,9 @@
             :a    [0 0]
             :v    [0 0]}
            attrs)))
+
+(defn make-mover [& {:as attrs}]
+  (make attrs))
 
 (defn draw-mover [ctx m]
   (let [line-width 2]
@@ -43,8 +46,8 @@
     (merge m {:xy xy :v v :a a})))
 
 (defn make-attractor
-  [& {:keys [xy mass] :or {mass 20}}]
-  {:xy xy :mass mass})
+  [xy]
+  (make :xy xy :mass 20))
 
 (defn draw-attractor
   [ctx m]
@@ -66,13 +69,8 @@
     (m/mul (m/normalize dist) (/ (* (:mass a) (:mass b)) (* mag-dist mag-dist)))))
 
 (defn make-body
-  [& {:keys [xy v mass] :or {v    [0 0]
-                             mass 8}}]
-  {:xy   xy
-   :r    (* 4 (js/Math.sqrt mass))
-   :mass mass
-   :a    [0 0]
-   :v    v})
+  [attrs]
+  (make (merge {:mass 8} attrs)))
 
 (defn draw-body [ctx m]
   (-> ctx
