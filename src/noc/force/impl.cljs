@@ -11,21 +11,23 @@
             :v    [0 0]}
            attrs)))
 
+(defn- draw [ctx {:keys [xy r]} & {:keys [fill-style line-width]}]
+  (-> ctx
+      (c/save)
+      (c/set-fill-style fill-style)
+      (c/set-stroke-style :black)
+      (c/set-line-width line-width)
+      (c/begin-path)
+      (c/circle xy (- r line-width))
+      (c/fill)
+      (c/stroke)
+      (c/restore)))
+
 (defn make-mover [& {:as attrs}]
   (make attrs))
 
 (defn draw-mover [ctx m]
-  (let [line-width 2]
-    (-> ctx
-        (c/save)
-        (c/set-fill-style "rgba(127,127,127,0.5)")
-        (c/set-stroke-style :black)
-        (c/set-line-width line-width)
-        (c/begin-path)
-        (c/circle (:xy m) (- (:r m) line-width))
-        (c/fill)
-        (c/stroke)
-        (c/restore))))
+  (draw ctx m :fill-style "rgba(127,127,127,0.5)" :line-width 2))
 
 (defn bounce                                                ; TODO how to model this using a force?
   ([m d] (bounce m d 1))
@@ -51,16 +53,7 @@
 
 (defn draw-attractor
   [ctx m]
-  (-> ctx
-      (c/save)
-      (c/set-fill-style "rgba(125,125,125,0.78)")
-      (c/set-stroke-style :black)
-      (c/set-line-width 4)
-      (c/begin-path)
-      (c/circle (:xy m) (:mass m))                          ; TODO adjust numbers
-      (c/fill)
-      (c/stroke)
-      (c/restore)))
+  (draw ctx m :fill-style "rgba(125,125,125,0.78)" :line-width 4))
 
 (defn get-attraction                                       ; force experienced by b due to a's attraction
   [a b]
@@ -73,13 +66,4 @@
   (make (merge {:mass 8} attrs)))
 
 (defn draw-body [ctx m]
-  (-> ctx
-      (c/save)
-      (c/set-fill-style "rgba(127,127,127,0.5)")
-      (c/set-stroke-style :black)
-      (c/set-line-width 2)
-      (c/begin-path)
-      (c/circle (:xy m) (:r m))
-      (c/fill)
-      (c/stroke)
-      (c/restore)))
+  (draw ctx m :fill-style "rgba(127,127,127,0.5)" :line-width 2))
