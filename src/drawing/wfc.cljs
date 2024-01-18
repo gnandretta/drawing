@@ -1,5 +1,6 @@
 (ns drawing.wfc
-  (:require [drawing.canvas :as c]))
+  (:require [clojure.set :as set]
+            [drawing.canvas :as c]))
 
 ; the coding train, coding challenge 171: wave function collapse (https://www.youtube.com/watch?v=rI_y2GAlQFM)
 
@@ -59,8 +60,8 @@
         uncollapsed-min-entropy (apply min (remove (partial = 1) entropies))]
     (->> entropies
          (map-indexed vector)
-         (filterv #(= uncollapsed-min-entropy (second %)))
-         (rand-nth)
+         (filter #(= uncollapsed-min-entropy (second %)))
+         (shuffle)
          (first)
          (first))))
 
@@ -69,3 +70,28 @@
 
 (defn collapse [pattern i]
   (assoc pattern i [(rand-nth (get pattern i))]))
+
+(defn adjacent-indexes [[r c] i]
+  [(let [n (- i c)] (if (>= n 0) n))
+   (if (not= (mod (inc i) c) 0) (inc i))
+   (let [n (+ i c)] (if (< n (* r c)) n))
+   (if (not= (mod i c) 0) (dec i))])
+
+(defn get-adjacency-constraint [pattern i direction]
+  (apply set/union (map #(get-in tiles [% direction]) (get pattern i (range (count tiles))))))
+
+(defn constrain [pattern [r c] i]
+  (->> (map (fn [j direction]
+              (get-adjacency-constraint pattern j direction))
+            (adjacent-indexes [r c] i)
+            [:down :left :up :right])
+       (apply set/intersection (set (get pattern i)))
+       (vec)
+       (assoc pattern i)))
+
+(defn propagate [pattern [r c]]
+  (reduce (fn [pattern i]
+            (cond-> pattern
+                    (not (collapsed? pattern i)) (constrain [r c] i)))
+          pattern
+          (range (count pattern))))
