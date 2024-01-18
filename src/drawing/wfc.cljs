@@ -63,3 +63,9 @@
          (rand-nth)
          (first)
          (first))))
+
+(defn collapsed? [pattern i]
+  (= (count (get pattern i)) 1))
+
+(defn collapse [pattern i]
+  (assoc pattern i [(rand-nth (get pattern i))]))
