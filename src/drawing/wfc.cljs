@@ -49,3 +49,17 @@
           (c/translate [15 0])
           (draw-tile)
           (c/restore)))))
+
+(defn make-pattern [[r c]]
+  (vec (map #(vec (range (count tiles)))
+            (range (* r c)))))
+
+(defn pick [pattern]
+  (let [entropies (map count pattern)
+        uncollapsed-min-entropy (apply min (remove (partial = 1) entropies))]
+    (->> entropies
+         (map-indexed vector)
+         (filterv #(= uncollapsed-min-entropy (second %)))
+         (rand-nth)
+         (first)
+         (first))))
