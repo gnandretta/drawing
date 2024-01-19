@@ -11,37 +11,37 @@
                 (c/set-fill-style "coral")
                 (c/j> (doseq [[xy d] rects] (c/fill-rect ctx xy d))))))
 
-(def tiles [{:draw-fn (make-draw-tile-fn [])
-             :up      #{0 1}
-             :right   #{0 2}
-             :down    #{0 3}
-             :left    #{0 4}}
-            {:draw-fn (make-draw-tile-fn [[[15 0] [10 15]] [[0 15] [40 10]]])
-             :up      #{2 3 4}
-             :right   #{1 3 4}
-             :down    #{0 3}
-             :left    #{1 2 3}}
-            {:draw-fn (make-draw-tile-fn [[[25 15] [15 10]] [[15 0] [10 40]]])
-             :up      #{2 3 4}
-             :right   #{1 3 4}
-             :down    #{1 2 4}
-             :left    #{0 4}}
-            {:draw-fn (make-draw-tile-fn [[[15 25] [10 15]] [[0 15] [40 10]]])
-             :up      #{0 1}
-             :right   #{1 3 4}
-             :down    #{1 2 4}
-             :left    #{1 2 3}}
-            {:draw-fn (make-draw-tile-fn [[[0 15] [15 10]] [[15 0] [10 40]]])
-             :up      #{2 3 4}
-             :right   #{0 2}
-             :down    #{1 2 4}
-             :left    #{1 2 3}}])
+(def sample-tiles [{:draw-fn (make-draw-tile-fn [])
+                    :up      #{0 1}
+                    :right   #{0 2}
+                    :down    #{0 3}
+                    :left    #{0 4}}
+                   {:draw-fn (make-draw-tile-fn [[[15 0] [10 15]] [[0 15] [40 10]]])
+                    :up      #{2 3 4}
+                    :right   #{1 3 4}
+                    :down    #{0 3}
+                    :left    #{1 2 3}}
+                   {:draw-fn (make-draw-tile-fn [[[25 15] [15 10]] [[15 0] [10 40]]])
+                    :up      #{2 3 4}
+                    :right   #{1 3 4}
+                    :down    #{1 2 4}
+                    :left    #{0 4}}
+                   {:draw-fn (make-draw-tile-fn [[[15 25] [10 15]] [[0 15] [40 10]]])
+                    :up      #{0 1}
+                    :right   #{1 3 4}
+                    :down    #{1 2 4}
+                    :left    #{1 2 3}}
+                   {:draw-fn (make-draw-tile-fn [[[0 15] [15 10]] [[15 0] [10 40]]])
+                    :up      #{2 3 4}
+                    :right   #{0 2}
+                    :down    #{1 2 4}
+                    :left    #{1 2 3}}])
 
 (defn tile-reference []
   (let [spacing 70
-        d [150 (* (count tiles) spacing)]
+        d [150 (* (count sample-tiles) spacing)]
         ctx (c/append ::tile-reference d)]
-    (doseq [i (range (count tiles)) :let [draw-tile (get-in tiles [i :draw-fn])]]
+    (doseq [i (range (count sample-tiles)) :let [draw-tile (get-in sample-tiles [i :draw-fn])]]
       (-> ctx
           (c/save)
           (c/translate [0 (* i spacing)])
@@ -109,7 +109,7 @@
   (let [d [600 1000]
         ctx (c/append ::drawing d)
         [r c] [5 5]
-        pattern (loop [pattern (make-pattern tiles [r c])]
+        pattern (loop [pattern (make-pattern sample-tiles [r c])]
                   (let [i (pick (:v pattern))]
                     (if (and i (not (collapsed? pattern i)))
                       (recur (-> (collapse pattern i) propagate))
