@@ -92,16 +92,17 @@
           pattern
           (range (count (:v pattern)))))
 
-(defn draw-pattern [ctx v [r c] [w h]]
-  (doall (for [i (range (count v))
-               :let [element (get v i)
-                     draw-fn (get-in tiles [(first element) :draw-fn])]
-               :when (= (count element) 1)]
-           (-> ctx
-               (c/save)
-               (c/translate [(* (mod i c) w) (* (quot i r) h)])
-               (draw-fn)
-               (c/restore)))))
+(defn draw-pattern [ctx {:keys [v d]} [w h]]
+  (let [[r c] d]
+    (doall (for [i (range (count v))
+                 :let [element (get v i)
+                       draw-fn (get-in tiles [(first element) :draw-fn])]
+                 :when (= (count element) 1)]
+             (-> ctx
+                 (c/save)
+                 (c/translate [(* (mod i c) w) (* (quot i r) h)])
+                 (draw-fn)
+                 (c/restore))))))
 
 (defn drawing []
   (let [d [600 1000]
@@ -112,4 +113,4 @@
                     (if (and i (not (collapsed? pattern i)))
                       (recur (-> (collapse pattern i) propagate))
                       pattern)))]
-    (draw-pattern ctx (:v pattern) [r c] [40 40])))
+    (draw-pattern ctx pattern [40 40])))
