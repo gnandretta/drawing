@@ -53,7 +53,8 @@
 
 (defn make-pattern [[r c]]
   {:v (vec (map #(vec (range (count tiles)))
-                (range (* r c))))})
+                (range (* r c))))
+   :d [r c]})
 
 (defn pick [v]
   (let [entropies (map count v)
@@ -71,25 +72,25 @@
 (defn collapse [v i]
   (assoc v i [(rand-nth (get v i))]))
 
-(defn constrain [v [r c] i]
-  (let [all-tiles (range (count tiles))
+(defn constrain [{:keys [v d] :as pattern} i]
+  (let [[r c] d
         [t r l b] [(let [n (- i c)] (if (>= n 0) n))
                    (let [n (inc i)] (if (not= (mod n c) 0) n))
                    (let [n (+ i c)] (if (< n (* r c)) n))
-                   (if (not= (mod i c) 0) (dec i))]]
-    (->> (map (fn [j direction]
-                (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
-                                      (get v j all-tiles))))
-              [t r l b]
-              [:down :left :up :right])
-         (apply set/intersection (set (get v i)))
-         (vec)
-         (assoc v i))))
+                   (if (not= (mod i c) 0) (dec i))]
+        all-tiles (range (count tiles))]
+    (assoc-in pattern [:v i] (->> (map (fn [j direction]
+                                         (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
+                                                               (get v j all-tiles))))
+                                       [t r l b]
+                                       [:down :left :up :right])
+                                  (apply set/intersection (set (get v i)))
+                                  (vec)))))
 
-(defn propagate [v [r c]]
-  (reduce (fn [v i] (cond-> v (not (collapsed? v i)) (constrain [r c] i)))
-          v
-          (range (count v))))
+(defn propagate [pattern]
+  (reduce (fn [pattern i] (cond-> pattern (not (collapsed? (:v pattern) i)) (constrain i)))
+          pattern
+          (range (count (:v pattern)))))
 
 (defn draw-pattern [ctx v [r c] [w h]]
   (doall (for [i (range (count v))
@@ -110,6 +111,6 @@
                   (let [i (pick (:v pattern))]
                     (if (and i (not (collapsed? (:v pattern) i)))
                       (recur (-> pattern (update :v collapse i)
-                                 (update :v propagate [r c])))
+                                 propagate))
                       pattern)))]
     (draw-pattern ctx (:v pattern) [r c] [40 40])))
