@@ -1,6 +1,7 @@
 (ns drawing.wfc
   (:require [clojure.set :as set]
-            [drawing.canvas :as c]))
+            [drawing.canvas :as c]
+            [drawing.math :as m]))
 
 ; the coding train, coding challenge 171: wave function collapse (https://www.youtube.com/watch?v=rI_y2GAlQFM)
 
@@ -51,11 +52,12 @@
           (draw-tile)
           (c/restore)))))
 
-(defn make-pattern [in [rows cols]]
+(defn make-pattern [in [rows cols] cell-wh]
   {:out  (vec (map #(vec (range (count in)))
                    (range (* rows cols))))
    :rows rows
    :cols cols
+   :cell-wh cell-wh
    :in   in})
 
 (defn pick [out]
@@ -93,14 +95,14 @@
           pattern
           (range (count out))))
 
-(defn draw-pattern [ctx {:keys [in out rows cols]} [w h]]
+(defn draw-pattern [ctx {:keys [in out rows cols cell-wh]}]
   (doall (for [i (range (count out))
                :let [element (get out i)
                      draw-fn (get-in in [(first element) :draw-fn])]
                :when (= (count element) 1)]
            (-> ctx
                (c/save)
-               (c/translate [(* (mod i cols) w) (* (quot i rows) h)])
+               (c/translate (m/mul [(mod i cols) (quot i rows)] cell-wh))
                (draw-fn)
                (c/restore)))))
 
@@ -108,9 +110,9 @@
   (let [d [600 1000]
         ctx (c/append ::drawing d)
         [r c] [5 5]
-        pattern (loop [pattern (make-pattern sample-tiles [r c])]
+        pattern (loop [pattern (make-pattern sample-tiles [r c] [40 40])]
                   (let [i (pick (:out pattern))]
                     (if (and i (not (collapsed? pattern i)))
                       (recur (-> (collapse pattern i) propagate))
                       pattern)))]
-    (draw-pattern ctx pattern [40 40])))
+    (draw-pattern ctx pattern)))
