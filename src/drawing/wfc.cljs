@@ -66,11 +66,11 @@
          (first)
          (first))))
 
-(defn collapsed? [v i]
+(defn collapsed? [{:keys [v]} i]
   (= (count (get v i)) 1))
 
-(defn collapse [v i]
-  (assoc v i [(rand-nth (get v i))]))
+(defn collapse [pattern i]
+  (update-in pattern [:v i] (fn [x] [(rand-nth x)])))
 
 (defn constrain [{:keys [v d] :as pattern} i]
   (let [[r c] d
@@ -109,8 +109,7 @@
         [r c] [5 5]
         pattern (loop [pattern (make-pattern [r c])]
                   (let [i (pick (:v pattern))]
-                    (if (and i (not (collapsed? (:v pattern) i)))
-                      (recur (-> pattern (update :v collapse i)
-                                 propagate))
+                    (if (and i (not (collapsed? pattern i)))
+                      (recur (-> (collapse pattern i) propagate))
                       pattern)))]
     (draw-pattern ctx (:v pattern) [r c] [40 40])))
