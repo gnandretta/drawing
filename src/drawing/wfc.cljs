@@ -52,9 +52,10 @@
           (c/restore)))))
 
 (defn make-pattern [[r c]]
-  {:v (vec (map #(vec (range (count tiles)))
-                (range (* r c))))
-   :d [r c]})
+  {:v     (vec (map #(vec (range (count tiles)))
+                    (range (* r c))))
+   :d     [r c]
+   :tiles tiles})
 
 (defn pick [v]
   (let [entropies (map count v)
@@ -72,7 +73,7 @@
 (defn collapse [pattern i]
   (update-in pattern [:v i] (fn [x] [(rand-nth x)])))
 
-(defn constrain [{:keys [v d] :as pattern} i]
+(defn constrain [{:keys [v d tiles] :as pattern} i]
   (let [[r c] d
         [t r l b] [(let [n (- i c)] (if (>= n 0) n))
                    (let [n (inc i)] (if (not= (mod n c) 0) n))
@@ -92,7 +93,7 @@
           pattern
           (range (count (:v pattern)))))
 
-(defn draw-pattern [ctx {:keys [v d]} [w h]]
+(defn draw-pattern [ctx {:keys [v d tiles]} [w h]]
   (let [[r c] d]
     (doall (for [i (range (count v))
                  :let [element (get v i)
