@@ -51,11 +51,11 @@
           (draw-tile)
           (c/restore)))))
 
-(defn make-pattern [tiles [r c]]
-  {:out   (vec (map #(vec (range (count tiles)))
-                    (range (* r c))))
-   :d     [r c]
-   :tiles tiles})
+(defn make-pattern [in [r c]]
+  {:out (vec (map #(vec (range (count in)))
+                  (range (* r c))))
+   :d   [r c]
+   :in  in})
 
 (defn pick [out]
   (let [entropies (map count out)
@@ -73,15 +73,15 @@
 (defn collapse [pattern i]
   (update-in pattern [:out i] (fn [x] [(rand-nth x)])))
 
-(defn constrain [{:keys [out d tiles] :as pattern} i]
+(defn constrain [{:keys [out d in] :as pattern} i]
   (let [[r c] d
         [t r l b] [(let [n (- i c)] (if (>= n 0) n))
                    (let [n (inc i)] (if (not= (mod n c) 0) n))
                    (let [n (+ i c)] (if (< n (* r c)) n))
                    (if (not= (mod i c) 0) (dec i))]
-        all-tiles (range (count tiles))]
+        all-tiles (range (count in))]
     (assoc-in pattern [:out i] (->> (map (fn [j direction]
-                                           (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
+                                           (apply set/union (map #(get-in in [% direction])
                                                                  (get out j all-tiles))))
                                          [t r l b]
                                          [:down :left :up :right])
@@ -93,11 +93,11 @@
           pattern
           (range (count out))))
 
-(defn draw-pattern [ctx {:keys [out d tiles]} [w h]]
+(defn draw-pattern [ctx {:keys [out d in]} [w h]]
   (let [[r c] d]
     (doall (for [i (range (count out))
                  :let [element (get out i)
-                       draw-fn (get-in tiles [(first element) :draw-fn])]
+                       draw-fn (get-in in [(first element) :draw-fn])]
                  :when (= (count element) 1)]
              (-> ctx
                  (c/save)
