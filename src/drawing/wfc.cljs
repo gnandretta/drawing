@@ -52,13 +52,13 @@
           (c/restore)))))
 
 (defn make-pattern [tiles [r c]]
-  {:v     (vec (map #(vec (range (count tiles)))
+  {:out   (vec (map #(vec (range (count tiles)))
                     (range (* r c))))
    :d     [r c]
    :tiles tiles})
 
-(defn pick [v]
-  (let [entropies (map count v)
+(defn pick [out]
+  (let [entropies (map count out)
         uncollapsed-min-entropy (apply min (remove (partial = 1) entropies))]
     (->> entropies
          (map-indexed vector)
@@ -67,36 +67,36 @@
          (first)
          (first))))
 
-(defn collapsed? [{:keys [v]} i]
-  (= (count (get v i)) 1))
+(defn collapsed? [{:keys [out]} i]
+  (= (count (get out i)) 1))
 
 (defn collapse [pattern i]
-  (update-in pattern [:v i] (fn [x] [(rand-nth x)])))
+  (update-in pattern [:out i] (fn [x] [(rand-nth x)])))
 
-(defn constrain [{:keys [v d tiles] :as pattern} i]
+(defn constrain [{:keys [out d tiles] :as pattern} i]
   (let [[r c] d
         [t r l b] [(let [n (- i c)] (if (>= n 0) n))
                    (let [n (inc i)] (if (not= (mod n c) 0) n))
                    (let [n (+ i c)] (if (< n (* r c)) n))
                    (if (not= (mod i c) 0) (dec i))]
         all-tiles (range (count tiles))]
-    (assoc-in pattern [:v i] (->> (map (fn [j direction]
-                                         (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
-                                                               (get v j all-tiles))))
-                                       [t r l b]
-                                       [:down :left :up :right])
-                                  (apply set/intersection (set (get v i)))
-                                  (vec)))))
+    (assoc-in pattern [:out i] (->> (map (fn [j direction]
+                                           (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
+                                                                 (get out j all-tiles))))
+                                         [t r l b]
+                                         [:down :left :up :right])
+                                    (apply set/intersection (set (get out i)))
+                                    (vec)))))
 
-(defn propagate [pattern]
-  (reduce (fn [pattern i] (cond-> pattern (not (collapsed? (:v pattern) i)) (constrain i)))
+(defn propagate [{:keys [out] :as pattern}]
+  (reduce (fn [pattern i] (cond-> pattern (not (collapsed? out i)) (constrain i)))
           pattern
-          (range (count (:v pattern)))))
+          (range (count out))))
 
-(defn draw-pattern [ctx {:keys [v d tiles]} [w h]]
+(defn draw-pattern [ctx {:keys [out d tiles]} [w h]]
   (let [[r c] d]
-    (doall (for [i (range (count v))
-                 :let [element (get v i)
+    (doall (for [i (range (count out))
+                 :let [element (get out i)
                        draw-fn (get-in tiles [(first element) :draw-fn])]
                  :when (= (count element) 1)]
              (-> ctx
@@ -110,7 +110,7 @@
         ctx (c/append ::drawing d)
         [r c] [5 5]
         pattern (loop [pattern (make-pattern sample-tiles [r c])]
-                  (let [i (pick (:v pattern))]
+                  (let [i (pick (:out pattern))]
                     (if (and i (not (collapsed? pattern i)))
                       (recur (-> (collapse pattern i) propagate))
                       pattern)))]
