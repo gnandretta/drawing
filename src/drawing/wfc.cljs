@@ -51,11 +51,12 @@
           (draw-tile)
           (c/restore)))))
 
-(defn make-pattern [in [r c]]
-  {:out (vec (map #(vec (range (count in)))
-                  (range (* r c))))
-   :d   [r c]
-   :in  in})
+(defn make-pattern [in [rows cols]]
+  {:out  (vec (map #(vec (range (count in)))
+                   (range (* rows cols))))
+   :rows rows
+   :cols cols
+   :in   in})
 
 (defn pick [out]
   (let [entropies (map count out)
@@ -73,12 +74,11 @@
 (defn collapse [pattern i]
   (update-in pattern [:out i] (fn [x] [(rand-nth x)])))
 
-(defn constrain [{:keys [out d in] :as pattern} i]
-  (let [[r c] d
-        [t r l b] [(let [n (- i c)] (if (>= n 0) n))
-                   (let [n (inc i)] (if (not= (mod n c) 0) n))
-                   (let [n (+ i c)] (if (< n (* r c)) n))
-                   (if (not= (mod i c) 0) (dec i))]
+(defn constrain [{:keys [in out rows cols] :as pattern} i]
+  (let [[t r l b] [(let [n (- i cols)] (if (>= n 0) n))
+                   (let [n (inc i)] (if (not= (mod n cols) 0) n))
+                   (let [n (+ i cols)] (if (< n (* rows cols)) n))
+                   (if (not= (mod i cols) 0) (dec i))]
         all-tiles (range (count in))]
     (assoc-in pattern [:out i] (->> (map (fn [j direction]
                                            (apply set/union (map #(get-in in [% direction])
@@ -93,17 +93,16 @@
           pattern
           (range (count out))))
 
-(defn draw-pattern [ctx {:keys [out d in]} [w h]]
-  (let [[r c] d]
-    (doall (for [i (range (count out))
-                 :let [element (get out i)
-                       draw-fn (get-in in [(first element) :draw-fn])]
-                 :when (= (count element) 1)]
-             (-> ctx
-                 (c/save)
-                 (c/translate [(* (mod i c) w) (* (quot i r) h)])
-                 (draw-fn)
-                 (c/restore))))))
+(defn draw-pattern [ctx {:keys [in out rows cols]} [w h]]
+  (doall (for [i (range (count out))
+               :let [element (get out i)
+                     draw-fn (get-in in [(first element) :draw-fn])]
+               :when (= (count element) 1)]
+           (-> ctx
+               (c/save)
+               (c/translate [(* (mod i cols) w) (* (quot i rows) h)])
+               (draw-fn)
+               (c/restore)))))
 
 (defn drawing []
   (let [d [600 1000]
