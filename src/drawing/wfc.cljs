@@ -51,7 +51,7 @@
           (draw-tile)
           (c/restore)))))
 
-(defn make-pattern [[r c]]
+(defn make-pattern [tiles [r c]]
   {:v     (vec (map #(vec (range (count tiles)))
                     (range (* r c))))
    :d     [r c]
@@ -109,7 +109,7 @@
   (let [d [600 1000]
         ctx (c/append ::drawing d)
         [r c] [5 5]
-        pattern (loop [pattern (make-pattern [r c])]
+        pattern (loop [pattern (make-pattern tiles [r c])]
                   (let [i (pick (:v pattern))]
                     (if (and i (not (collapsed? pattern i)))
                       (recur (-> (collapse pattern i) propagate))
