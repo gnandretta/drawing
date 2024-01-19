@@ -71,23 +71,20 @@
 (defn collapse [pattern i]
   (assoc pattern i [(rand-nth (get pattern i))]))
 
-(defn adjacent-indexes [[r c] i]
-  [(let [n (- i c)] (if (>= n 0) n))
-   (if (not= (mod (inc i) c) 0) (inc i))
-   (let [n (+ i c)] (if (< n (* r c)) n))
-   (if (not= (mod i c) 0) (dec i))])
-
-(defn get-adjacency-constraint [pattern i direction]
-  (apply set/union (map #(get-in tiles [% direction]) (get pattern i (range (count tiles))))))
-
 (defn constrain [pattern [r c] i]
-  (->> (map (fn [j direction]
-              (get-adjacency-constraint pattern j direction))
-            (adjacent-indexes [r c] i)
-            [:down :left :up :right])
-       (apply set/intersection (set (get pattern i)))
-       (vec)
-       (assoc pattern i)))
+  (let [all-tiles (range (count tiles))
+        [t r l b] [(let [n (- i c)] (if (>= n 0) n))
+                   (let [n (inc i)] (if (not= (mod n c) 0) n))
+                   (let [n (+ i c)] (if (< n (* r c)) n))
+                   (if (not= (mod i c) 0) (dec i))]]
+    (->> (map (fn [j direction]
+                (apply set/union (map (fn [ti] (get-in tiles [ti direction]))
+                                      (get pattern j all-tiles))))
+              [t r l b]
+              [:down :left :up :right])
+         (apply set/intersection (set (get pattern i)))
+         (vec)
+         (assoc pattern i))))
 
 (defn propagate [pattern [r c]]
   (reduce (fn [pattern i]
