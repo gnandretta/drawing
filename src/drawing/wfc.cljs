@@ -53,7 +53,7 @@
 
 (defn make-pattern [[r c]]
   {:v (vec (map #(vec (range (count tiles)))
-             (range (* r c))))})
+                (range (* r c))))})
 
 (defn pick [v]
   (let [entropies (map count v)
