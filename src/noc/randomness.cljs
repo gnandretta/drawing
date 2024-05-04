@@ -4,39 +4,16 @@
             [drawing.canvas :as c]
             [drawing.math :as m :include-macros true]))
 
-(defn- traditional-step-4-choices
-  [[x y]]
-  (case (rand-int 4)                                        ; idiom
-    0 [(inc x) y]
-    1 [(dec x) y]
-    2 [x (inc y)]
-    3 [x (dec y)]))
-
-(defn- traditional-step-9-choices
-  [xy]
-  (m/add xy #(m/rand-int-off -1 2)))
-
-(defn- traditional-step-infinite-choices
-  [xy]
-  (m/add xy #(m/rand-off -1 1)))
-
-(defn traditional-random-walk [& {:keys [size fps]
-                                  :or   {size [640 240]
-                                         fps  30}}]
-  (let [in (chan)
-        [play ctrl] (a/play fps)
-        ctx (c/append ::traditional-random-walk size)]
-    (-> ctx
-        (c/set-fill-style :white)
-        (c/fill-rect size)
-        (c/set-fill-style :black))
-    (go (loop [xy (m/mul size 0.5)]
-          (>! in xy)
-          (recur (traditional-step-4-choices xy))))
-    (go (while true
-          (c/fill-rect ctx (<! in) [1 1])
-          (<! play)))
-    ctrl))
+(defn traditional-random-walk [& {:keys [d] :or {d [640 240]}}] ; example 0.1
+  (let [ctx (c/append ::traditional-random-walk d)]
+    (go (loop [[x y :as xy] (m/mul 0.5 d)]
+          (c/fill-rect ctx xy [1 1])
+          (<! (timeout 16))
+          (recur (case (rand-int 4)                         ; idiom, also try (m/add xy #(m/rand-int-off -1 2)) and (m/add xy #(m/rand-off -1 1))
+                   0 [(inc x) y]
+                   1 [(dec x) y]
+                   2 [x (inc y)]
+                   3 [x (dec y)]))))))
 
 (defn- make-bars [[w h] n counts]
   (let [bar-w (/ w n)]
