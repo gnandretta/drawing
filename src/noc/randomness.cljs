@@ -46,9 +46,22 @@
           (<! play)))
     ctrl))
 
-(defn random-distribution
-  ([] (random-distribution {}))
-  ([opts] (distribution-bars ::random-distribution rand-int opts)))
+(defn random-number-distribution [& {:keys [d] :or {d [640 240]}}] ; example 0.2
+  (let [[w h] d
+        ctx (c/append ::random-distribution d)
+        n 20
+        rects (let [w' (/ w n)] (vec (for [i (range n)] [[(* i w') h] [w' h]])))]
+    (go (loop [rects rects]
+          (doseq [[xy [w* h*]] rects]
+            (-> ctx
+                (c/set-fill-style "#7F7F7F")
+                (c/set-line-width 2)
+                (c/begin-path)
+                (c/rect xy [(dec w*) h*])
+                (c/fill)
+                (c/stroke)))
+          (<! (timeout 16))
+          (recur (update-in rects [(rand-int n) 0 1] dec))))))
 
 (defn- tends-to-right-step
   [[x y]]
