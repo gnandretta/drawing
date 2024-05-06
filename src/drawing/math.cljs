@@ -199,3 +199,5 @@
   [r c]
   (for [j (range r) i (range c)]
     [(/ (+ i 0.5) c) (/ (+ j 0.5) r)]))
+
+(def sqrt m/sqrt)                                           ; TODO docs
