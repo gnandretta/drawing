@@ -17,7 +17,7 @@
 
 (defn random-number-distribution [& {:keys [d] :or {d [640 240]}}] ; example 0.2
   (let [[w h] d
-        ctx (c/append ::random-distribution d)
+        ctx (c/append ::random-number-distribution d)
         n 20
         rects (let [w' (/ w n)] (vec (for [i (range n)] [[(* i w') h] [w' h]])))]
     (go (loop [rects rects]
