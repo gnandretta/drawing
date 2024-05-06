@@ -74,22 +74,15 @@
                    0.8 [x (inc y)]
                    1 [x (dec y)]))))))
 
-(defn gaussian-distribution [& {:keys [size fps]
-                                :or   {size [640 240]
-                                       fps  30}}]
-  (let [[play ctrl] (a/play fps)
-        ctx (c/append ::gaussian-distribution size)]
-    (-> ctx
-        (c/set-fill-style :white)
-        (c/fill-rect size))
+(defn gaussian-distribution [& {:keys [d] :or {d [640 240]}}]
+  (let [[w h] d
+        ctx (c/append ::gaussian-distribution d)]
     (go (while true
           (-> ctx
               (c/set-fill-style "rgba(0,0,0,0.005)")
-              (c/circle (update (m/mul size 0.5) 0 + (* (m/rand-std-norm) 60)) ; idiom
-                        8)
+              (c/circle [(+ (/ w 2) (* (m/rand-std-norm) 60)) (/ h 2)] 8) ; idiom
               (c/fill))
-          (<! play)))
-    ctrl))
+          (<! (timeout 16))))))
 
 (defn- accept-reject []
   (let [r1 (rand) r2 (rand)]
