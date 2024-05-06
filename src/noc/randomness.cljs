@@ -88,11 +88,22 @@
   (let [r1 (rand) r2 (rand)]
     (if (< r2 r1) r1 (recur))))
 
-(defn accept-reject-distribution
-  ([] (accept-reject-distribution {}))
-  ([opts] (distribution-bars ::accept-reject-distribution
-                             #(js/Math.floor (* % (accept-reject)))
-                             opts)))
+(defn accept-reject-distribution [& {:keys [d] :or {d [640 240]}}]
+  (let [[w h] d
+        ctx (c/append ::accept-reject-distribution d)
+        n 20
+        rects (let [w' (/ w n)] (vec (for [i (range n)] [[(* i w') h] [w' h]])))]
+    (go (loop [rects rects]
+          (doseq [[xy [w* h*]] rects]
+            (-> ctx
+                (c/set-fill-style "#7F7F7F")
+                (c/set-line-width 2)
+                (c/begin-path)
+                (c/rect xy [(dec w*) h*])
+                (c/fill)
+                (c/stroke)))
+          (<! (timeout 16))
+          (recur (update-in rects [(cljs.math/floor (* n (accept-reject))) 0 1] dec))))))
 
 (defn perlin-noise-walk [& {:keys [size fps]
                             :or   {size [640 240]
