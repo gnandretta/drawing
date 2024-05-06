@@ -63,32 +63,16 @@
           (<! (timeout 16))
           (recur (update-in rects [(rand-int n) 0 1] dec))))))
 
-(defn- tends-to-right-step
-  [[x y]]
-  (condp >= (rand)                                          ; idiom
-    0.4 [(inc x) y]
-    0.6 [(dec x) y]
-    0.8 [x (inc y)]
-    1 [x (dec y)]))
-
-(defn random-walk-tends-to-right [& {:keys [size fps]
-                                     :or   {size [640 240]
-                                            fps  30}}]
-  (let [in (chan)
-        [play ctrl] (a/play fps)
-        ctx (c/append ::random-walk-tends-to-right size)]
-    (go (loop [xy (m/mul size 0.5)]
-          (>! in xy)
-          (recur (tends-to-right-step xy))))
-    (-> ctx
-        (c/set-fill-style :white)
-        (c/fill-rect size))
-    (go (while true
-          (-> ctx
-              (c/set-fill-style :black)
-              (c/fill-rect (<! in) [1 1]))
-          (<! play)))
-    ctrl))
+(defn random-walk-tends-to-right [& {:keys [d] :or {d [640 240]}}] ; example 0.3
+  (let [ctx (c/append ::random-walk-tends-to-right d)]
+    (go (loop [[x y :as xy] (m/mul 0.5 d)]
+          (c/fill-rect ctx xy [1 1])
+          (<! (timeout 16))
+          (recur (condp > (rand)                            ; idiom
+                   0.4 [(inc x) y]
+                   0.6 [(dec x) y]
+                   0.8 [x (inc y)]
+                   1 [x (dec y)]))))))
 
 (defn gaussian-distribution [& {:keys [size fps]
                                 :or   {size [640 240]
