@@ -15,37 +15,6 @@
                    2 [x (inc y)]
                    3 [x (dec y)]))))))
 
-(defn- make-bars [[w h] n counts]
-  (let [bar-w (/ w n)]
-    (map (fn [i c] [[(* i bar-w) h] [(dec bar-w) (* -1 c)]]) ; idiom
-         (range)
-         counts)))
-
-(defn- distribution-bars [nm f & {:keys [size fps n]
-                                  :or   {size [640 240]
-                                         fps  30
-                                         n    20}}]
-  (let [in (chan)
-        [play ctrl] (a/play fps)
-        ctx (c/append nm size)]
-    (go (loop [counts (vec (repeat n 0))]
-          (>! in counts)
-          (recur (update counts (f n) inc))))
-    (go (while true
-          (-> ctx
-              (c/set-fill-style :white)
-              (c/fill-rect size)
-              (c/set-fill-style "#7f7f7f")
-              (c/set-line-width 2))
-          (doseq [bar (make-bars size n (<! in))]
-            (-> ctx
-                (c/begin-path)
-                (c/apply c/rect bar)
-                (c/fill)
-                (c/stroke)))
-          (<! play)))
-    ctrl))
-
 (defn random-number-distribution [& {:keys [d] :or {d [640 240]}}] ; example 0.2
   (let [[w h] d
         ctx (c/append ::random-distribution d)
